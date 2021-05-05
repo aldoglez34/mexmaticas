@@ -64,7 +64,7 @@ export const SignUpForm = () => {
           );
 
           // edit user display name to student
-          await fbRes.user.updateProfile({ displayName: "Teacher" });
+          await fbRes.user.updateProfile({ displayName: "Student" });
 
           // push new user to database
           const newUser = await API.registerNewStudent({

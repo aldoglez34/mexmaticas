@@ -1,5 +1,3 @@
 # MeXmáticas
 
-## About
-
-Under development
+Online math school - frontend

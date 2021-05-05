@@ -71,7 +71,7 @@ router.post("/new", function (req, res) {
     email: req.body.email,
   })
     .then((newUser) => {
-      console.log(newUser);
+      // console.log(newUser);
       res.json(newUser);
     })
     .catch((err) => {

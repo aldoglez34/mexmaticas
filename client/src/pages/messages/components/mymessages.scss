@@ -1,0 +1,10 @@
+.msgTab {
+  margin-bottom: 10px;
+  padding: 25px !important;
+
+  &.active {
+    background-color: #49bf84 !important;
+
+    border-left: 5px solid #0d2129 !important;
+  }
+}

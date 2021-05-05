@@ -1,0 +1,23 @@
+.card {
+  width: 24rem;
+  background-color: #f4fbf8 !important;
+  color: #50575e !important;
+}
+
+.link {
+  color: #48bf84 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  &:hover {
+    text-decoration: none !important;
+    color: #308b5e !important;
+    transition: 0.3;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .card {
+    width: 100%;
+  }
+}

@@ -1,0 +1,39 @@
+#myfooter {
+  background-color: #0d2129;
+  margin-top: auto !important;
+  color: #7f898e;
+  padding: 60px 0px !important;
+  padding-bottom: 0px !important;
+}
+
+@media only screen and (max-width: 991px) {
+  #myfooter {
+    padding-top: 40px !important;
+  }
+}
+
+.footerImg {
+  max-height: 60px;
+}
+
+#footerLogo {
+  color: #48bf84;
+  font-family: "Noto Serif", serif !important;
+  font-weight: 700 !important;
+}
+
+.footerTitle {
+  // color: #48bf84;
+  color: white;
+  // font-family: "Noto Sans", sans-serif;
+}
+
+#footerCopyright {
+  color: #baf73c;
+}
+
+.socials {
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+}

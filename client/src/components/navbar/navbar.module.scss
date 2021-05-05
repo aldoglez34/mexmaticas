@@ -1,0 +1,47 @@
+.container {
+  background-color: #0d2129;
+  border-bottom: 1px solid #20323a;
+}
+
+.logo {
+  color: #48bf84;
+  cursor: pointer;
+  font-family: "Noto Serif", serif !important;
+  font-weight: 700 !important;
+
+  &:hover {
+    color: #87e2b4;
+    transition: 0.2s;
+  }
+}
+
+.zen {
+  cursor: default;
+
+  &:hover {
+    color: #48bf84;
+    transition: 0.2s;
+  }
+}
+
+.beta {
+  color: #7b8887;
+  font-family: "Lato", sans-serif !important;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.navbarItem {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #7b8887 !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+
+  &:hover {
+    color: gainsboro !important;
+    transition: 0.2s !important;
+  }
+}

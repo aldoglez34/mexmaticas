@@ -1,0 +1,32 @@
+.oc_jumbo {
+  margin-top: 100px !important;
+}
+
+.courseMenuItem {
+  margin-bottom: 10px;
+  padding: 25px !important;
+
+  &.active {
+    background-color: transparent !important;
+
+    border-left: 5px solid #49bf84 !important;
+  }
+}
+
+.seemorebttn {
+  background-color: #48bf84 !important;
+  border-color: #48bf84 !important;
+
+  color: white !important;
+
+  &:hover {
+    background-color: #329c67 !important;
+    color: white !important;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .oc_jumbo {
+    margin-top: 80px !important;
+  }
+}

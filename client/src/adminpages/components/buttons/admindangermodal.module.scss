@@ -1,0 +1,18 @@
+.transparent {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #d11a2a !important;
+
+  font-size: 22px !important;
+  padding: 1px 5px !important;
+
+  outline: none;
+  box-shadow: none !important;
+
+  &:hover {
+    background-color: #d11a2a !important;
+    border-color: #d11a2a !important;
+    color: white !important;
+    transition: 0.3s;
+  }
+}

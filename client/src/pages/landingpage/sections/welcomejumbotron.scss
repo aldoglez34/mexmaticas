@@ -1,0 +1,58 @@
+.wj_jumboStyle {
+  padding: 80px 0px !important;
+  margin-bottom: 0px !important;
+  background-image: url("/images/schoolBack.jpg");
+  background-size: cover;
+  background-color: gray !important;
+  background-blend-mode: multiply;
+}
+
+.wj_title {
+  font-size: 57px;
+  color: #49bf84 !important;
+  font-weight: 800 !important;
+}
+
+.wj_plusIcon {
+  font-size: 18px;
+  margin-right: 5px;
+  color: #49bf84 !important;
+}
+
+.wj_text {
+  color: #f4fbf8 !important;
+  font-size: 20px;
+  font-size: 18px;
+}
+
+.wj_registerButton {
+  padding: 7px 25px !important;
+
+  background-color: #48bf84 !important;
+  border-color: #48bf84 !important;
+
+  color: white !important;
+  font-size: 20px !important;
+
+  &:hover {
+    background-color: #329c67 !important;
+    color: white !important;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .wj_jumboStyle {
+    padding: 150px 0px !important;
+    background-image: url("/images/schoolBacksm.jpg");
+  }
+  .wj_title {
+    font-size: 42px !important;
+  }
+  .wj_plusIcon {
+    font-size: 16px;
+    margin-right: 5px;
+  }
+  .wj_text {
+    font-size: 16px !important;
+  }
+}

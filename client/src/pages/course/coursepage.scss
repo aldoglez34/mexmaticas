@@ -1,0 +1,41 @@
+.topicSection {
+  background-color: #f4fbf8;
+  padding: 5rem 0rem;
+}
+
+.accordionItem {
+  cursor: pointer !important;
+  background-color: transparent !important;
+}
+
+hr.mexmaticasDivider {
+  overflow: visible; /* For IE */
+  padding: 0;
+  border: none;
+  width: 30%;
+  border-top: medium double #d7dfdb;
+  color: #d7dfdb;
+  text-align: center;
+  margin: 7rem auto;
+}
+
+hr.mexmaticasDivider:after {
+  content: "M";
+  font-family: "Noto Serif", serif !important;
+  display: inline-block;
+  position: relative;
+  top: -0.7em;
+  font-size: 1.5em;
+  padding: 0 0.25em;
+  background: white;
+}
+
+@media only screen and (max-width: 991px) {
+  .divider1 {
+    margin: 4rem auto !important;
+  }
+
+  .topicName {
+    font-size: 35px !important;
+  }
+}

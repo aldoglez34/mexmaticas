@@ -1,0 +1,9 @@
+.medal {
+  opacity: 0.8;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+    transition: 0.3s;
+  }
+}

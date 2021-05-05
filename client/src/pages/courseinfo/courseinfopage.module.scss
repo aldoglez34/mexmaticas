@@ -1,0 +1,33 @@
+.courseinfoheader {
+  border-left: solid 1px #0f5257;
+  border-right: solid 1px #0f5257;
+  color: #0f5257;
+  display: inline-block;
+  font-size: 60px;
+  font-weight: 900 !important;
+  padding: 0 10px;
+  position: relative;
+}
+
+@media only screen and (max-width: 991px) {
+  .courseinfoheader {
+    font-size: 45px;
+  }
+}
+
+.courseinfoheader:before,
+.courseinfoheader:after {
+  border-bottom: 1px solid #0f5257;
+  bottom: 23px;
+  content: "";
+  position: absolute;
+  width: 30px;
+}
+
+.courseinfoheader:before {
+  left: -30px;
+}
+
+.courseinfoheader:after {
+  right: -30px;
+}

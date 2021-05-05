@@ -1,0 +1,50 @@
+#root {
+  height: 100%;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Noto Sans", sans-serif !important;
+  font-weight: 400 !important;
+  color: #4d535a !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Lato", sans-serif !important;
+  font-weight: 700 !important;
+  color: #0f5257;
+}
+
+// generic button
+.genericButton {
+  background-color: #48bf84 !important;
+  border-color: #48bf84 !important;
+  color: white !important;
+
+  &:hover {
+    background-color: #319764 !important;
+    border-color: #319764 !important;
+  }
+}
+
+// hr
+.myDivider {
+  margin-top: 0;
+  border: none;
+  // min-height: 0.5rem !important;
+  height: 0.4rem !important;
+  width: 2.5rem;
+  background-color: #48bf84;
+  margin-left: 0;
+}
+
+@media only screen and (max-width: 991px) {
+  hr.dashedDivider {
+    margin: 45px 0px !important;
+  }
+}

@@ -1,0 +1,9 @@
+.topic {
+  color: #48bf84;
+
+  &:hover {
+    text-decoration: none;
+    color: #308b5e;
+    transition: 0.3;
+  }
+}

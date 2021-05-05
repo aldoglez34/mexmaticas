@@ -1,0 +1,14 @@
+.container {
+  margin-top: 150px !important;
+}
+
+.title {
+  color: white;
+  font-weight: 700;
+}
+
+@media only screen and (max-width: 991px) {
+  .container {
+    margin-top: 80px !important;
+  }
+}

@@ -1,0 +1,69 @@
+#fj_image {
+  margin-top: 100px !important;
+}
+
+.fj_jumbo {
+  padding-top: 50px !important;
+  padding-bottom: 100px !important;
+  margin-bottom: 0px !important;
+  background-color: #f4fbf8 !important;
+}
+
+.fj_question {
+  font-size: 17px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-weight: 500 !important;
+  &:hover {
+    color: #5cc792;
+    transition: 0.3s;
+  }
+}
+
+.fj_questionSelected {
+  font-size: 17px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-weight: 500 !important;
+  color: #5cc792;
+}
+
+.fj_answer {
+  font-size: 17px;
+  cursor: default !important;
+}
+
+.plusSymbol {
+  padding-top: 4px;
+  color: #5cc792;
+}
+
+.fj_paddingsides {
+  padding-left: 250px !important;
+  padding-right: 250px !important;
+}
+
+.fj_accordionItem {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.fj_cardHeader {
+  background-color: white !important;
+}
+
+@media only screen and (max-width: 991px) {
+  .fj_image {
+    margin-top: 80px !important;
+  }
+
+  .fj_paddingsides {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+
+  .fj_jumbo {
+    padding-top: 40px !important;
+    padding-bottom: 80px !important;
+  }
+}

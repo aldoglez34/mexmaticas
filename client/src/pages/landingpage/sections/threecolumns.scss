@@ -1,0 +1,17 @@
+.tc_container {
+  margin-top: 100px !important;
+  background-image: url("/images/threecolumns.png");
+  background-size: cover;
+}
+
+.tc_pic {
+  width: 120px !important;
+  height: 120px !important;
+}
+
+@media only screen and (max-width: 991px) {
+  .tc_container {
+    margin-top: 80px !important;
+    background-image: url("/images/threecolumns_sm.png");
+  }
+}

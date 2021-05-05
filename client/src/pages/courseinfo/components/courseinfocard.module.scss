@@ -1,0 +1,56 @@
+.card {
+  background-color: #f4fbf8 !important;
+  margin-top: 30px;
+  width: 30rem;
+}
+
+.title {
+  color: #0f5257;
+  font-weight: 700 !important;
+}
+
+.badge {
+  background-color: #48bf84;
+  color: white;
+}
+
+.bullet {
+  color: #48bf84;
+}
+
+.priceLabel {
+  color: #212529;
+  background-color: #c6d9d7;
+}
+
+.coursePrice {
+  color: #495057;
+  font-weight: 900 !important;
+}
+
+.buyButton {
+  background-color: transparent !important;
+  border-color: #48bf84 !important;
+
+  color: #48bf84 !important;
+  font-weight: 700 !important;
+
+  &:hover {
+    background-color: #329c67 !important;
+    color: white !important;
+  }
+}
+
+.purchasedButton {
+  background-color: transparent !important;
+  border-color: #48bf84 !important;
+
+  color: #48bf84 !important;
+  font-weight: 700 !important;
+}
+
+@media only screen and (max-width: 481px) {
+  .card {
+    width: 100%;
+  }
+}

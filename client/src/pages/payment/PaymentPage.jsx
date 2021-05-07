@@ -8,9 +8,10 @@ import { BackButton } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
 import * as yup from "yup";
-import cn from "classnames";
+import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
+// import cn from "classnames";
 
-import styles from "./paymentpage.module.scss";
+// import styles from "./paymentpage.module.scss";
 
 export const PaymentPage = React.memo((props) => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ export const PaymentPage = React.memo((props) => {
           <Row>
             <Col md={{ span: 6, offset: 3 }}>
               <h3>Estás comprando:</h3>
-              <h5 className="mb-2">{courseId}</h5>
+              {/* <h5 className="mb-2">{courseId}</h5>
               <div className="mb-2">
                 <i className={cn("fab", "fa-cc-visa", styles.cardIcon)} />
                 <i
@@ -54,7 +55,7 @@ export const PaymentPage = React.memo((props) => {
                     styles.cardIcon
                   )}
                 />
-              </div>
+              </div> */}
               <Formik
                 initialValues={{
                   name: "",
@@ -132,18 +133,20 @@ export const PaymentPage = React.memo((props) => {
                     <Form.Group>
                       <Button
                         variant="danger"
-                        type="submit"
+                        // type="submit"
                         disabled={isSubmitting}
                       >
                         Pagar
                       </Button>
                     </Form.Group>
+                    <PayPalButtonComponent />
                   </Form>
                 )}
               </Formik>
             </Col>
           </Row>
         </Container>
+        <PayPalButtonComponent />
       </Container>
       <ScrollButton scrollStepInPx={150} delayInMs={16.66} />
     </Layout>

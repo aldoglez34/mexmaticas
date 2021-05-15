@@ -1,19 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { ScrollButton } from "../../components/scrollbutton/ScrollButton";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import API from "../../utils/API";
 import { Formik, ErrorMessage } from "formik";
 import { BackButton } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
 import * as yup from "yup";
-import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
+import TeacherAPI from "../../utils/TeacherAPI";
 // import cn from "classnames";
 
 // import styles from "./paymentpage.module.scss";
 
 export const PaymentPage = React.memo((props) => {
+  const [course, setCourse] = useState();
   const dispatch = useDispatch();
 
   const { courseId, school } = props.routeProps.match.params;
@@ -29,6 +30,8 @@ export const PaymentPage = React.memo((props) => {
 
   useEffect(() => {
     if (purchase) dispatch(clearPurchase());
+
+    TeacherAPI.t_fetchOneCourse(courseId).then((res) => setCourse(res.data));
   }, [dispatch, purchase]);
 
   return (
@@ -43,19 +46,11 @@ export const PaymentPage = React.memo((props) => {
         <Container>
           <Row>
             <Col md={{ span: 6, offset: 3 }}>
-              <h3>Estás comprando:</h3>
-              {/* <h5 className="mb-2">{courseId}</h5>
-              <div className="mb-2">
-                <i className={cn("fab", "fa-cc-visa", styles.cardIcon)} />
-                <i
-                  className={cn(
-                    "fab",
-                    "fa-cc-mastercard",
-                    "ml-1",
-                    styles.cardIcon
-                  )}
-                />
-              </div> */}
+              <Image className="mb-4" src="/images/paypal.png" fluid />
+              <span>Curso:</span>
+              <h3 className="mb-2">{course?.name}</h3>
+              <span>Precio:</span>
+              <h1>{`$${course?.price}`}</h1>
               <Formik
                 initialValues={{
                   name: "",
@@ -133,20 +128,20 @@ export const PaymentPage = React.memo((props) => {
                     <Form.Group>
                       <Button
                         variant="danger"
-                        // type="submit"
+                        block
+                        size="lg"
+                        className="mt-2"
                         disabled={isSubmitting}
                       >
                         Pagar
                       </Button>
                     </Form.Group>
-                    <PayPalButtonComponent />
                   </Form>
                 )}
               </Formik>
             </Col>
           </Row>
         </Container>
-        <PayPalButtonComponent />
       </Container>
       <ScrollButton scrollStepInPx={150} delayInMs={16.66} />
     </Layout>

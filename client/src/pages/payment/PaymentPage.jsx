@@ -32,7 +32,7 @@ export const PaymentPage = React.memo((props) => {
     if (purchase) dispatch(clearPurchase());
 
     TeacherAPI.t_fetchOneCourse(courseId).then((res) => setCourse(res.data));
-  }, [dispatch, purchase]);
+  }, [courseId, dispatch, purchase]);
 
   return (
     <Layout backgroundColor="white">

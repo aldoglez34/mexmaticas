@@ -1,32 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { ScrollButton } from "../../components/scrollbutton/ScrollButton";
-import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
-import API from "../../utils/API";
-import { Formik, ErrorMessage } from "formik";
+import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import { BackButton } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
-import * as yup from "yup";
 import TeacherAPI from "../../utils/TeacherAPI";
-// import cn from "classnames";
-
-// import styles from "./paymentpage.module.scss";
+import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
 
 export const PaymentPage = React.memo((props) => {
   const [course, setCourse] = useState();
+  const [isPaying, setIsPaying] = useState(false);
+
   const dispatch = useDispatch();
 
   const { courseId, school } = props.routeProps.match.params;
 
-  const student = useSelector((state) => state.student);
   const purchase = useSelector((state) => state.purchase);
-
-  // TODO: add required to all fields
-  const yupschema = yup.object({
-    name: yup.string().min(3, "Nombre demasiado corto"),
-    number: yup.number(),
-  });
 
   useEffect(() => {
     if (purchase) dispatch(clearPurchase());
@@ -45,100 +35,37 @@ export const PaymentPage = React.memo((props) => {
         <BackButton to={`/courses/${school}`} />
         <Container>
           <Row>
-            <Col md={{ span: 6, offset: 3 }}>
+            <Col md={{ span: 5, offset: 4 }} className="mt-0 mt-md-4">
               <Image className="mb-4" src="/images/paypal.png" fluid />
-              <span>Curso:</span>
-              <h3 className="mb-2">{course?.name}</h3>
-              <span>Precio:</span>
-              <h1>{`$${course?.price}`}</h1>
-              <Formik
-                initialValues={{
-                  name: "",
-                  number: "",
-                }}
-                validationSchema={yupschema}
-                onSubmit={(values, { setSubmitting }) => {
-                  setSubmitting(true);
-                  console.log(values);
-
-                  API.buyCourse({ courseId, studentId: student._id })
-                    .then(() => {
-                      alert("Has comprado el curso satisfactoriamente.");
-                      window.location.href = "/";
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                      alert("Ocurrió un error, vuelve a intentarlo.");
-                    });
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                }) => (
-                  <Form noValidate onSubmit={handleSubmit}>
-                    {/* name */}
-                    <Form.Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Titular de tarjeta</Form.Label>
-                        <Form.Control
-                          maxLength="100"
-                          type="text"
-                          name="name"
-                          value={values.name}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          isValid={touched.name && !errors.name}
-                          isInvalid={touched.name && !!errors.name}
-                        />
-                        <ErrorMessage
-                          className="text-danger"
-                          name="name"
-                          component="div"
-                        />
-                      </Form.Group>
-                    </Form.Row>
-                    {/* creadit card number */}
-                    <Form.Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Número de tarjeta</Form.Label>
-                        <Form.Control
-                          maxLength="100"
-                          type="number"
-                          name="number"
-                          value={values.number}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          isValid={touched.number && !errors.number}
-                          isInvalid={touched.number && !!errors.number}
-                        />
-                        <ErrorMessage
-                          className="text-danger"
-                          name="number"
-                          component="div"
-                        />
-                      </Form.Group>
-                    </Form.Row>
-                    {/* buttons */}
-                    <Form.Group>
-                      <Button
-                        variant="danger"
-                        block
-                        size="lg"
-                        className="mt-2"
-                        disabled={isSubmitting}
-                      >
-                        Pagar
-                      </Button>
-                    </Form.Group>
-                  </Form>
+              <div className="mb-3">
+                <span className="lead">Curso:</span>
+                <h2>{course?.name}</h2>
+              </div>
+              <div className="mb-4">
+                <span className="lead">Precio:</span>
+                <h1>{`$${course?.price}`}</h1>
+              </div>
+              <div>
+                {!isPaying ? (
+                  <Button
+                    block
+                    className="mt-2 shadow-sm"
+                    size="lg"
+                    onClick={() => setIsPaying(true)}
+                    variant="primary"
+                  >
+                    Pagar con PayPal
+                  </Button>
+                ) : (
+                  <PayPalButtonComponent />
                 )}
-              </Formik>
+              </div>
+              <small className="d-block mt-4">
+                *Por el momento sólo contamos con pagos con PayPal.
+              </small>
+              <small className="d-block  mb-2">
+                *Contacta al administrador para conocer más formas de pago.
+              </small>
             </Col>
           </Row>
         </Container>

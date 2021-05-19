@@ -1,39 +1,46 @@
-// import React from "react";
-// import { PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import React, { useEffect, useRef } from "react";
 
-// // const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
+export const PayPalButtonComponent = () => {
+  const paypalRef = useRef();
 
-// export const PayPalButtonComponent = () => {
-//   // const createOrder = (data, actions) => {
-//   //   return actions.order.create({
-//   //     purchase_units: [
-//   //       {
-//   //         amount: {
-//   //           value: "0.01",
-//   //         },
-//   //       },
-//   //     ],
-//   //   });
-//   // };
+  const createPayPalOrder = () => {
+    return window.paypal
+      .Buttons({
+        createOrder: (data, actions, err) => {
+          return actions.order.create({
+            intent: "CAPTURE",
+            purchase_units: [
+              {
+                description: "some course",
+                amount: {
+                  currency_code: "MXN",
+                  value: 1,
+                },
+              },
+            ],
+          });
+        },
+        onApprove: async (data, acitons) => {
+          const order = await actions.order.capture();
+          console.log("order:", order);
+        },
+        onError: (err) => {
+          console.log("paypal error:", err);
+        },
+      })
+      .render(paypal.current);
+  };
 
-//   // const onApprove = (data, actions) => {
-//   //   return actions.order.capture();
-//   // };
+  useEffect(() => {
+    createPayPalOrder();
+  }, []);
 
-//   // const [{ isPending }] = usePayPalScriptReducer();
+  //   const initialOptions = {
+  //     "client-id": "KPDLDBZU2R4E2",
+  //     currency: "MXN",
+  //     intent: "capture",
+  //     "data-client-token": "abc123xyz==",
+  //   };
 
-//   const initialOptions = {
-//     "client-id": "KPDLDBZU2R4E2",
-//     currency: "MXN",
-//     intent: "capture",
-//     "data-client-token": "abc123xyz==",
-//   };
-
-//   return (
-//     <PayPalScriptProvider deferLoading={true} options={initialOptions}>
-//       {/* <PayPalButtons style={{ layout: "horizontal" }} /> */}
-//       {/* {isPending ? <div className="spinner" /> : null} */}
-//       <PayPalButtons />
-//     </PayPalScriptProvider>
-//   );
-// };
+  return <div ref={paypalRef}></div>;
+};

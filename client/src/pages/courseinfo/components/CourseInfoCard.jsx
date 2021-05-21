@@ -138,3 +138,5 @@ CourseInfoCard.propTypes = {
   title: string.isRequired,
   topics: array.isRequired,
 };
+
+CourseInfoCard.displayName = "CourseInfoCard";

@@ -155,3 +155,5 @@ export const MultipleOptionWithImageTable = React.memo(({ questions }) => {
 MultipleOptionWithImageTable.propTypes = {
   questions: array.isRequired,
 };
+
+MultipleOptionWithImageTable.displayName = "MultipleOptionWithImageTable";

@@ -94,3 +94,5 @@ TopicNameForm.propTypes = {
   formLabel: string,
   formInitialText: string,
 };
+
+TopicNameForm.displayName = "TopicNameForm";

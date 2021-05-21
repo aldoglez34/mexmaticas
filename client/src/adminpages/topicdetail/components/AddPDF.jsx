@@ -174,3 +174,5 @@ AddPDF.propTypes = {
   courseId: string.isRequired,
   topicId: string.isRequired,
 };
+
+AddPDF.displayName = "AddPDF";

@@ -126,3 +126,5 @@ export const HelpModalSM = React.memo(({ question }) => {
 HelpModalSM.propTypes = {
   question: object.isRequired,
 };
+
+HelpModalSM.displayName = "HelpModalSM";

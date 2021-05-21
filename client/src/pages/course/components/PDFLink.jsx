@@ -33,3 +33,5 @@ export const PDFLInk = React.memo(({ path, name, ...props }) => {
     )
   );
 });
+
+PDFLInk.displayName = "PDFLInk";

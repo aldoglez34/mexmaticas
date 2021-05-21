@@ -138,3 +138,5 @@ export const SimpleWithImageQuestionsTable = React.memo(({ questions }) => {
 SimpleWithImageQuestionsTable.propTypes = {
   questions: array.isRequired,
 };
+
+SimpleWithImageQuestionsTable.displayName = "SimpleWithImageQuestionsTable";

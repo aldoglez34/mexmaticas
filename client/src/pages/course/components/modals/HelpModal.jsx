@@ -118,3 +118,5 @@ HelpModal.propTypes = {
   courseName: string.isRequired,
   topic: string.isRequired,
 };
+
+HelpModal.displayName = "HelpModal";

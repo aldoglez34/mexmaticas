@@ -34,3 +34,5 @@ export const ImageFromFirebase = React.memo(
     );
   }
 );
+
+ImageFromFirebase.displayName = "ImageFromFirebase";

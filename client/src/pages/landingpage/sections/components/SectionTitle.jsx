@@ -35,3 +35,5 @@ SectionTitle.propTypes = {
   text: string.isRequired,
   title: string.isRequired,
 };
+
+SectionTitle.displayName = "SectionTitle";

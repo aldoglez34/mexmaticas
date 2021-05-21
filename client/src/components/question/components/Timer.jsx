@@ -19,3 +19,5 @@ export const Timer = React.memo(({ minutesLeft, secondsLeft }) => {
     </div>
   );
 });
+
+Timer.displayName = "Timer";

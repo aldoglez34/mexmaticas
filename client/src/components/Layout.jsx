@@ -40,3 +40,6 @@ export const StudentLayout = React.memo(({ children }) => {
 StudentLayout.propTypes = {
   children: node.isRequired,
 };
+
+Layout.displayName = "Layout";
+StudentLayout.displayName = "StudentLayout";

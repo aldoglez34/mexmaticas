@@ -35,3 +35,5 @@ IncorrectModal.propTypes = {
   setShowIncorrect: func.isRequired,
   showIncorrect: bool.isRequired,
 };
+
+IncorrectModal.displayName = "IncorrectModal";

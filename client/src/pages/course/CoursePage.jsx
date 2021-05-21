@@ -96,3 +96,5 @@ export const CoursePage = React.memo((props) => {
     </StudentLayout>
   );
 });
+
+CoursePage.displayName = "CoursePage";

@@ -46,3 +46,5 @@ EditQuestionModal.propTypes = {
   question: object.isRequired,
   text: string.isRequired,
 };
+
+EditQuestionModal.displayName = "EditQuestionModal";

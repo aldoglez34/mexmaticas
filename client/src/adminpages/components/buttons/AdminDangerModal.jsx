@@ -85,3 +85,5 @@ AdminDangerModal.propTypes = {
   modalText: string.isRequired,
   variant: oneOf(["transparent", "filled"]),
 };
+
+AdminDangerModal.displayName = "AdminDangerModal";

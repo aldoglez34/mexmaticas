@@ -121,3 +121,5 @@ export const SimpleQuestionTable = React.memo(({ questions }) => {
 SimpleQuestionTable.propTypes = {
   questions: array.isRequired,
 };
+
+SimpleQuestionTable.displayName = "SimpleQuestionTable";

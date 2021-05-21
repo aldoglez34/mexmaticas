@@ -89,3 +89,5 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
 DifficultyStars.propTypes = {
   difficulty: string.isRequired,
 };
+
+DifficultyStars.displayName = "DifficultyStars";

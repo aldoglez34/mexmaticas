@@ -121,3 +121,5 @@ TopicRewardForm.propTypes = {
   formLabel: string,
   formInitialText: string,
 };
+
+TopicRewardForm.displayName = "TopicRewardForm";

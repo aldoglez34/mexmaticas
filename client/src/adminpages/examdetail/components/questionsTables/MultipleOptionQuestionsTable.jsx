@@ -136,3 +136,5 @@ export const MultipleOptionQuestionsTable = React.memo(({ questions }) => {
 MultipleOptionQuestionsTable.propTypes = {
   questions: array.isRequired,
 };
+
+MultipleOptionQuestionsTable.displayName = "MultipleOptionQuestionsTable";

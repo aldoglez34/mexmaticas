@@ -39,3 +39,5 @@ AdminLayout.propTypes = {
   leftBarActive: string.isRequired,
   optionsDropdown: array,
 };
+
+AdminLayout.displayName = "AdminLayout";

@@ -12,3 +12,5 @@ export const QInstruction = React.memo(({ qInstruction }) => {
 QInstruction.propTypes = {
   qInstruction: string.isRequired,
 };
+
+QInstruction.displayName = "QInstruction";

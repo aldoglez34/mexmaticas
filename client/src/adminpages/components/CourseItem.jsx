@@ -32,3 +32,5 @@ CourseItem.propTypes = {
   _id: string.isRequired,
   isActive: bool.isRequired,
 };
+
+CourseItem.displayName = "CourseItem";

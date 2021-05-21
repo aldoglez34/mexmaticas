@@ -49,3 +49,5 @@ QMultipleChoice.propTypes = {
   getValueFromMultipleChoice: func.isRequired,
   choiceSelected: string,
 };
+
+QMultipleChoice.displayName = "QMultipleChoice";

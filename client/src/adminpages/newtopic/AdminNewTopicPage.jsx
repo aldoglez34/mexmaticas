@@ -288,3 +288,5 @@ export const AdminNewTopicPage = React.memo((props) => {
     </AdminLayout>
   );
 });
+
+AdminNewTopicPage.displayName = "AdminNewTopicPage";

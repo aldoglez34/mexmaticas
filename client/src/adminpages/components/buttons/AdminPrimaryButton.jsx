@@ -16,3 +16,5 @@ export const AdminPrimaryButton = React.memo(({ icon, ...props }) => {
 AdminPrimaryButton.propTypes = {
   icon: node.isRequired,
 };
+
+AdminPrimaryButton.displayName = "AdminPrimaryButton";

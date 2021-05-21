@@ -4,7 +4,7 @@ import GuestNavigation from "./GuestNavigation";
 import StudentNavigation from "./StudentNavigation";
 import AdminNavigation from "./AdminNavigation";
 
-const Navigation = React.memo(() => (
+const Navigation = () => (
   <AuthUserContext.Consumer>
     {(navigation) => {
       return navigation === "Student" ? (
@@ -16,6 +16,6 @@ const Navigation = React.memo(() => (
       );
     }}
   </AuthUserContext.Consumer>
-));
+);
 
 export default Navigation;

@@ -87,3 +87,5 @@ ResponseForm.propTypes = {
   msgId: string.isRequired,
   email: string,
 };
+
+ResponseForm.displayName = "ResponseForm";

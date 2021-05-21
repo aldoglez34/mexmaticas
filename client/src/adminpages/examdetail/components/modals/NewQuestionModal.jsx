@@ -45,3 +45,5 @@ export const NewQuestionModal = React.memo(({ Form, text }) => {
 NewQuestionModal.propTypes = {
   text: string.isRequired,
 };
+
+NewQuestionModal.displayName = "NewQuestionModal";

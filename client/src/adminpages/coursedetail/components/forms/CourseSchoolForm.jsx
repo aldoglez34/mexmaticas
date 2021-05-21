@@ -98,3 +98,5 @@ CourseSchoolForm.propTypes = {
   formLabel: string,
   formInitialText: string,
 };
+
+CourseSchoolForm.display = "CourseSchoolForm";

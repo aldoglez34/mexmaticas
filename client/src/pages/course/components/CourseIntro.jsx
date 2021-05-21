@@ -54,3 +54,5 @@ CourseIntro.propTypes = {
   rewards: array.isRequired,
   topics: array.isRequired,
 };
+
+CourseIntro.displayName = "CourseIntro";

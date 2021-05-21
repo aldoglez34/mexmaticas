@@ -23,3 +23,5 @@ QTechnicalInstruction.propTypes = {
   text: string,
   imageLink: string,
 };
+
+QTechnicalInstruction.displayName = "QTechnicalInstruction";

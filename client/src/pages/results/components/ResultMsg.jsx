@@ -42,3 +42,5 @@ export const ResultMsg = React.memo(({ grade }) => {
 ResultMsg.propTypes = {
   grade: number.isRequired,
 };
+
+ResultMsg.displayName = "ResultMsg";

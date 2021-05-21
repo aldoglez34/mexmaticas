@@ -79,3 +79,5 @@ export const MyMessages = React.memo(({ messages }) => {
 MyMessages.propTypes = {
   messages: array.isRequired,
 };
+
+MyMessages.displayName = "MyMessages";

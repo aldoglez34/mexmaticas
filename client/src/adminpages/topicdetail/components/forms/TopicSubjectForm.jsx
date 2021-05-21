@@ -110,3 +110,5 @@ TopicSubjectForm.propTypes = {
   courseId: string,
   topicId: string,
 };
+
+TopicSubjectForm.displayName = "TopicSubjectForm";

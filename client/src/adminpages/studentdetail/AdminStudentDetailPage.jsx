@@ -140,3 +140,5 @@ export const AdminStudentDetailPage = React.memo((props) => {
     <AdminSpinner />
   );
 });
+
+AdminStudentDetailPage.displayName = "AdminStudentDetailPage";

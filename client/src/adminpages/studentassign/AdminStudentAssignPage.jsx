@@ -76,3 +76,5 @@ export const AdminStudentAssignPage = React.memo((props) => {
     <AdminSpinner />
   );
 });
+
+AdminStudentAssignPage.display = "AdminStudentAssignPage";

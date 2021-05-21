@@ -300,3 +300,5 @@ export const AdminTopicDetailPage = React.memo((props) => {
     <AdminSpinner />
   );
 });
+
+AdminTopicDetailPage.displayName = "AdminTopicDetailPage";

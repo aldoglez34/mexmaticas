@@ -43,10 +43,8 @@ export const AdminExamDetailPage = React.memo((props) => {
   // questions
   const [simpleQuestions, setSimpleQuestions] = useState([]);
   const [simpleWithImageQuestions, setSimpleWithImageQuestions] = useState([]);
-  const [
-    simpleWithTwoAnswersQuestions,
-    setSimpleWithTwoAnswersQuestions,
-  ] = useState([]);
+  const [simpleWithTwoAnswersQuestions, setSimpleWithTwoAnswersQuestions] =
+    useState([]);
   const [imageWithTwoAnswers, setImageWithTwoAnswers] = useState([]);
   const [multipleOptionQuestions, setMultipleOptionQuestions] = useState([]);
   const [
@@ -54,10 +52,8 @@ export const AdminExamDetailPage = React.memo((props) => {
     setMultipleOptionWithImageQuestions,
   ] = useState([]);
   const [dichotomousQuestions, setDichotomousQuestions] = useState([]);
-  const [
-    dichotomousQuestionsWithImage,
-    setDichotomousQuestionsWithImage,
-  ] = useState([]);
+  const [dichotomousQuestionsWithImage, setDichotomousQuestionsWithImage] =
+    useState([]);
 
   // url params
   const courseId = props.routeProps.match.params.courseId;
@@ -322,3 +318,5 @@ export const AdminExamDetailPage = React.memo((props) => {
     <AdminSpinner />
   );
 });
+
+AdminExamDetailPage.displayName = "AdminExamDetailPage";

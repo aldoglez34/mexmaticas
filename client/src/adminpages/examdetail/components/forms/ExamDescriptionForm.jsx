@@ -91,3 +91,5 @@ ExamDescriptionForm.propTypes = {
   formInitialText: string,
   formLabel: string,
 };
+
+ExamDescriptionForm.displayName = "ExamDescriptionForm";

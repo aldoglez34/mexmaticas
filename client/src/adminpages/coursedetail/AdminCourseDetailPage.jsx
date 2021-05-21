@@ -193,3 +193,5 @@ export const AdminCourseDetailPage = React.memo((props) => {
     <AdminSpinner />
   );
 });
+
+AdminCourseDetailPage.displayName = "AdminCourseDetailPage";

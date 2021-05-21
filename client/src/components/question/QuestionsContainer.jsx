@@ -411,3 +411,5 @@ QuestionsContainer.propTypes = {
   questions: array.isRequired,
   isFreestyle: bool,
 };
+
+QuestionsContainer.displayName = "QuestionsContainer";

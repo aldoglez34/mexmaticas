@@ -49,3 +49,5 @@ AdminModal.propTypes = {
   formLabel: string,
   icon: node,
 };
+
+AdminModal.displayName = "AdminModal";

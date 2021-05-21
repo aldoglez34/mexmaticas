@@ -85,3 +85,5 @@ TopNav.propTypes = {
   buttons: node,
   optionsDropdown: array,
 };
+
+TopNav.displayName = "TopNav";

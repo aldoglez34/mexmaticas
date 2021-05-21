@@ -71,3 +71,5 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
     </Nav>
   );
 });
+
+LeftNav.displayName = "LeftNav";

@@ -85,3 +85,5 @@ Topic.propTypes = {
   courseName: string.isRequired,
   topic: object.isRequired,
 };
+
+Topic.displayName = "Topic";

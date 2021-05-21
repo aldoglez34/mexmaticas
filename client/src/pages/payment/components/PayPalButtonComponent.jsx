@@ -1,46 +1,66 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
+import ReactDOM from "react-dom";
+import { number, string } from "prop-types";
+import API from "../../../utils/API";
+import { useSelector } from "react-redux";
 
-export const PayPalButtonComponent = () => {
-  const paypalRef = useRef();
+const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
 
-  const createPayPalOrder = () => {
-    return window.paypal
-      .Buttons({
-        createOrder: (data, actions, err) => {
-          return actions.order.create({
-            intent: "CAPTURE",
-            purchase_units: [
-              {
-                description: "some course",
-                amount: {
-                  currency_code: "MXN",
-                  value: 1,
-                },
-              },
-            ],
-          });
-        },
-        onApprove: async (data, acitons) => {
-          const order = await actions.order.capture();
-          console.log("order:", order);
-        },
-        onError: (err) => {
-          console.log("paypal error:", err);
-        },
-      })
-      .render(paypal.current);
+export const PayPalButtonComponent = React.memo(({ courseId, price }) => {
+  const student = useSelector((state) => state.student);
+
+  const addCourseToUser = async () => {
+    try {
+      await API.buyCourse({ courseId, studentId: student._id });
+      alert("Has comprado el curso satisfactoriamente.");
+      window.location.href = "/";
+    } catch (err) {
+      console.log(err);
+      alert(
+        "Ocurrió un error con la aplicación, ponte en contacto con el maestro."
+      );
+    }
   };
 
-  useEffect(() => {
-    createPayPalOrder();
-  }, []);
+  const createOrder = (data, actions) => {
+    console.log("creating order...", data);
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: String(price),
+            currency_code: "MXN",
+          },
+        },
+      ],
+    });
+  };
 
-  //   const initialOptions = {
-  //     "client-id": "KPDLDBZU2R4E2",
-  //     currency: "MXN",
-  //     intent: "capture",
-  //     "data-client-token": "abc123xyz==",
-  //   };
+  const onApprove = (data, actions) => {
+    console.log("data on approve:", data);
+    return actions.order.capture().then((res) => {
+      console.log("after payment, response:", res);
+      addCourseToUser();
+    });
+  };
 
-  return <div ref={paypalRef}></div>;
+  const onError = (err) => {
+    console.log("paypal error:", err);
+    return alert("Ocurrió un error al efectuar tu pago.");
+  };
+
+  return (
+    <PayPalButton
+      createOrder={(data, actions) => createOrder(data, actions)}
+      onApprove={(data, actions) => onApprove(data, actions)}
+      onError={(err) => onError(err)}
+    />
+  );
+});
+
+PayPalButtonComponent.propTypes = {
+  courseId: string.isRequired,
+  price: number.isRequired,
 };
+
+PayPalButtonComponent.displayName = "PayPalButtonComponent";

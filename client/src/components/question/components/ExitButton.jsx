@@ -45,3 +45,5 @@ export const ExitButton = React.memo(({ url }) => {
 ExitButton.propTypes = {
   url: string.isRequired,
 };
+
+ExitButton.displayName = "ExitButton";

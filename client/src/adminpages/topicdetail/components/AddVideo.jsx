@@ -134,3 +134,5 @@ AddVideo.propTypes = {
   courseId: string.isRequired,
   topicId: string.isRequired,
 };
+
+AddVideo.displayName = "AddVideo";

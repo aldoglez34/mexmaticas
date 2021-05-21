@@ -91,3 +91,5 @@ CoursePriceForm.propTypes = {
   formLabel: string,
   formInitialText: number,
 };
+
+CoursePriceForm.displayName = "CoursePriceForm";

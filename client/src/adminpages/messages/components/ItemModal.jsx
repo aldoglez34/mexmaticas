@@ -200,3 +200,5 @@ export const ItemModal = React.memo(({ message }) => {
 ItemModal.propTypes = {
   message: object.isRequired,
 };
+
+ItemModal.displayName = "ItemModal";

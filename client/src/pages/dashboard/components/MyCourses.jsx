@@ -16,3 +16,5 @@ export const MyCourses = React.memo(({ courses }) => {
 MyCourses.propTypes = {
   courses: array.isRequired,
 };
+
+MyCourses.displayName = "MyCourses";

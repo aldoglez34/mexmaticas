@@ -98,3 +98,5 @@ TopicFreestyleTimerForm.propTypes = {
   formLabel: string,
   formInitialText: number,
 };
+
+TopicFreestyleTimerForm.displayName = "TopicFreestyleTimerForm";

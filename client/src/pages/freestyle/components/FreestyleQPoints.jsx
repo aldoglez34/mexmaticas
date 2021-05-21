@@ -17,3 +17,5 @@ export const FreestyleQPoints = React.memo(({ score }) => {
 FreestyleQPoints.propTypes = {
   score: number.isRequired,
 };
+
+FreestyleQPoints.displayName = "FreestyleQPoints";

@@ -77,3 +77,5 @@ export const DashboardCourseCard = React.memo(({ course }) => {
 DashboardCourseCard.propTypes = {
   course: object.isRequired,
 };
+
+DashboardCourseCard.displayName = "DashboardCourseCard";

@@ -90,3 +90,5 @@ CourseActiveForm.propTypes = {
   formLabel: string,
   formInitialText: oneOfType([string, bool]),
 };
+
+CourseActiveForm.displayName = "CourseActiveForm";

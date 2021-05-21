@@ -78,3 +78,5 @@ export const AdminStudentHistoryPage = React.memo((props) => {
     <AdminSpinner />
   );
 });
+
+AdminStudentHistoryPage.displayName = "AdminStudentHistoryPage";

@@ -94,3 +94,5 @@ CourseSummaryForm.propTypes = {
   formLabel: string,
   formInitialText: string,
 };
+
+CourseSummaryForm.displayName = "CourseSummaryForm";

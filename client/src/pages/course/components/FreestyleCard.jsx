@@ -106,3 +106,5 @@ FreestyleCard.propTypes = {
   freestyle: object.isRequired,
   topicName: string.isRequired,
 };
+
+FreestyleCard.displayName = "FreestyleCard";

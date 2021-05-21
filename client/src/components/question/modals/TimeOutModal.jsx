@@ -23,3 +23,5 @@ TimeOutModal.propTypes = {
   showTimeOut: bool,
   url: string,
 };
+
+TimeOutModal.displayName = "TimeOutModal";

@@ -94,3 +94,5 @@ ExamQCounterForm.propTypes = {
   formInitialText: number,
   formLabel: string,
 };
+
+ExamQCounterForm.displayName = "ExamQCounterForm";

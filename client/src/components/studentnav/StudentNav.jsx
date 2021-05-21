@@ -24,3 +24,5 @@ export const StudentNav = React.memo(() => {
     </div>
   );
 });
+
+StudentNav.displayName = "StudentNav";

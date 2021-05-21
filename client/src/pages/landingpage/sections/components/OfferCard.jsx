@@ -23,3 +23,5 @@ OfferCard.propTypes = {
   title: string.isRequired,
   text: string.isRequired,
 };
+
+OfferCard.displayName = "OfferCard";

@@ -61,3 +61,5 @@ export const MedalObtained = React.memo(({ reward }) => {
 MedalObtained.propTypes = {
   reward: object.isRequired,
 };
+
+MedalObtained.displayName = "MedalObtained";

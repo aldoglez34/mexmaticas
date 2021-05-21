@@ -24,3 +24,5 @@ StudentItem.propTypes = {
   email: string.isRequired,
   _id: string.isRequired,
 };
+
+StudentItem.displayName = "StudentItem";

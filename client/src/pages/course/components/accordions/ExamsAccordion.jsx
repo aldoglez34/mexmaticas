@@ -199,3 +199,5 @@ ExamsAccordion.propTypes = {
   freestyle: object.isRequired,
   reward: object.isRequired,
 };
+
+ExamsAccordion.displayName = "ExamsAccordion";

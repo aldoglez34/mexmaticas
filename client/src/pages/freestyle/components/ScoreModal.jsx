@@ -28,3 +28,5 @@ ScoreModal.propTypes = {
   show: bool.isRequired,
   url: string.isRequired,
 };
+
+ScoreModal.displayName = "ScoreModal";

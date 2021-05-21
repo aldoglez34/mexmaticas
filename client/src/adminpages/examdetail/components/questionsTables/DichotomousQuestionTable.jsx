@@ -136,3 +136,5 @@ export const DichotomousQuestionTable = React.memo(({ questions }) => {
 DichotomousQuestionTable.propTypes = {
   questions: array.isRequired,
 };
+
+DichotomousQuestionTable.displayName = "DichotomousQuestionTable";

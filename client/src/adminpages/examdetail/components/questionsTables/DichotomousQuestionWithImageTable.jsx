@@ -155,3 +155,6 @@ export const DichotomousQuestionWithImageTable = React.memo(({ questions }) => {
 DichotomousQuestionWithImageTable.propTypes = {
   questions: array.isRequired,
 };
+
+DichotomousQuestionWithImageTable.displayName =
+  "DichotomousQuestionWithImageTable";

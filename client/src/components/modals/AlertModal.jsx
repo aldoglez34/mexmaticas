@@ -26,3 +26,5 @@ AlertModal.propTypes = {
   image: string.isRequired,
   show: bool.isRequired,
 };
+
+AlertModal.displayName = "AlertModal";

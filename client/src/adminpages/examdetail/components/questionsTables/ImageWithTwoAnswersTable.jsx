@@ -149,3 +149,5 @@ export const ImageWithTwoAnswersTable = React.memo(({ questions }) => {
 ImageWithTwoAnswersTable.propTypes = {
   questions: array.isRequired,
 };
+
+ImageWithTwoAnswersTable.displayName = "ImageWithTwoAnswersTable";

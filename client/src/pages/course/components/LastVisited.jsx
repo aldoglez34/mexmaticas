@@ -14,3 +14,5 @@ export const LastVisited = React.memo(({ date }) => {
     </span>
   );
 });
+
+LastVisited.displayName = "LastVisited";

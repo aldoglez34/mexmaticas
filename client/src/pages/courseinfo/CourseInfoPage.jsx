@@ -99,3 +99,5 @@ export const CourseInfoPage = React.memo((props) => {
     </Layout>
   );
 });
+
+CourseInfoPage.displayName = "CourseInfoPage";

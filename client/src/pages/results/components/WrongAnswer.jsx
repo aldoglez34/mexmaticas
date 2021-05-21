@@ -97,4 +97,6 @@ WrongAnswer.propTypes = {
   userAnswers: object.isRequired,
 };
 
+WrongAnswer.displayName = "WrongAnswer";
+
 export default WrongAnswer;

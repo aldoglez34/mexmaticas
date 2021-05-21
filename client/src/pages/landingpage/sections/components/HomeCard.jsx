@@ -44,3 +44,5 @@ HomeCard.propTypes = {
   courses: array.isRequired,
   link: string.isRequired,
 };
+
+HomeCard.displayName = "HomeCard";

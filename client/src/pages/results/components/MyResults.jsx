@@ -69,3 +69,5 @@ export const MyResults = React.memo(({ results }) => {
 MyResults.propTypes = {
   results: array.isRequired,
 };
+
+MyResults.displayName = "MyResults";

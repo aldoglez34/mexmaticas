@@ -40,3 +40,5 @@ Grade.propTypes = {
   grade: number.isRequired,
   incorrects: number.isRequired,
 };
+
+Grade.displayName = "Grade";

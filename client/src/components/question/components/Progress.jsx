@@ -22,3 +22,5 @@ Progress.propTypes = {
   current: number.isRequired,
   total: number.isRequired,
 };
+
+Progress.displayName = "Progress";

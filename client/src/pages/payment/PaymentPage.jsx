@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
+import { ReactPayPal } from "./components/ReactPayPal";
 
 export const PaymentPage = React.memo((props) => {
   const [course, setCourse] = useState();
@@ -32,17 +33,10 @@ export const PaymentPage = React.memo((props) => {
             marginBottom: "80px",
           }}
         >
-          {console.log(course)}
           <BackButton to={`/courses/${school}`} />
           <Container>
             <Row>
-              <Col md={{ span: 5, offset: 4 }}>
-                <small className="d-block mt-4">
-                  *Por el momento sólo contamos con pagos vía PayPal.
-                </small>
-                <small className="d-block  mb-2">
-                  *Contacta al administrador para conocer más formas de pago.
-                </small>
+              <Col md={{ span: 5, offset: 4 }} className="p-0">
                 <Image className="mb-4" src="/images/paypal.png" fluid />
                 <div className="mb-3">
                   <span className="lead">Curso:</span>
@@ -53,9 +47,17 @@ export const PaymentPage = React.memo((props) => {
                   <h2>{`$${course?.price} MXN`}</h2>
                 </div>
                 <PayPalButtonComponent
-                  price={course.price}
                   courseId={courseId}
+                  coursePrice={course.price}
                 />
+                <h3>¿Necesitas ayuda?</h3>
+                <p>
+                  Para soliticar ayuda, incluyendo pagos en efectivo, contacta
+                  al M.C. Luis Rodrigo López Utrera al 229 909 1675.
+                </p>
+                <h3>¿Por qué PayPal?</h3>
+                <p>PayPal es más cómodo, más seguro y más protegido.</p>
+                {/* <ReactPayPal courseId={courseId} coursePrice={course.price} /> */}
               </Col>
             </Row>
           </Container>

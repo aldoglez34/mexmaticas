@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
 
-export const PayPalButtonComponent = React.memo(({ courseId, price }) => {
+export const PayPalButtonComponent = React.memo(({ courseId, coursePrice }) => {
   const student = useSelector((state) => state.student);
 
   const addCourseToUser = async () => {
@@ -22,45 +22,57 @@ export const PayPalButtonComponent = React.memo(({ courseId, price }) => {
     }
   };
 
-  const createOrder = (data, actions) => {
-    console.log("creating order...", data);
+  const handleCreateOrder = (data, actions) => {
+    console.log("creating order");
     return actions.order.create({
       purchase_units: [
         {
           amount: {
-            value: String(price),
+            value: String(coursePrice),
             currency_code: "MXN",
+          },
+          payee: {
+            email_address: student.email,
           },
         },
       ],
     });
   };
 
-  const onApprove = (data, actions) => {
-    console.log("data on approve:", data);
+  const handleOnApprove = (data, actions) => {
+    console.log("approved!", data);
     return actions.order.capture().then((res) => {
       console.log("after payment, response:", res);
       addCourseToUser();
     });
   };
 
-  const onError = (err) => {
+  const hadnleOnError = (err) => {
     console.log("paypal error:", err);
-    return alert("Ocurrió un error al efectuar tu pago.");
+    return alert(
+      "Ocurrió un error al efectuar tu pago. Ponte en contacto con el maestro."
+    );
   };
 
   return (
     <PayPalButton
-      createOrder={(data, actions) => createOrder(data, actions)}
-      onApprove={(data, actions) => onApprove(data, actions)}
-      onError={(err) => onError(err)}
+      createOrder={(data, actions) => handleCreateOrder(data, actions)}
+      onApprove={(data, actions) => handleOnApprove(data, actions)}
+      onError={(err) => hadnleOnError(err)}
+      style={{
+        color: "gold",
+        label: "pay",
+        layout: "vertical",
+        shape: "rect",
+        tagline: false,
+      }}
     />
   );
 });
 
 PayPalButtonComponent.propTypes = {
   courseId: string.isRequired,
-  price: number.isRequired,
+  coursePrice: number.isRequired,
 };
 
 PayPalButtonComponent.displayName = "PayPalButtonComponent";

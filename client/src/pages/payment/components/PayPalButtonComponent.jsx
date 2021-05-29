@@ -42,8 +42,8 @@ export const PayPalButtonComponent = React.memo(({ courseId, coursePrice }) => {
   const handleOnApprove = (data, actions) => {
     console.log("approved!", data);
     return actions.order.capture().then((res) => {
-      console.log("after payment, response:", res);
-      addCourseToUser();
+      console.log("after payment successful, response:", res);
+      // addCourseToUser();
     });
   };
 

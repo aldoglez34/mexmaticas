@@ -18,6 +18,7 @@ export const AdminNewCoursePage = () => {
       .required("Requerido"),
     description: yup.string().required("Requerido"),
     summary: yup.string().required("Requerido"),
+    paypalId: yup.string(),
     price: yup
       .number()
       .positive("El número debe ser mayor a 1")
@@ -40,6 +41,7 @@ export const AdminNewCoursePage = () => {
                 school: "",
                 description: "",
                 summary: "",
+                paypalId: "",
                 price: "",
               }}
               validationSchema={yupschema}
@@ -117,6 +119,27 @@ export const AdminNewCoursePage = () => {
                       <ErrorMessage
                         className="text-danger"
                         name="school"
+                        component="div"
+                      />
+                    </Col>
+                  </Form.Row>
+                  {/* paypal id */}
+                  <Form.Row className="mt-3">
+                    <Col>
+                      <Form.Label>PayPal ID</Form.Label>
+                      <Form.Control
+                        maxLength="250"
+                        type="text"
+                        name="paypalId"
+                        value={values.paypalId}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isValid={touched.paypalId && !errors.paypalId}
+                        isInvalid={touched.paypalId && !!errors.paypalId}
+                      />
+                      <ErrorMessage
+                        className="text-danger"
+                        name="paypalId"
                         component="div"
                       />
                     </Col>

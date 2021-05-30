@@ -39,7 +39,7 @@ export const AdminStudentsPage = () => {
                   {students.map((s) => (
                     <StudentItem
                       key={s._id}
-                      name={s.name + " " + s.firstSurname}
+                      name={`${s.name} ${s.firstSurname}`}
                       email={s.email}
                       _id={s._id}
                     />

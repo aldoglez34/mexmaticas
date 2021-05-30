@@ -8,6 +8,7 @@ import {
   CourseActiveForm,
   CourseDescriptionForm,
   CourseNameForm,
+  CoursePayPalIdForm,
   CoursePriceForm,
   CourseSchoolForm,
   CourseSummaryForm,
@@ -45,6 +46,28 @@ export const AdminCourseDetailPage = React.memo((props) => {
   return course ? (
     <AdminLayout leftBarActive="Cursos" backBttn="/admin/courses">
       <Container fluid>
+        {/* course id */}
+        <Row>
+          <Col>
+            <span className="text-muted">ID</span>
+            <h4 className="mb-3">{course._id}</h4>
+          </Col>
+        </Row>
+        {/* paypal id */}
+        <Row>
+          <Col>
+            <span className="text-muted">PayPal ID</span>
+            <h4>
+              {course.paypalId ? course.paypalId : "-"}
+              <AdminModal
+                Form={CoursePayPalIdForm}
+                formInitialText={course.paypalId}
+                formLabel="PayPal ID"
+                icon={<i className="fas fa-pen-alt" />}
+              />
+            </h4>
+          </Col>
+        </Row>
         {/* course name */}
         <Row>
           <Col>

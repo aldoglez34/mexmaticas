@@ -11,6 +11,9 @@ export default {
 
   t_newCourse: (data) => axios.post("/teacherAPI/courses/new", data),
 
+  t_updateCoursePaypalId: (data) =>
+    axios.put("/teacherAPI/courses/update/paypalId", data),
+
   t_updateCourseName: (data) =>
     axios.put("/teacherAPI/courses/update/name", data),
 

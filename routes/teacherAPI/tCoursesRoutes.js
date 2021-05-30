@@ -30,7 +30,7 @@ router.get("/:courseId", function (req, res) {
 // t_newCourse
 // matches with /teacherAPI/courses/new
 router.post("/new", function (req, res) {
-  const { name, school, description, price, summary } = req.body;
+  const { description, name, paypalId, price, school, summary } = req.body;
 
   // find all courses from the same school first
   model.Course.find({
@@ -49,10 +49,11 @@ router.post("/new", function (req, res) {
           .send("Un curso con este nombre ya existe en este nivel educativo.");
       } else {
         model.Course.create({
-          name: name,
-          school: school,
-          price: price,
           description: description,
+          name: name,
+          paypalId: paypalId,
+          price: price,
+          school: school,
           topicsSummary: summary.split(","),
         })
           .then((newCourse) => {
@@ -63,6 +64,21 @@ router.post("/new", function (req, res) {
             res.status(422).send("Ocurrió un error.");
           });
       }
+    })
+    .catch((err) => {
+      console.log("@error", err);
+      res.status(422).send("Ocurrió un error.");
+    });
+});
+
+// t_updateCoursePaypalId
+// matches with /teacherAPI/topics/update/paypalId
+router.put("/update/paypalId", function (req, res) {
+  const { courseId, newPaypalId } = req.body;
+
+  model.Course.findByIdAndUpdate(courseId, { paypalId: newPaypalId })
+    .then(() => {
+      res.json("PayPal ID del curso actualizado satisfactoriamente.");
     })
     .catch((err) => {
       console.log("@error", err);

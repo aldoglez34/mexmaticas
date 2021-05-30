@@ -41,7 +41,7 @@ export const PaymentPage = React.memo((props) => {
   /* paypal functions */
   const paypalSubscribe = (data, actions) => {
     return actions.subscription.create({
-      plan_id: "P-0H824406BX451241NMCZQYCA",
+      plan_id: course.paypalId,
     });
   };
   const paypalOnError = (err) => {
@@ -59,7 +59,7 @@ export const PaymentPage = React.memo((props) => {
 
   return (
     <Layout backgroundColor="white">
-      {course ? (
+      {course && course.paypalId ? (
         <Container
           style={{
             paddingTop: "40px",

@@ -56,7 +56,7 @@ export const ExamsAccordion = React.memo(
                   <Card.Header style={{ backgroundColor: "#e7edee" }}>
                     <Accordion.Toggle
                       as={Button}
-                      className="p-0"
+                      className="p-0 text-left"
                       eventKey={idx}
                       style={{ boxShadow: "none", textDecoration: "none" }}
                       variant="link"

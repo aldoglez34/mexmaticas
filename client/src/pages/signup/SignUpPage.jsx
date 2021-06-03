@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "../../components/Layout";
-import { Container, Row, Col } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { SignUpForm } from "./components";
 import "./signuppage.scss";
 
@@ -23,6 +23,15 @@ export const SignUpPage = () => {
           </Col>
           <Col lg={6} id="su_rightCol">
             <SignUpForm />
+            <hr className="mt-4" />
+            <strong>O inicia sesión con las siguiente cuentas</strong>
+            <Row>
+              <Col>
+                <Button variant="outline-dark">Facebook</Button>
+                <Button variant="outline-dark">Google</Button>
+                <Button variant="outline-dark">Apple</Button>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

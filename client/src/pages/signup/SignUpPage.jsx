@@ -25,13 +25,18 @@ export const SignUpPage = () => {
             <SignUpForm />
             <hr className="mt-4" />
             <strong>O inicia sesión con las siguiente cuentas</strong>
-            <Row>
-              <Col>
-                <Button variant="outline-dark">Facebook</Button>
-                <Button variant="outline-dark">Google</Button>
-                <Button variant="outline-dark">Apple</Button>
-              </Col>
-            </Row>
+            <div className="mt-2">
+              <Button className="d-block" variant="outline-dark">
+                Facebook
+              </Button>
+              <Button className="d-block mt-2" variant="outline-dark">
+                <i className="fab fa-google mr-2" />
+                Google
+              </Button>
+              <Button className="d-block mt-2" variant="outline-dark">
+                Apple
+              </Button>
+            </div>
           </Col>
         </Row>
       </Container>

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const model = require("../../models");
+const moment = require("moment");
 
 // t_fetchMessages()
 // matches with /teacherAPI/messages/all
@@ -38,7 +39,7 @@ router.put("/respond", function (req, res) {
   model.Message.findByIdAndUpdate(msgId, {
     response: body,
     answered: true,
-    respondedAt: Date.now(),
+    respondedAt: moment().format(),
   })
     .then(() => {
       // after responding, notify student that a new message have been posted

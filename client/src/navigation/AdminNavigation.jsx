@@ -1,10 +1,12 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import {
+  AdminClassrooms,
   AdminCourseDetailPage,
   AdminCoursesPage,
   AdminExamDetailPage,
   AdminMessagesPage,
+  AdminNewClassroom,
   AdminNewCoursePage,
   AdminNewTopicPage,
   AdminStudentAssignPage,
@@ -17,6 +19,9 @@ import {
 export default () => {
   return (
     <Switch>
+      {/* ================= CLASSROOMS ================= */}
+      <Route exact path="/admin/classrooms" component={AdminClassrooms} />
+
       {/* ================= COURSES ================= */}
       <Route exact path="/admin/courses" component={AdminCoursesPage} />
       <Route

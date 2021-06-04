@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 
 const schema = new Schema({
   source: {
@@ -44,7 +45,7 @@ const schema = new Schema({
   },
   sentAt: {
     type: Date,
-    default: Date.now(),
+    default: moment().format(),
   },
   respondedAt: {
     type: Date,

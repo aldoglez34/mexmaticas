@@ -12,7 +12,7 @@ export const StudentItem = React.memo(({ name, email, _id }) => {
     >
       <span className="studentitemtext">{name}</span>
       <span>
-        <i className="fas fa-at mr-1" />
+        <i className="fas fa-user-graduate mr-2" />
         {email}
       </span>
     </ListGroup.Item>

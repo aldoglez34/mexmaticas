@@ -26,7 +26,7 @@ export const AdminMessagesPage = () => {
       });
   }, [dispatch]);
 
-  const filterProducts = (criteria) => {
+  const filterMessages = (criteria) => {
     switch (criteria) {
       case "New":
         setFilter(criteria === filter ? null : criteria);
@@ -51,7 +51,7 @@ export const AdminMessagesPage = () => {
         active={filter === "New" ? true : false}
         variant="outline-light"
         className="shadow-sm"
-        onClick={() => filterProducts("New")}
+        onClick={() => filterMessages("New")}
       >
         Nuevos
       </Button>
@@ -60,7 +60,7 @@ export const AdminMessagesPage = () => {
         active={filter === "Inicio" ? true : false}
         variant="outline-light"
         className="shadow-sm ml-2"
-        onClick={() => filterProducts("Inicio")}
+        onClick={() => filterMessages("Inicio")}
       >
         Inicio
       </Button>
@@ -69,7 +69,7 @@ export const AdminMessagesPage = () => {
         active={filter === "Tema" ? true : false}
         variant="outline-light"
         className="shadow-sm ml-2"
-        onClick={() => filterProducts("Tema")}
+        onClick={() => filterMessages("Tema")}
       >
         Tema
       </Button>
@@ -78,7 +78,7 @@ export const AdminMessagesPage = () => {
         active={filter === "Pregunta" ? true : false}
         variant="outline-light"
         className="shadow-sm ml-2"
-        onClick={() => filterProducts("Pregunta")}
+        onClick={() => filterMessages("Pregunta")}
       >
         Pregunta
       </Button>
@@ -86,7 +86,7 @@ export const AdminMessagesPage = () => {
   );
 
   return filtered ? (
-    <AdminLayout title="Mensajes" leftBarActive="Mensajes" buttons={filters}>
+    <AdminLayout leftBarActive="Mensajes" buttons={filters}>
       <Container fluid>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>
@@ -102,7 +102,7 @@ export const AdminMessagesPage = () => {
                 </ListGroup>
               </>
             ) : (
-              <div className="text-center mt-4">No hay mensajes</div>
+              <div className="text-center mt-4">No hay mensajes.</div>
             )}
           </Col>
         </Row>

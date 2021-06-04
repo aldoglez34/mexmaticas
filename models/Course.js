@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 
 const schema = new Schema({
   paypalId: {
@@ -51,7 +52,7 @@ const schema = new Schema({
             },
             username: { type: String },
             score: { type: Number, required: true },
-            date: { type: Date, default: Date.now() },
+            date: { type: Date, default: moment().format() },
           },
         ],
       },
@@ -73,7 +74,7 @@ const schema = new Schema({
   ],
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: moment().format(),
   },
 });
 

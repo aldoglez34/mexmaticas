@@ -49,10 +49,21 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
         active={leftBarActive === "Mensajes" ? true : false}
       >
         <i
-          className="fas fa-envelope-open-text"
+          className="fas fa-envelope"
           style={{ width: "26px", textAlign: "center" }}
         />
         <span className="ml-1">Mensajes</span>
+      </Nav.Link>
+      <Nav.Link
+        className="navLinkStyle"
+        href="/admin/classrooms"
+        active={leftBarActive === "Salones" ? true : false}
+      >
+        <i
+          className="fas fa-chalkboard"
+          style={{ width: "26px", textAlign: "center" }}
+        />
+        <span className="ml-1">Salones</span>
       </Nav.Link>
       <div className="mt-auto">
         <Button

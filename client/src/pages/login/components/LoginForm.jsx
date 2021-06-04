@@ -80,15 +80,19 @@ export const LoginForm = () => {
             <Form.Group as={Col}>
               <Form.Label>
                 <strong>Correo</strong>
+                <strong className="ml-1 text-danger" title="Requerido">
+                  *
+                </strong>
               </Form.Label>
               <Form.Control
-                maxLength="50"
-                type="email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
                 isValid={touched.email && !errors.email}
+                maxLength="50"
+                name="email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                placeholder="ejemplo@email.com"
+                type="email"
+                value={values.email}
               />
               <ErrorMessage
                 className="text-danger"
@@ -101,6 +105,9 @@ export const LoginForm = () => {
             <Form.Group as={Col}>
               <Form.Label>
                 <strong>Contraseña</strong>
+                <strong className="ml-1 text-danger" title="Requerido">
+                  *
+                </strong>
               </Form.Label>
               <Form.Control
                 maxLength="25"
@@ -119,12 +126,19 @@ export const LoginForm = () => {
             </Form.Group>
           </Form.Row>
           <Button
-            className="shadow-sm mt-4 genericButton"
-            type="submit"
+            className="shadow-sm mt-2 genericButton"
             disabled={isSubmitting}
+            size="lg"
+            type="submit"
+            block
           >
             Entrar
           </Button>
+          <div className="text-right mt-2">
+            <a className="text-success" href="#">
+              <small>¿Olvidaste tu contraseña?</small>
+            </a>
+          </div>
         </Form>
       )}
     </Formik>

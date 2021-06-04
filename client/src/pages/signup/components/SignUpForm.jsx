@@ -120,14 +120,14 @@ export const SignUpForm = () => {
                 </strong>
               </Form.Label>
               <Form.Control
-                maxLength="50"
-                placeholder="ejemplo@ejemplo.com"
-                type="email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
                 isValid={touched.email && !errors.email}
+                maxLength="50"
+                name="email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                placeholder="ejemplo@email.com"
+                type="email"
+                value={values.email}
               />
               <ErrorMessage
                 className="text-danger"
@@ -146,7 +146,6 @@ export const SignUpForm = () => {
               </Form.Label>
               <Form.Control
                 maxLength="50"
-                // placeholder="Apellido paterno"
                 type="text"
                 name="name"
                 value={values.name}
@@ -171,7 +170,6 @@ export const SignUpForm = () => {
               </Form.Label>
               <Form.Control
                 maxLength="50"
-                // placeholder="Apellido paterno"
                 type="text"
                 name="firstSurname"
                 value={values.firstSurname}
@@ -194,7 +192,6 @@ export const SignUpForm = () => {
               </Form.Label>
               <Form.Control
                 maxLength="50"
-                // placeholder="Apellido paterno"
                 type="text"
                 name="secondSurname"
                 value={values.secondSurname}
@@ -223,7 +220,6 @@ export const SignUpForm = () => {
               </Form.Label>
               <Form.Control
                 maxLength="25"
-                // placeholder="Apellido paterno"
                 type="password"
                 name="password"
                 value={values.password}
@@ -239,9 +235,11 @@ export const SignUpForm = () => {
             </Form.Group>
           </Form.Row>
           <Button
-            className="shadow-sm mt-3 genericButton"
-            type="submit"
+            block
+            className="shadow-sm mt-2 genericButton"
             disabled={isSubmitting}
+            size="lg"
+            type="submit"
           >
             Registrarme
           </Button>

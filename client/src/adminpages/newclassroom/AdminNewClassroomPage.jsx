@@ -7,7 +7,7 @@ import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
-export const AdminNewClassroom = () => {
+export const AdminNewClassroomPage = () => {
   const dispatch = useDispatch();
 
   const yupschema = yup.object({
@@ -150,6 +150,7 @@ export const AdminNewClassroom = () => {
                     <Button
                       variant="dark"
                       type="submit"
+                      className="shadow-sm"
                       disabled={isSubmitting}
                     >
                       Crear

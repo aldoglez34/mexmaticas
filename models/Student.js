@@ -40,6 +40,12 @@ const schema = new Schema({
       ref: "Exam",
     },
   ],
+  classrooms: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Classroom",
+    },
+  ],
   attempts: [
     {
       exam: {

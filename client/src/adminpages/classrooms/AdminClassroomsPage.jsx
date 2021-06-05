@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminSpinner } from "../components";
-import { CourseItem } from "./components";
+import { ClassroomItem } from "./components";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
-export const AdminCoursesPage = () => {
+export const AdminClassroomsPage = () => {
   const dispatch = useDispatch();
 
-  const [courses, setCourses] = useState();
+  const [classrooms, setClassrooms] = useState();
   const [filtered, setFiltered] = useState();
   const [filter, setFilter] = useState();
 
   useEffect(() => {
-    dispatch(setTitle("Cursos"));
+    dispatch(setTitle("Salones"));
     //
-    TeacherAPI.t_fetchCourses()
+    TeacherAPI.t_fetchClassrooms()
       .then((res) => {
-        const rawCourses = res.data;
-        const sortedCourses = rawCourses
+        // ordering classrooms by school level
+        const rawClassrooms = res.data;
+
+        const sortedClassrooms = rawClassrooms
           .reduce((acc, cv) => {
             let orderNumber;
             switch (cv.school) {
@@ -43,59 +45,59 @@ export const AdminCoursesPage = () => {
           }, [])
           .sort((a, b) => a.orderNumber - b.orderNumber);
         //
-        setCourses(sortedCourses);
-        setFiltered(sortedCourses);
+        setClassrooms(sortedClassrooms);
+        setFiltered(sortedClassrooms);
       })
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
-  const filterCourses = (criteria) => {
+  const filterClassrooms = (criteria) => {
     setFilter(criteria === filter ? null : criteria);
     setFiltered(
       criteria === filter
-        ? courses
-        : courses.filter((c) => c.school === criteria)
+        ? classrooms
+        : classrooms.filter((c) => c.school === criteria)
     );
   };
 
   const filters = (
     <div className="d-flex">
       <Button
-        disabled={courses ? false : true}
+        disabled={classrooms ? false : true}
         active={filter === "Primaria" ? true : false}
         variant="outline-light"
         className="shadow-sm"
-        onClick={() => filterCourses("Primaria")}
+        onClick={() => filterClassrooms("Primaria")}
       >
         Primaria
       </Button>
       <Button
-        disabled={courses ? false : true}
+        disabled={classrooms ? false : true}
         active={filter === "Secundaria" ? true : false}
         variant="outline-light"
         className="shadow-sm ml-2"
-        onClick={() => filterCourses("Secundaria")}
+        onClick={() => filterClassrooms("Secundaria")}
       >
         Secundaria
       </Button>
       <Button
-        disabled={courses ? false : true}
+        disabled={classrooms ? false : true}
         active={filter === "Preparatoria" ? true : false}
         variant="outline-light"
         className="shadow-sm ml-2"
-        onClick={() => filterCourses("Preparatoria")}
+        onClick={() => filterClassrooms("Preparatoria")}
       >
         Preparatoria
       </Button>
       <Button
-        disabled={courses ? false : true}
+        disabled={classrooms ? false : true}
         active={filter === "Universidad" ? true : false}
         variant="outline-light"
         className="shadow-sm ml-2"
-        onClick={() => filterCourses("Universidad")}
+        onClick={() => filterClassrooms("Universidad")}
       >
         Universidad
       </Button>
@@ -104,15 +106,15 @@ export const AdminCoursesPage = () => {
 
   const optionsDropdown = [
     {
-      text: "Nuevo Curso",
-      fn: () => (window.location.href = "/admin/courses/new"),
+      text: "Nuevo Salón",
+      fn: () => (window.location.href = "/admin/classrooms/new"),
     },
   ];
 
   return filtered ? (
     <AdminLayout
       buttons={filters}
-      leftBarActive="Cursos"
+      leftBarActive="Salones"
       optionsDropdown={optionsDropdown}
     >
       <Container fluid>
@@ -121,22 +123,21 @@ export const AdminCoursesPage = () => {
             {filtered.length ? (
               <>
                 <h3 className="mb-3" style={{ color: "#0f5257" }}>
-                  Selecciona un curso...
+                  Selecciona un salón...
                 </h3>
                 <ListGroup>
                   {filtered.map((c) => (
-                    <CourseItem
+                    <ClassroomItem
+                      _id={c._id}
                       key={c._id}
                       name={c.name}
                       school={c.school}
-                      _id={c._id}
-                      isActive={c.isActive}
                     />
                   ))}
                 </ListGroup>
               </>
             ) : (
-              <div className="text-center mt-4">No hay cursos.</div>
+              <div className="text-center mt-4">No hay salones.</div>
             )}
           </Col>
         </Row>

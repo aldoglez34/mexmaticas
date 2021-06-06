@@ -14,7 +14,7 @@ import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
-const PAGE_SIZE = 5;
+// const PAGE_SIZE = 5;
 const SORT_OPTIONS = [
   "Más Recientes",
   "Más Antiguos",

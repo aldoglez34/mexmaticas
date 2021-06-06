@@ -56,6 +56,17 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
       </Nav.Link>
       <Nav.Link
         className="navLinkStyle"
+        href="/admin/institutions"
+        active={leftBarActive === "Escuelas" ? true : false}
+      >
+        <i
+          className="fas fa-school"
+          style={{ width: "26px", textAlign: "center" }}
+        />
+        <span className="ml-1">Escuelas</span>
+      </Nav.Link>
+      <Nav.Link
+        className="navLinkStyle"
         href="/admin/classrooms"
         active={leftBarActive === "Salones" ? true : false}
       >

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const moment = require("moment");
 
 const schema = new Schema({
   qCounter: { type: Number, required: true },
@@ -67,7 +66,7 @@ const schema = new Schema({
   ],
   createdAt: {
     type: Date,
-    default: moment().format(),
+    default: Date.now,
   },
 });
 

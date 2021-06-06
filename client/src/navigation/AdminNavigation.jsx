@@ -5,9 +5,11 @@ import {
   AdminCourseDetailPage,
   AdminCoursesPage,
   AdminExamDetailPage,
+  AdminInstitutionsPage,
   AdminMessagesPage,
   AdminNewClassroomPage,
   AdminNewCoursePage,
+  AdminNewInstitutionPage,
   AdminNewTopicPage,
   AdminStudentAssignPage,
   AdminStudentDetailPage,
@@ -25,6 +27,14 @@ export default () => {
         exact
         path="/admin/classrooms/new"
         component={AdminNewClassroomPage}
+      />
+
+      {/* ================= INSTITUTIONS ================= */}
+      <Route exact path="/admin/institutions" component={AdminInstitutionsPage} />
+      <Route
+        exact
+        path="/admin/institutions/new"
+        component={AdminNewInstitutionPage}
       />
 
       {/* ================= COURSES ================= */}

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const moment = require("moment");
 
 const schema = new Schema({
   firebaseUID: {
@@ -53,7 +52,7 @@ const schema = new Schema({
         ref: "Exam",
       },
       grade: { type: Number, default: 0 },
-      date: { type: Date, default: moment().format() },
+      date: { type: Date, default: Date.now },
     },
   ],
   rewards: [
@@ -74,12 +73,12 @@ const schema = new Schema({
       body: { type: String, required: true },
       answered: { type: Boolean, required: true, default: false },
       response: { type: String, required: true },
-      date: { type: Date, default: moment().format() },
+      date: { type: Date, default: Date.now },
     },
   ],
   registeredAt: {
     type: Date,
-    default: moment().format(),
+    default: Date.now,
   },
   unseenMessages: {
     type: Number,

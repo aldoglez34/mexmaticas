@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 
 const schema = new Schema({
   name: {
@@ -9,15 +10,7 @@ const schema = new Schema({
   description: {
     type: String,
   },
-  school: {
-    type: String,
-    enum: ["Primaria", "Secundaria", "Preparatoria", "Universidad"],
-  },
-  institution: {
-    type: Schema.Types.ObjectId,
-    ref: "Institution",
-  },
-  members: [
+  classrooms: [
     {
       type: Schema.Types.ObjectId,
       ref: "Student",
@@ -29,6 +22,6 @@ const schema = new Schema({
   },
 });
 
-const Classroom = mongoose.model("Classroom", schema);
+const Institution = mongoose.model("Institution", schema);
 
-module.exports = Classroom;
+module.exports = Institution;

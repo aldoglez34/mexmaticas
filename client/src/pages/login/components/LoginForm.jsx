@@ -135,7 +135,7 @@ export const LoginForm = () => {
             Entrar
           </Button>
           <div className="text-right mt-2">
-            <a className="text-success" href="#">
+            <a className="text-success" href="/">
               <small>¿Olvidaste tu contraseña?</small>
             </a>
           </div>

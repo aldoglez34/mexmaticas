@@ -21,6 +21,9 @@ router.use("/api/freestyle", freestyleRoutes);
 // ==============================================
 // TEACHER API
 // ==============================================
+const tInstitutionRoutes = require("./teacherAPI/tInstitutionRoutes");
+router.use("/teacherAPI/institutions", tInstitutionRoutes);
+
 const tClassroomRoutes = require("./teacherAPI/tClassroomRoutes");
 router.use("/teacherAPI/classrooms", tClassroomRoutes);
 

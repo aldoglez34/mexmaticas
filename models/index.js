@@ -1,6 +1,8 @@
 module.exports = {
-  Exam: require("./Exam"),
+  Classroom: require("./Classroom"),
   Course: require("./Course"),
-  Student: require("./Student"),
+  Exam: require("./Exam"),
+  Institution: require("./Institution"),
   Message: require("./Message"),
+  Student: require("./Student"),
 };

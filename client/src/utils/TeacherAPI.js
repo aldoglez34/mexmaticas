@@ -2,10 +2,20 @@ import axios from "axios";
 
 export default {
   // ==============================================
+  // INSTITUTIONS
+  // ==============================================
+
+  t_fetchInstitutions: () => axios.get("/teacherAPI/institutions/all"),
+
+  t_newInstitution: (data) => axios.post("/teacherAPI/institutions/new", data),
+
+  // ==============================================
   // CLASSROOMS
   // ==============================================
 
   t_fetchClassrooms: () => axios.get("/teacherAPI/classrooms/all"),
+
+  t_newClassroom: (data) => axios.post("/teacherAPI/classrooms/new", data),
 
   // ==============================================
   // COURSES

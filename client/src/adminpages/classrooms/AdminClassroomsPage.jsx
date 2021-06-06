@@ -18,41 +18,18 @@ export const AdminClassroomsPage = () => {
     //
     TeacherAPI.t_fetchClassrooms()
       .then((res) => {
-        // ordering classrooms by school level
-        const rawClassrooms = res.data;
-
-        const sortedClassrooms = rawClassrooms
-          .reduce((acc, cv) => {
-            let orderNumber;
-            switch (cv.school) {
-              case "Primaria":
-                orderNumber = 1;
-                break;
-              case "Secundaria":
-                orderNumber = 2;
-                break;
-              case "Preparatoria":
-                orderNumber = 3;
-                break;
-              case "Universidad":
-                orderNumber = 4;
-                break;
-              default:
-                break;
-            }
-            acc.push({ ...cv, orderNumber });
-            return acc;
-          }, [])
-          .sort((a, b) => a.orderNumber - b.orderNumber);
-        //
-        setClassrooms(sortedClassrooms);
-        setFiltered(sortedClassrooms);
+        console.log(res.data);
+        const defaultSorting = res?.data?.sort((a, b) =>
+          a.createdAt > b.createdAt ? -1 : 1
+        );
+        setClassrooms(defaultSorting);
+        setFiltered(defaultSorting);
       })
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, []);
+  }, [dispatch]);
 
   const filterClassrooms = (criteria) => {
     setFilter(criteria === filter ? null : criteria);
@@ -129,7 +106,10 @@ export const AdminClassroomsPage = () => {
                   {filtered.map((c) => (
                     <ClassroomItem
                       _id={c._id}
+                      description={c.description}
+                      institution={c.institution?.name}
                       key={c._id}
+                      membersCounter={c.members.length}
                       name={c.name}
                       school={c.school}
                     />

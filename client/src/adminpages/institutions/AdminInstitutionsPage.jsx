@@ -10,6 +10,7 @@ export const AdminInstitutionsPage = () => {
   const dispatch = useDispatch();
 
   const [institutions, setInstitutions] = useState();
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     dispatch(setTitle("Escuelas"));

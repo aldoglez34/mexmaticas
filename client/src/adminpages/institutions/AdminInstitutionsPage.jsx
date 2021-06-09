@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AdminLayout, AdminSpinner } from "../components";
-import { Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Modal, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 import TeacherAPI from "../../utils/TeacherAPI";
@@ -9,8 +9,8 @@ import { InstitutionItem } from "./components/";
 export const AdminInstitutionsPage = () => {
   const dispatch = useDispatch();
 
+  const [showModal, setShowModal] = useState(false);
   const [institutions, setInstitutions] = useState();
-  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     dispatch(setTitle("Escuelas"));
@@ -35,6 +35,9 @@ export const AdminInstitutionsPage = () => {
     },
   ];
 
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
   return institutions ? (
     <AdminLayout leftBarActive="Escuelas" optionsDropdown={optionsDropdown}>
       <Container fluid>
@@ -48,10 +51,11 @@ export const AdminInstitutionsPage = () => {
                 <ListGroup>
                   {institutions.map((c) => (
                     <InstitutionItem
+                      _id={c._id}
                       description={c.description}
                       key={c._id}
-                      _id={c._id}
                       name={c.name}
+                      onClick={handleShowModal}
                     />
                   ))}
                 </ListGroup>
@@ -62,6 +66,28 @@ export const AdminInstitutionsPage = () => {
           </Col>
         </Row>
       </Container>
+      <Modal
+        backdrop="static"
+        onHide={handleCloseModal}
+        show={showModal}
+        size="lg"
+      >
+        <Modal.Body className="bg-light rounded">
+          <div className="d-flex">
+            <h3 className="mb-0 text-dark">Escuela</h3>
+            <Button
+              variant="link"
+              className="text-dark ml-auto"
+              onClick={handleCloseModal}
+            >
+              <i className="fas fa-times" />
+            </Button>
+          </div>
+          <div className="my-3">
+            <h1>contenido</h1>
+          </div>
+        </Modal.Body>
+      </Modal>
     </AdminLayout>
   ) : (
     <AdminSpinner />

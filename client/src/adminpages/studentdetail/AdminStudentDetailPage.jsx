@@ -28,11 +28,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
   }, [studentId, dispatch]);
 
   return student ? (
-    <AdminLayout
-      backBttn="/admin/students"
-      title="Detalle del Alumno"
-      leftBarActive="Alumnos"
-    >
+    <AdminLayout backBttn="/admin/students" leftBarActive="Alumnos">
       <Container fluid>
         {/* username */}
         <Row>

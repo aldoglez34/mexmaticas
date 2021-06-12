@@ -6,26 +6,25 @@ import { AdminSpinner, AdminLayout } from "../components";
 export const AdminStudentAssignPage = React.memo((props) => {
   const [unpurchased, setUnpurchased] = useState(false);
 
-  useEffect(() => {
-    const studentId = props.routeProps.match.params.studentId;
+  const studentId = props.routeProps.match.params.studentId;
 
+  useEffect(() => {
     TeacherAPI.t_fetchStudentUnpurchased(studentId)
       .then((res) => setUnpurchased(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [props.routeProps.match.params.studentId]);
+  }, [studentId]);
 
   const assignCourse = (courseId) => {
     TeacherAPI.t_assignCourse({
       courseId,
-      studentId: props.routeProps.match.params.studentId,
+      studentId,
     })
       .then((res) => {
         console.log(res.data);
-        window.location.href =
-          "/admin/students/" + props.routeProps.match.params.studentId;
+        window.location.href = `/admin/students/${studentId}`;
       })
       .catch((err) => {
         console.log(err);
@@ -35,16 +34,15 @@ export const AdminStudentAssignPage = React.memo((props) => {
 
   return unpurchased ? (
     <AdminLayout
-      title="Asignar Curso"
       leftBarActive="Alumnos"
-      backBttn={"/admin/students/" + props.routeProps.match.params.studentId}
+      backBttn={`/admin/students/${studentId}`}
     >
       <Container>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>
             <h3>Elige un curso de la lista...</h3>
             <span className="mb-4">
-              Sólo se muestran cursos que no ha adquirido el alumno
+              Sólo se muestran cursos que no ha adquirido el alumno.
             </span>
             {unpurchased.length ? (
               <ListGroup variant="flush" className="mt-3">

@@ -35,7 +35,7 @@ export const AdminStudentsPage = () => {
   useEffect(() => {
     dispatch(setTitle("Alumnos"));
     setSort(SORT_OPTIONS[0]);
-
+    //
     TeacherAPI.t_fetchStudents()
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
@@ -177,10 +177,10 @@ export const AdminStudentsPage = () => {
                   <ListGroup>
                     {filtered.map((s) => (
                       <StudentItem
+                        _id={s._id}
+                        email={s.email}
                         key={s._id}
                         name={`${s.name} ${s.firstSurname}`}
-                        email={s.email}
-                        _id={s._id}
                       />
                     ))}
                   </ListGroup>

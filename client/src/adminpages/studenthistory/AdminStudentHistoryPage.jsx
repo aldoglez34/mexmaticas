@@ -21,7 +21,6 @@ export const AdminStudentHistoryPage = React.memo((props) => {
 
   return history ? (
     <AdminLayout
-      title="Historial de Exámenes"
       leftBarActive="Alumnos"
       backBttn={"/admin/students/" + props.routeProps.match.params.studentId}
     >

@@ -1,11 +1,11 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
-import { func, string } from "prop-types";
+import { string } from "prop-types";
 import cn from "classnames";
 
 import styles from "./institutionitem.module.scss";
 
-export const InstitutionItem = React.memo(({ description, name, onClick }) => {
+export const InstitutionItem = React.memo(({ _id, description, name }) => {
   return (
     <ListGroup.Item
       action
@@ -16,7 +16,7 @@ export const InstitutionItem = React.memo(({ description, name, onClick }) => {
         "py-4",
         styles.itemstyle
       )}
-      onClick={onClick}
+      href={`/admin/institutions/edit/${_id}`}
     >
       <span className={styles.itemtext}>{name}</span>
       {description && <span>{description}</span>}
@@ -25,9 +25,9 @@ export const InstitutionItem = React.memo(({ description, name, onClick }) => {
 });
 
 InstitutionItem.propTypes = {
+  _id: string.isRequired,
   description: string.isRequired,
   name: string.isRequired,
-  onClick: func.isRequired,
 };
 
 InstitutionItem.displayName = "InstitutionItem";

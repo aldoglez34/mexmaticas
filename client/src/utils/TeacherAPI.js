@@ -7,7 +7,16 @@ export default {
 
   t_fetchInstitutions: () => axios.get("/teacherAPI/institutions/all"),
 
+  t_fetchOneInstitution: (institutionId) =>
+    axios.get("/teacherAPI/institutions/" + institutionId),
+
   t_newInstitution: (data) => axios.post("/teacherAPI/institutions/new", data),
+
+  t_updateInstitutionName: (data) =>
+    axios.put("/teacherAPI/institutions/update/name", data),
+
+  t_updateInstitutionDescription: (data) =>
+    axios.put("/teacherAPI/institutions/update/description", data),
 
   // ==============================================
   // CLASSROOMS

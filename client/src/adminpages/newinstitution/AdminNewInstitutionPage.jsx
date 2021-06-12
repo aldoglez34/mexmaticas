@@ -11,8 +11,8 @@ export const AdminNewInstitutionPage = () => {
   const dispatch = useDispatch();
 
   const yupschema = yup.object({
-    name: yup.string().min(3, "Nombre demasiado corto").required("Requerido"),
     description: yup.string(),
+    name: yup.string().min(3, "Nombre demasiado corto").required("Requerido"),
   });
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const AdminNewInstitutionPage = () => {
     <AdminLayout leftBarActive="Escuelas" backBttn="/admin/institutions">
       <Container>
         <Row>
-          <Col>
+          <Col md={{ offset: 2, span: 8 }}>
             <h3 className="mb-3">Ingresa los datos de la escuela.</h3>
             <Formik
               initialValues={{

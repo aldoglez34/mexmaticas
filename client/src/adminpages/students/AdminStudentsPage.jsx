@@ -1,20 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AdminLayout, AdminSpinner } from "../components";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  ListGroup,
-  Pagination,
-  Row,
-} from "react-bootstrap";
+import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
+import { Button, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import { StudentItem } from "./components";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
-// const PAGE_SIZE = 5;
+const PAGE_SIZE = 5;
 const SORT_OPTIONS = [
   "Más Recientes",
   "Más Antiguos",
@@ -28,6 +20,8 @@ export const AdminStudentsPage = () => {
   const dispatch = useDispatch();
   const searchRef = useRef(null);
 
+  const [pages, setPages] = useState();
+  const [activePage, setActivePage] = useState(1);
   const [sort, setSort] = useState();
   const [students, setStudents] = useState();
   const [filtered, setFiltered] = useState();
@@ -43,6 +37,7 @@ export const AdminStudentsPage = () => {
         );
         setStudents(defaultSorting);
         setFiltered(defaultSorting);
+        setPages(defaultSorting.length);
       })
       .catch((err) => {
         console.log(err);
@@ -185,23 +180,11 @@ export const AdminStudentsPage = () => {
                     ))}
                   </ListGroup>
                   <div className="mt-3">
-                    <Pagination>
-                      <Pagination.First />
-                      <Pagination.Prev />
-                      <Pagination.Item>{1}</Pagination.Item>
-                      <Pagination.Ellipsis />
-
-                      <Pagination.Item>{10}</Pagination.Item>
-                      <Pagination.Item>{11}</Pagination.Item>
-                      <Pagination.Item active>{12}</Pagination.Item>
-                      <Pagination.Item>{13}</Pagination.Item>
-                      <Pagination.Item disabled>{14}</Pagination.Item>
-
-                      <Pagination.Ellipsis />
-                      <Pagination.Item>{20}</Pagination.Item>
-                      <Pagination.Next />
-                      <Pagination.Last />
-                    </Pagination>
+                    <AdminPagination
+                      activePage={1}
+                      handleChangePage={() => undefined}
+                      pageCount={5}
+                    />
                   </div>
                 </React.Fragment>
               ) : (

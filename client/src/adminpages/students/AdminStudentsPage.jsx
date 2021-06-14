@@ -6,7 +6,7 @@ import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 const SORT_OPTIONS = [
   "Más Recientes",
   "Más Antiguos",
@@ -39,7 +39,7 @@ export const AdminStudentsPage = () => {
         );
         setStudents(defaultSorting);
         setFiltered(defaultSorting);
-        setPages(Math.floor(defaultSorting.length / PAGE_SIZE + 1));
+        setPages(Math.round(defaultSorting.length / PAGE_SIZE + 1));
       })
       .catch((err) => {
         console.log(err);

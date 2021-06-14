@@ -1,19 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AdminLayout, AdminSpinner } from "../components";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  ListGroup,
-  Pagination,
-  Row,
-} from "react-bootstrap";
+import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
+import { Button, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { InstitutionItem } from "./components/";
 
+const PAGE_SIZE = 2;
 const SORT_OPTIONS = [
   "Más Recientes",
   "Más Antiguos",
@@ -25,12 +18,17 @@ export const AdminInstitutionsPage = () => {
   const dispatch = useDispatch();
   const searchRef = useRef(null);
 
+  const [pages, setPages] = useState();
+  const [activePage, setActivePage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [offset, setOffset] = useState(0);
   const [sort, setSort] = useState();
   const [institutions, setInstitutions] = useState();
   const [filtered, setFiltered] = useState();
 
   useEffect(() => {
     dispatch(setTitle("Escuelas"));
+    setSort(SORT_OPTIONS[0]);
     //
     TeacherAPI.t_fetchInstitutions()
       .then((res) => {
@@ -39,6 +37,7 @@ export const AdminInstitutionsPage = () => {
         );
         setInstitutions(defaultSorting);
         setFiltered(defaultSorting);
+        setPages(Math.round(defaultSorting.length / PAGE_SIZE));
       })
       .catch((err) => {
         console.log(err);
@@ -109,6 +108,19 @@ export const AdminInstitutionsPage = () => {
     searchRef.current.value = "";
   };
 
+  const handleChangePage = (p) => {
+    setActivePage(p);
+    if (p === 1) {
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
+    if (p > 1) {
+      const _offset = (p - 1) * PAGE_SIZE;
+      setOffset(_offset);
+      setLimit(_offset + PAGE_SIZE);
+    }
+  };
+
   return (
     <AdminLayout leftBarActive="Escuelas" optionsDropdown={optionsDropdown}>
       <Container fluid>
@@ -157,7 +169,7 @@ export const AdminInstitutionsPage = () => {
               filtered.length ? (
                 <React.Fragment>
                   <ListGroup>
-                    {filtered.map((c) => (
+                    {filtered.slice(offset, limit).map((c) => (
                       <InstitutionItem
                         _id={c._id}
                         description={c.description}
@@ -166,25 +178,15 @@ export const AdminInstitutionsPage = () => {
                       />
                     ))}
                   </ListGroup>
-                  <div className="mt-3">
-                    <Pagination>
-                      <Pagination.First />
-                      <Pagination.Prev />
-                      <Pagination.Item>{1}</Pagination.Item>
-                      <Pagination.Ellipsis />
-
-                      <Pagination.Item>{10}</Pagination.Item>
-                      <Pagination.Item>{11}</Pagination.Item>
-                      <Pagination.Item active>{12}</Pagination.Item>
-                      <Pagination.Item>{13}</Pagination.Item>
-                      <Pagination.Item disabled>{14}</Pagination.Item>
-
-                      <Pagination.Ellipsis />
-                      <Pagination.Item>{20}</Pagination.Item>
-                      <Pagination.Next />
-                      <Pagination.Last />
-                    </Pagination>
-                  </div>
+                  {pages > 0 && (
+                    <div className="mt-3">
+                      <AdminPagination
+                        activePage={activePage}
+                        handleChangePage={(p) => handleChangePage(p)}
+                        pageCount={pages}
+                      />
+                    </div>
+                  )}
                 </React.Fragment>
               ) : (
                 <div className="text-center mt-4">No hay escuelas.</div>

@@ -1,0 +1,14 @@
+.pagination {
+  li {
+    a {
+      color: #48b86a;
+      &:hover {
+        color: #0d2129;
+      }
+    }
+    span {
+      background-color: #48b86a !important;
+      border-color: #48b86a !important;
+    }
+  }
+}

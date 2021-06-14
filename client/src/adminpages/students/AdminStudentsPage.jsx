@@ -22,6 +22,8 @@ export const AdminStudentsPage = () => {
 
   const [pages, setPages] = useState();
   const [activePage, setActivePage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [offset, setOffset] = useState(0);
   const [sort, setSort] = useState();
   const [students, setStudents] = useState();
   const [filtered, setFiltered] = useState();
@@ -37,7 +39,7 @@ export const AdminStudentsPage = () => {
         );
         setStudents(defaultSorting);
         setFiltered(defaultSorting);
-        setPages(defaultSorting.length);
+        setPages(Math.floor(defaultSorting.length / PAGE_SIZE + 1));
       })
       .catch((err) => {
         console.log(err);
@@ -122,6 +124,19 @@ export const AdminStudentsPage = () => {
     searchRef.current.value = "";
   };
 
+  const handleChangePage = (p) => {
+    setActivePage(p);
+    if (p === 1) {
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
+    if (p > 1) {
+      const _offset = (p - 1) * PAGE_SIZE;
+      setOffset(_offset);
+      setLimit(_offset + PAGE_SIZE);
+    }
+  };
+
   return (
     <AdminLayout leftBarActive="Alumnos">
       <Container fluid>
@@ -139,7 +154,9 @@ export const AdminStudentsPage = () => {
                     onChange={(opt) => handleSortStudents(opt.target.value)}
                   >
                     {SORT_OPTIONS.map((so) => (
-                      <option key={so}>{so}</option>
+                      <option key={so} value={so}>
+                        {so}
+                      </option>
                     ))}
                   </Form.Control>
                 </Col>
@@ -170,7 +187,7 @@ export const AdminStudentsPage = () => {
               filtered.length ? (
                 <React.Fragment>
                   <ListGroup>
-                    {filtered.map((s) => (
+                    {filtered.slice(offset, limit).map((s) => (
                       <StudentItem
                         _id={s._id}
                         email={s.email}
@@ -179,13 +196,15 @@ export const AdminStudentsPage = () => {
                       />
                     ))}
                   </ListGroup>
-                  <div className="mt-3">
-                    <AdminPagination
-                      activePage={1}
-                      handleChangePage={() => undefined}
-                      pageCount={5}
-                    />
-                  </div>
+                  {pages > 0 && (
+                    <div className="mt-3">
+                      <AdminPagination
+                        activePage={activePage}
+                        handleChangePage={(p) => handleChangePage(p)}
+                        pageCount={pages}
+                      />
+                    </div>
+                  )}
                 </React.Fragment>
               ) : (
                 <div className="text-center mt-4">No hay alumnos.</div>

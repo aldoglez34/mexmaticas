@@ -37,6 +37,7 @@ export const AdminStudentsPage = () => {
         const defaultSorting = res?.data?.sort((a, b) =>
           a.registeredAt > b.registeredAt ? -1 : 1
         );
+        console.log(defaultSorting);
         setStudents(defaultSorting);
         setFiltered(defaultSorting);
         setPages(Math.round(defaultSorting.length / PAGE_SIZE));

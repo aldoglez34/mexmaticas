@@ -6,7 +6,7 @@ import { setTitle } from "../../redux/actions/admin";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { InstitutionItem } from "./components/";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 10;
 const SORT_OPTIONS = [
   "Más Recientes",
   "Más Antiguos",

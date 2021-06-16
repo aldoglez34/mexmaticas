@@ -6,7 +6,7 @@ import { setTitle } from "../../redux/actions/admin";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { InstitutionItem } from "./components/";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 2;
 const SORT_OPTIONS = [
   "Más Recientes",
   "Más Antiguos",
@@ -54,6 +54,11 @@ export const AdminInstitutionsPage = () => {
 
   const handleSortInstitutions = (criteria) => {
     setSort(criteria);
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
     if (criteria === SORT_OPTIONS[0])
       setFiltered((institutions) =>
         institutions.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
@@ -84,6 +89,11 @@ export const AdminInstitutionsPage = () => {
 
   const handleFilterInstitutions = (criteria) => {
     setSort(SORT_OPTIONS[0]);
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
     if (criteria.length < 3) {
       setFiltered(
         institutions.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
@@ -106,6 +116,11 @@ export const AdminInstitutionsPage = () => {
       institutions.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
     );
     searchRef.current.value = "";
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
   };
 
   const handleChangePage = (p) => {

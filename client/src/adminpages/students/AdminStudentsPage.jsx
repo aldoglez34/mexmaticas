@@ -50,6 +50,11 @@ export const AdminStudentsPage = () => {
 
   const handleSortStudents = (criteria) => {
     setSort(criteria);
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
     if (criteria === SORT_OPTIONS[0])
       setFiltered((students) =>
         students.sort((a, b) => (a.registeredAt > b.registeredAt ? -1 : 1))
@@ -98,6 +103,11 @@ export const AdminStudentsPage = () => {
 
   const handleFilterStudents = (criteria) => {
     setSort(SORT_OPTIONS[0]);
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
     if (criteria.length < 3) {
       setFiltered(
         students.sort((a, b) => (a.registeredAt > b.registeredAt ? -1 : 1))
@@ -123,6 +133,11 @@ export const AdminStudentsPage = () => {
       students.sort((a, b) => (a.registeredAt > b.registeredAt ? -1 : 1))
     );
     searchRef.current.value = "";
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
   };
 
   const handleChangePage = (p) => {

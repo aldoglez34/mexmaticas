@@ -23,17 +23,6 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
       {/* menu */}
       <Nav.Link
         className="navLinkStyle"
-        href="/admin/courses"
-        active={leftBarActive === "Cursos" ? true : false}
-      >
-        <i
-          className="fas fa-graduation-cap"
-          style={{ width: "26px", textAlign: "center" }}
-        />
-        <span className="ml-1">Cursos</span>
-      </Nav.Link>
-      <Nav.Link
-        className="navLinkStyle"
         href="/admin/students"
         active={leftBarActive === "Alumnos" ? true : false}
       >
@@ -45,14 +34,14 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
       </Nav.Link>
       <Nav.Link
         className="navLinkStyle"
-        href="/admin/messages"
-        active={leftBarActive === "Mensajes" ? true : false}
+        href="/admin/courses"
+        active={leftBarActive === "Cursos" ? true : false}
       >
         <i
-          className="fas fa-envelope"
+          className="fas fa-graduation-cap"
           style={{ width: "26px", textAlign: "center" }}
         />
-        <span className="ml-1">Mensajes</span>
+        <span className="ml-1">Cursos</span>
       </Nav.Link>
       <Nav.Link
         className="navLinkStyle"
@@ -64,6 +53,17 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
           style={{ width: "26px", textAlign: "center" }}
         />
         <span className="ml-1">Escuelas</span>
+      </Nav.Link>
+      <Nav.Link
+        className="navLinkStyle"
+        href="/admin/messages"
+        active={leftBarActive === "Mensajes" ? true : false}
+      >
+        <i
+          className="fas fa-envelope"
+          style={{ width: "26px", textAlign: "center" }}
+        />
+        <span className="ml-1">Mensajes</span>
       </Nav.Link>
       <Nav.Link
         className="navLinkStyle"

@@ -193,7 +193,7 @@ export const AdminInstitutionsPage = () => {
                       />
                     ))}
                   </ListGroup>
-                  {pages > 0 && (
+                  {filtered.length > PAGE_SIZE && (
                     <div className="mt-3">
                       <AdminPagination
                         activePage={activePage}

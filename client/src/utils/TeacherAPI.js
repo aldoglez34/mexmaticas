@@ -24,7 +24,16 @@ export default {
 
   t_fetchClassrooms: () => axios.get("/teacherAPI/classrooms/all"),
 
+  t_fetchOneClassroom: (classroomId) =>
+    axios.get("/teacherAPI/classrooms/" + classroomId),
+
   t_newClassroom: (data) => axios.post("/teacherAPI/classrooms/new", data),
+
+  t_updateClassroomName: (data) =>
+    axios.put("/teacherAPI/classrooms/update/name", data),
+
+  t_updateClassroomDescription: (data) =>
+    axios.put("/teacherAPI/classrooms/update/description", data),
 
   // ==============================================
   // COURSES

@@ -37,7 +37,6 @@ export const AdminStudentsPage = () => {
         const defaultSorting = res?.data?.sort((a, b) =>
           a.registeredAt > b.registeredAt ? -1 : 1
         );
-        console.log(defaultSorting);
         setStudents(defaultSorting);
         setFiltered(defaultSorting);
         setPages(Math.round(defaultSorting.length / PAGE_SIZE));
@@ -212,7 +211,7 @@ export const AdminStudentsPage = () => {
                       />
                     ))}
                   </ListGroup>
-                  {pages > 0 && (
+                  {filtered.length > PAGE_SIZE && (
                     <div className="mt-3">
                       <AdminPagination
                         activePage={activePage}

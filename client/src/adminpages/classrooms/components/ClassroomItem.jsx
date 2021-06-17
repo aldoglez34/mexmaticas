@@ -6,7 +6,7 @@ import cn from "classnames";
 import styles from "./classroomitem.module.scss";
 
 export const ClassroomItem = React.memo(
-  ({ _id, description, institution, membersCounter, name, school }) => {
+  ({ _id, institution, membersCounter, name, school }) => {
     return (
       <ListGroup.Item
         action
@@ -17,24 +17,28 @@ export const ClassroomItem = React.memo(
           "py-4",
           styles.itemstyle
         )}
-        href={`/admin/classroom/edit/${_id}`}
+        href={`/admin/classrooms/edit/${_id}`}
       >
         <span className={styles.itemtext}>{name}</span>
+        {school && (
+          <span className="mb-1">
+            <i className="fas fa-graduation-cap mr-2" />
+            {school}
+          </span>
+        )}
         <div>
           <span>
-            <i className="fas fa-user-graduate mr-1" />
+            <i className="fas fa-user-graduate mr-2" />
             {membersCounter}
           </span>
           {institution && (
             <span className="ml-2">
               |
-              <i className="fas fa-school mr-1 ml-2" />
+              <i className="fas fa-school ml-2 mr-2" />
               {institution}
             </span>
           )}
         </div>
-        {school && <strong className="mt-1">{school}</strong>}
-        {description && <span>{description}</span>}
       </ListGroup.Item>
     );
   }
@@ -42,11 +46,10 @@ export const ClassroomItem = React.memo(
 
 ClassroomItem.propTypes = {
   _id: string.isRequired,
-  description: string,
   institution: string,
   membersCounter: number.isRequired,
   name: string.isRequired,
-  school: string,
+  school: string.isRequired,
 };
 
 ClassroomItem.displayName = "ClassroomItem";

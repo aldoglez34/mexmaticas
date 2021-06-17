@@ -1,3 +1,4 @@
+export * from "./classroomdetail/AdminClassroomDetailPage";
 export * from "./classrooms/AdminClassroomsPage";
 export * from "./coursedetail/AdminCourseDetailPage";
 export * from "./courses/AdminCoursesPage";

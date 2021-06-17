@@ -47,6 +47,40 @@ export const AdminClassroomDetailPage = React.memo((props) => {
             </h1>
           </Col>
         </Row>
+        {/* school */}
+        {classroom.school && (
+          <Row>
+            <Col>
+              <span className="text-muted">Nivel educativo</span>
+              <h3>
+                {classroom.school}
+                <AdminModal
+                  Form={ClassroomNameForm}
+                  formInitialText={classroom.institution.school}
+                  formLabel="Nombre"
+                  icon={<i className="fas fa-pen-alt" />}
+                />
+              </h3>
+            </Col>
+          </Row>
+        )}
+        {/* institution */}
+        {classroom.institution && (
+          <Row>
+            <Col>
+              <span className="text-muted">Escuela</span>
+              <h3>
+                {classroom.institution.name}
+                <AdminModal
+                  Form={ClassroomNameForm}
+                  formInitialText={classroom.institution.name}
+                  formLabel="Nombre"
+                  icon={<i className="fas fa-pen-alt" />}
+                />
+              </h3>
+            </Col>
+          </Row>
+        )}
         {/* description */}
         <Row>
           <Col>

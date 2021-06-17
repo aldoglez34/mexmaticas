@@ -49,7 +49,7 @@ ClassroomItem.propTypes = {
   institution: string,
   membersCounter: number.isRequired,
   name: string.isRequired,
-  school: string.isRequired,
+  school: string,
 };
 
 ClassroomItem.displayName = "ClassroomItem";

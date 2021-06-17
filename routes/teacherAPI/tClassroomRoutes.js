@@ -20,6 +20,7 @@ router.get("/:classroomId", (req, res) => {
   const { classroomId } = req.params;
 
   model.Classroom.findById(classroomId)
+    .populate("institution", "name")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);

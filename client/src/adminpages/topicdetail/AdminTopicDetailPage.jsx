@@ -48,10 +48,40 @@ export const AdminTopicDetailPage = React.memo((props) => {
     if (!topic)
       TeacherAPI.t_fetchTopic(courseId, topicId)
         .then((res) => {
-          const topicName = res.data.name;
+          const response = res.data;
+          console.log(response);
+          const topicName = response.name;
+          const unsortedExams = response.exams;
+          const sortedExams = unsortedExams
+            .reduce((acc, cv) => {
+              let orderNumber;
+              switch (cv.difficulty) {
+                case "Basic":
+                  orderNumber = 1;
+                  break;
+                case "Basic-Intermediate":
+                  orderNumber = 2;
+                  break;
+                case "Intermediate":
+                  orderNumber = 3;
+                  break;
+                case "Intermediate-Advanced":
+                  orderNumber = 4;
+                  break;
+                case "Advanced":
+                  orderNumber = 5;
+                  break;
+                default:
+                  break;
+              }
+              acc.push({ ...cv, orderNumber });
+              return acc;
+            }, [])
+            .sort((a, b) => a.orderNumber - b.orderNumber);
+          //
           dispatch(adminActions.setTopic({ topicId, topicName }));
           dispatch(adminActions.setTitle(`${courseName} | ${topicName}`));
-          setTopic(res.data);
+          setTopic({ ...response, exams: sortedExams });
         })
         .catch((err) => {
           console.log(err);
@@ -232,7 +262,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
             <span className="text-muted">Exámenes</span>
             <div className="d-flex flex-column mb-1">
               {topic.exams
-                .sort((a, b) => a.examOrderNumber - b.examOrderNumber)
+                .sort((a, b) => a.orderNumber - b.orderNumber)
                 .map((e) => {
                   const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${e._id}`;
                   const badgeText = `${e.actualQCounter}/${e.qCounter}`;

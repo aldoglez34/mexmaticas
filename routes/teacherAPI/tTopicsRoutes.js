@@ -10,16 +10,17 @@ router.get("/:courseId/:topicId", function (req, res) {
   model.Course.findById(courseId)
     .select("topics")
     .lean()
-    .populate("topics.exams", "name qCounter questions")
+    .populate("topics.exams", "name qCounter questions difficulty")
     .then(({ topics }) => {
       const thisTopic = topics.filter((t) => t._id.toString() === topicId)[0];
 
       const thisTopicExams = thisTopic.exams.reduce((acc, cv) => {
         acc.push({
           _id: cv._id,
+          actualQCounter: cv.questions.length,
+          difficulty: cv.difficulty,
           name: cv.name,
           qCounter: cv.qCounter,
-          actualQCounter: cv.questions.length,
         });
         return acc;
       }, []);

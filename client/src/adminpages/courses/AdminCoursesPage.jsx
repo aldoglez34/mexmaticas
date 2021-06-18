@@ -18,8 +18,8 @@ export const AdminCoursesPage = () => {
     //
     TeacherAPI.t_fetchCourses()
       .then((res) => {
-        const rawCourses = res.data;
-        const sortedCourses = rawCourses
+        const unsortedExams = res.data;
+        const sortedCourses = unsortedExams
           .reduce((acc, cv) => {
             let orderNumber;
             switch (cv.school) {

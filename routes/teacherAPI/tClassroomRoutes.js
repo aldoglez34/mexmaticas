@@ -87,4 +87,23 @@ router.put("/update/description", async (req, res) => {
   }
 });
 
+// t_updateClassroomSchool
+// matches with /teacherAPI/classrooms/update/school
+router.put("/update/school", async (req, res) => {
+  const { classroomId, newSchool } = req.body;
+
+  try {
+    await model.Classroom.findByIdAndUpdate(classroomId, {
+      school: newSchool,
+    });
+
+    res
+      .status(200)
+      .send("El nivel educativo fue actualizado satisfactoriamente.");
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error.");
+  }
+});
+
 module.exports = router;

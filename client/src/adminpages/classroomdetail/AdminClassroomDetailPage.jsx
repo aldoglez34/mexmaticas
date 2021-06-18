@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
-import { ClassroomDescriptionForm, ClassroomNameForm } from "./components";
+import {
+  ClassroomDescriptionForm,
+  ClassroomNameForm,
+  ClassroomSchoolForm,
+} from "./components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 import moment from "moment";
@@ -48,22 +52,20 @@ export const AdminClassroomDetailPage = React.memo((props) => {
           </Col>
         </Row>
         {/* school */}
-        {classroom.school && (
-          <Row>
-            <Col>
-              <span className="text-muted">Nivel educativo</span>
-              <h3>
-                {classroom.school}
-                <AdminModal
-                  Form={ClassroomNameForm}
-                  formInitialText={classroom.institution.school}
-                  formLabel="Nombre"
-                  icon={<i className="fas fa-pen-alt" />}
-                />
-              </h3>
-            </Col>
-          </Row>
-        )}
+        <Row>
+          <Col>
+            <span className="text-muted">Nivel educativo</span>
+            <h3>
+              {classroom?.school || "-"}
+              <AdminModal
+                Form={ClassroomSchoolForm}
+                formInitialText={classroom?.school || "Elige..."}
+                formLabel="Nombre"
+                icon={<i className="fas fa-pen-alt" />}
+              />
+            </h3>
+          </Col>
+        </Row>
         {/* institution */}
         {classroom.institution && (
           <Row>

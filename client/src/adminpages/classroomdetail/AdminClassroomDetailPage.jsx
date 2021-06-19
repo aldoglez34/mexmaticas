@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
 import {
+  AddStudentsButton,
   ClassroomDescriptionForm,
   ClassroomInstitutionForm,
   ClassroomNameForm,
@@ -23,7 +24,6 @@ export const AdminClassroomDetailPage = React.memo((props) => {
   useEffect(() => {
     TeacherAPI.t_fetchOneClassroom(classroomId)
       .then((res) => {
-        console.log(res.data);
         setClassroom(res.data);
         const { name } = res.data;
         dispatch(setTitle(name));
@@ -113,15 +113,7 @@ export const AdminClassroomDetailPage = React.memo((props) => {
           <Col>
             <span className="text-muted d-block">{`Miembros (${classroom.members.length})`}</span>
             <div>{!classroom.members.length && <h5>-</h5>}</div>
-            <Button
-              className="mt-1"
-              size="sm"
-              variant="dark"
-              // href={`/admin/courses/courses/newTopic/${courseId}`}
-            >
-              <i className="fas fa-user-plus mr-2" />
-              <span>Agregar Alumno</span>
-            </Button>
+            <AddStudentsButton />
           </Col>
         </Row>
       </Container>

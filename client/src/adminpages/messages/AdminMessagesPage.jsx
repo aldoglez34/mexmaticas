@@ -6,7 +6,7 @@ import { ItemModal } from "./components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 export const AdminMessagesPage = () => {
   const dispatch = useDispatch();

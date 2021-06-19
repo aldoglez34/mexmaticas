@@ -13,7 +13,7 @@ export const ClassroomNameForm = React.memo(
     const yupschema = yup.object({
       newName: yup
         .string()
-        .min(3, "Nombre demasiado corto")
+        .min(2, "Nombre demasiado corto")
         .required("Requerido"),
     });
 
@@ -53,7 +53,10 @@ export const ClassroomNameForm = React.memo(
             {/* name */}
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Label>{formLabel}</Form.Label>
+                <Form.Label>
+                  {formLabel}
+                  <strong className="text-danger">*</strong>
+                </Form.Label>
                 <Form.Control
                   maxLength="40"
                   type="text"

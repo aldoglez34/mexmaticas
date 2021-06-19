@@ -65,7 +65,7 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
         {/* created at */}
         <Row>
           <Col>
-            <span className="text-muted">Fecha de registro</span>
+            <span className="text-muted">Fecha de creación</span>
             <h5>
               <i className="far fa-calendar-alt mr-2" />
               {moment(institution.createdAt).format("LL")}

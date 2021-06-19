@@ -1,23 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Col } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import TeacherAPI from "../../../utils/TeacherAPI";
 
-export const ClassroomSchoolForm = React.memo(
+export const ClassroomInstitutionForm = React.memo(
   ({ formLabel, formInitialText }) => {
+    const [institutions, setInstitutions] = useState();
+
     const url = new URL(window.location.href);
     const classroomId = url.href.split("/").pop();
 
     const yupschema = yup.object({
-      newSchool: yup.string(),
+      newInstitution: yup.string(),
     });
+
+    useEffect(() => {
+      TeacherAPI.t_fetchInstitutions()
+        .then((res) => {
+          const institutions = res.data
+            .map(({ _id, name }) => ({
+              _id,
+              name,
+            }))
+            .sort((a, b) =>
+              String(a.name).toUpperCase().trim() >
+              String(b.name).toUpperCase().trim()
+                ? 1
+                : -1
+            );
+          setInstitutions(institutions);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Ocurrió un error, vuelve a intentarlo.");
+        });
+    }, []);
 
     return (
       <Formik
         initialValues={{
-          newSchool: formInitialText,
+          newInstitution: formInitialText,
         }}
         validationSchema={yupschema}
         onSubmit={(values, { setSubmitting }) => {
@@ -25,7 +49,7 @@ export const ClassroomSchoolForm = React.memo(
 
           values.classroomId = classroomId;
 
-          TeacherAPI.t_updateClassroomSchool(values)
+          TeacherAPI.t_updateClassroomInstitution(values)
             .then((res) => {
               console.log(res);
               window.location.reload();
@@ -54,22 +78,24 @@ export const ClassroomSchoolForm = React.memo(
                 <Form.Control
                   as="select"
                   type="text"
-                  name="newSchool"
-                  value={values.newSchool}
+                  name="newInstitution"
+                  value={values.newInstitution}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isValid={touched.newSchool && !errors.newSchool}
-                  isInvalid={touched.newSchool && !!errors.newSchool}
+                  isValid={touched.newInstitution && !errors.newInstitution}
+                  isInvalid={touched.newInstitution && !!errors.newInstitution}
                 >
                   <option value="Elige...">Elige...</option>
-                  <option value="Primaria">Primaria</option>
-                  <option value="Secundaria">Secundaria</option>
-                  <option value="Preparatoria">Preparatoria</option>
-                  <option value="Universidad">Universidad</option>
+                  {institutions &&
+                    institutions.map((i) => (
+                      <option key={i._id} value={i._id}>
+                        {i.name}
+                      </option>
+                    ))}
                 </Form.Control>
                 <ErrorMessage
                   className="text-danger"
-                  name="newSchool"
+                  name="newInstitution"
                   component="div"
                 />
               </Form.Group>
@@ -93,9 +119,9 @@ export const ClassroomSchoolForm = React.memo(
   }
 );
 
-ClassroomSchoolForm.propTypes = {
+ClassroomInstitutionForm.propTypes = {
   formLabel: string,
   formInitialText: string,
 };
 
-ClassroomSchoolForm.display = "ClassroomSchoolForm";
+ClassroomInstitutionForm.display = "ClassroomInstitutionForm";

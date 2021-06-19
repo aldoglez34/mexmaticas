@@ -94,7 +94,29 @@ router.put("/update/school", async (req, res) => {
 
   try {
     await model.Classroom.findByIdAndUpdate(classroomId, {
-      school: newSchool,
+      school: newSchool && newSchool !== "Elige..." ? newSchool : undefined,
+    });
+
+    res
+      .status(200)
+      .send("El nivel educativo fue actualizado satisfactoriamente.");
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error.");
+  }
+});
+
+// t_updateClassroomInstitution
+// matches with /teacherAPI/classrooms/update/institution
+router.put("/update/institution", async (req, res) => {
+  const { classroomId, newInstitution } = req.body;
+
+  try {
+    await model.Classroom.findByIdAndUpdate(classroomId, {
+      institution:
+        newInstitution && newInstitution !== "Elige..."
+          ? newInstitution
+          : undefined,
     });
 
     res

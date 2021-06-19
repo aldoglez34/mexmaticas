@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
 import {
   ClassroomDescriptionForm,
+  ClassroomInstitutionForm,
   ClassroomNameForm,
   ClassroomSchoolForm,
 } from "./components";
@@ -60,29 +61,27 @@ export const AdminClassroomDetailPage = React.memo((props) => {
               <AdminModal
                 Form={ClassroomSchoolForm}
                 formInitialText={classroom?.school || "Elige..."}
-                formLabel="Nombre"
+                formLabel="Nivel educativo"
                 icon={<i className="fas fa-pen-alt" />}
               />
             </h3>
           </Col>
         </Row>
         {/* institution */}
-        {classroom.institution && (
-          <Row>
-            <Col>
-              <span className="text-muted">Escuela</span>
-              <h3>
-                {classroom.institution.name}
-                <AdminModal
-                  Form={ClassroomNameForm}
-                  formInitialText={classroom.institution.name}
-                  formLabel="Nombre"
-                  icon={<i className="fas fa-pen-alt" />}
-                />
-              </h3>
-            </Col>
-          </Row>
-        )}
+        <Row>
+          <Col>
+            <span className="text-muted">Escuela</span>
+            <h3>
+              {classroom?.institution?.name || "-"}
+              <AdminModal
+                Form={ClassroomInstitutionForm}
+                formInitialText={classroom?.institution?._id || "Elige..."}
+                formLabel="Escuela"
+                icon={<i className="fas fa-pen-alt" />}
+              />
+            </h3>
+          </Col>
+        </Row>
         {/* description */}
         <Row>
           <Col>
@@ -102,11 +101,27 @@ export const AdminClassroomDetailPage = React.memo((props) => {
         {/* created at */}
         <Row>
           <Col>
-            <span className="text-muted">Fecha de registro</span>
+            <span className="text-muted">Fecha de creación</span>
             <h5>
               <i className="far fa-calendar-alt mr-2" />
               {moment(classroom.createdAt).format("LL")}
             </h5>
+          </Col>
+        </Row>
+        {/* members */}
+        <Row className="mt-2">
+          <Col>
+            <span className="text-muted d-block">{`Miembros (${classroom.members.length})`}</span>
+            <div>{!classroom.members.length && <h5>-</h5>}</div>
+            <Button
+              className="mt-1"
+              size="sm"
+              variant="dark"
+              // href={`/admin/courses/courses/newTopic/${courseId}`}
+            >
+              <i className="fas fa-user-plus mr-2" />
+              <span>Agregar Alumno</span>
+            </Button>
           </Col>
         </Row>
       </Container>

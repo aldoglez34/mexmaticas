@@ -26,7 +26,7 @@ const schema = new Schema({
   courses: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Student",
+      ref: "Course",
     },
   ],
   createdAt: {

@@ -10,7 +10,10 @@ export const AdminStudentAssignPage = React.memo((props) => {
 
   useEffect(() => {
     TeacherAPI.t_fetchStudentUnpurchased(studentId)
-      .then((res) => setUnpurchased(res.data))
+      .then((res) => {
+        console.log(res.data);
+        setUnpurchased(res.data);
+      })
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
@@ -63,7 +66,7 @@ export const AdminStudentAssignPage = React.memo((props) => {
               </ListGroup>
             ) : (
               <div className="py-4 text-center">
-                <em>No hay cursos disponibles para asignar a este alumno</em>
+                <em>No hay cursos disponibles para asignar a este alumno.</em>
               </div>
             )}
           </Col>

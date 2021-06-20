@@ -35,6 +35,9 @@ router.get("/history/:studentId", function (req, res) {
 router.get("/unpurchased/:studentId", function (req, res) {
   const { studentId } = req.params;
 
+  console.log("ENTERING UNPURCHASED");
+  console.log("STUDENTID:", studentId);
+
   model.Student.findById(studentId)
     .select("courses")
     .then((data) => {

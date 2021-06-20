@@ -84,10 +84,6 @@ export default () => {
       {/* ================= STUDENTS ================= */}
       <Route exact path="/admin/students" component={AdminStudentsPage} />
       <Route
-        path="/admin/students/:studentId"
-        render={(props) => <AdminStudentDetailPage routeProps={props} />}
-      />
-      <Route
         exact
         path="/admin/students/unpurchased/:studentId"
         render={(props) => <AdminStudentAssignPage routeProps={props} />}
@@ -96,6 +92,11 @@ export default () => {
         exact
         path="/admin/students/history/:studentId"
         render={(props) => <AdminStudentHistoryPage routeProps={props} />}
+      />
+      <Route
+        // exact
+        path="/admin/students/:studentId"
+        render={(props) => <AdminStudentDetailPage routeProps={props} />}
       />
 
       {/* ================= MESSAGES ================= */}

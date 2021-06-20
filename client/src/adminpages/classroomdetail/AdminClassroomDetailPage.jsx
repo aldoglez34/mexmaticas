@@ -122,15 +122,26 @@ export const AdminClassroomDetailPage = React.memo((props) => {
           <Col>
             <span className="text-muted">Cursos</span>
             {classroom.courses.length ? (
-              <h5 className="mb-0">-</h5>
+              classroom.courses.map((c) => (
+                <h5 key={c._id} className="mb-0">
+                  {c.name}
+                </h5>
+              ))
             ) : (
               <h5 className="mb-0">-</h5>
             )}
             <AddCoursesButton
-              defaultMembers={classroom.members.map((s) => ({
-                studentId: s._id,
-                studentName: `${s.name} ${s.firstSurname} ${s.secondName} - ${s.email}`,
-              }))}
+              defaultCourses={classroom.courses
+                .map(({ _id, name, school }) => ({
+                  courseId: _id,
+                  courseName: `${school.trim()} / ${name.trim()}`,
+                }))
+                .sort((a, b) =>
+                  String(`${a.courseName}`).toUpperCase().trim() <
+                  String(`${b.courseName}`).toUpperCase().trim()
+                    ? -1
+                    : 1
+                )}
             />
           </Col>
         </Row>

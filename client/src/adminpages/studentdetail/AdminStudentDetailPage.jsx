@@ -75,7 +75,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
         {/* courses bought */}
         <Row>
           <Col>
-            <span className="text-muted d-flex">Cursos comprados</span>
+            <span className="text-muted d-flex">Cursos</span>
             {student.courses.length ? (
               <ul className="mb-2">
                 {student.courses.map((c) => {
@@ -87,7 +87,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
                 })}
               </ul>
             ) : (
-              <h5>Ninguno</h5>
+              <h5>-</h5>
             )}
             <Button
               variant="dark"

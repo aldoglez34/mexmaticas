@@ -7,36 +7,35 @@ import cn from "classnames";
 
 import styles from "./addstudentsbutton.module.scss";
 
-export const AddCoursesButton = React.memo(({ defaultMembers }) => {
+export const AddCoursesButton = React.memo(({ defaultCourses }) => {
   const url = new URL(window.location.href);
   const classroomId = url.href.split("/").pop();
 
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
-  const [allStudents, setAllStudents] = useState();
-  const [classroomStudents, setClassroomStudents] = useState([]);
+  const [allCourses, setAllCourses] = useState();
+  const [classroomCourses, setClassroomCourses] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   useEffect(() => {
     if (show) {
-      TeacherAPI.t_fetchStudents()
+      TeacherAPI.t_fetchCourses()
         .then((res) => {
-          const rawStudents = res.data
-            .map(({ _id, email, firstSurname, name }) => ({
-              _id,
-              email: email.trim(),
-              name: String(`${name} ${firstSurname}`).trim(),
+          const rawCourses = res.data
+            .map(({ _id, name, school }) => ({
+              courseId: _id,
+              courseName: `${school.trim()} / ${name.trim()}`,
             }))
             .sort((a, b) =>
-              String(`${a.name}`).toUpperCase().trim() <
-              String(`${b.name}`).toUpperCase().trim()
+              String(`${a.courseName}`).toUpperCase().trim() <
+              String(`${b.courseName}`).toUpperCase().trim()
                 ? -1
                 : 1
             );
-          setClassroomStudents(defaultMembers);
-          setAllStudents(rawStudents);
+          setClassroomCourses(defaultCourses);
+          setAllCourses(rawCourses);
         })
         .catch((err) => {
           console.log("err", err);
@@ -49,8 +48,8 @@ export const AddCoursesButton = React.memo(({ defaultMembers }) => {
 
   const handleSaveChanges = async () => {
     setIsLoading(true);
-    const onlyIds = classroomStudents.map(({ studentId }) => studentId);
-    TeacherAPI.t_updateClassroomMembers({ classroomId, members: onlyIds })
+    const onlyIds = classroomCourses.map(({ courseId }) => courseId);
+    TeacherAPI.t_updateClassroomCourses({ classroomId, courses: onlyIds })
       .then((res) => {
         console.log(res);
         window.location.reload();
@@ -61,41 +60,41 @@ export const AddCoursesButton = React.memo(({ defaultMembers }) => {
       });
   };
 
-  const isStudentInState = (studentId) => {
-    return !!classroomStudents.find(
-      (s) => String(s.studentId) === String(studentId)
+  const isCourseInState = (courseId) => {
+    return !!classroomCourses.find(
+      (s) => String(s.courseId) === String(courseId)
     );
   };
 
   const handleSelectStudent = (e) => {
-    const studentId = e.target.value;
-    const studentName = e.target.text;
+    const courseId = e.target.value;
+    const courseName = e.target.text;
 
-    // if user selected is in state, delete it
-    if (isStudentInState(studentId))
-      return setClassroomStudents((prevState) =>
-        prevState.filter((s) => String(s.studentId) !== String(studentId))
+    // if course selected is in state, delete it
+    if (isCourseInState(courseId))
+      return setClassroomCourses((prevState) =>
+        prevState.filter((s) => String(s.courseId) !== String(courseId))
       );
 
-    // if user selected is not in state, add it
-    if (!isStudentInState(studentId))
-      return setClassroomStudents((prevState) => [
+    // if course selected is not in state, add it
+    if (!isCourseInState(courseId))
+      return setClassroomCourses((prevState) => [
         ...prevState,
-        { studentId, studentName },
+        { courseId, courseName },
       ]);
   };
 
-  const setClass = (studentId) => {
-    if (!isStudentInState(studentId))
+  const setClass = (courseId) => {
+    if (!isCourseInState(courseId))
       return cn(styles.option, styles.notSelectedOption);
-    if (isStudentInState(studentId))
+    if (isCourseInState(courseId))
       return cn(styles.option, styles.selectedOption);
   };
 
   return (
     <>
       <Button
-        className="mt-1 shadow-sm"
+        className="mt-2 shadow-sm"
         onClick={handleShow}
         variant="dark"
         size="sm"
@@ -107,7 +106,7 @@ export const AddCoursesButton = React.memo(({ defaultMembers }) => {
       <Modal show={show} onHide={handleClose} backdrop="static" size="lg">
         <Modal.Body className="bg-light py-4 rounded shadow text-center">
           <div className="d-flex">
-            <h3 className="mb-0 text-dark">Agregar Alumnos</h3>
+            <h3 className="mb-0 text-dark">Agregar Cursos</h3>
             <Button
               variant="link"
               className="text-dark ml-auto"
@@ -120,35 +119,37 @@ export const AddCoursesButton = React.memo(({ defaultMembers }) => {
             <Form>
               <Row>
                 <Form.Group as={Col} md="8" className={styles.formGroup}>
-                  {allStudents ? (
-                    allStudents.length ? (
+                  {allCourses ? (
+                    allCourses.length ? (
                       <Form.Control
                         as="select"
                         className={styles.formControl}
                         multiple
                       >
-                        {allStudents.map((s) => (
+                        {allCourses.map((c) => (
                           <option
-                            key={s._id}
+                            key={c.courseId}
                             onClick={handleSelectStudent}
-                            value={s._id}
-                            className={setClass(s._id)}
-                          >{`${s.name} - ${s.email}`}</option>
+                            value={c.courseId}
+                            className={setClass(c.courseId)}
+                          >
+                            {c.courseName}
+                          </option>
                         ))}
                       </Form.Control>
                     ) : (
-                      <em>No hay alumnos.</em>
+                      <em>No hay cursos.</em>
                     )
                   ) : (
                     <AdminSpinner />
                   )}
                 </Form.Group>
                 <Col md="4" className="text-left d-flex flex-column">
-                  <strong>Alumnos:</strong>
+                  <strong>Cursos:</strong>
                   <ul className={styles.list}>
-                    {classroomStudents.map(({ studentId, studentName }) => (
-                      <li key={studentId}>
-                        <small key={studentId}>{studentName}</small>
+                    {classroomCourses.map(({ courseId, courseName }) => (
+                      <li key={courseId}>
+                        <small key={courseId}>{courseName}</small>
                       </li>
                     ))}
                   </ul>
@@ -172,7 +173,7 @@ export const AddCoursesButton = React.memo(({ defaultMembers }) => {
 });
 
 AddCoursesButton.propTypes = {
-  defaultMembers: array.isRequired,
+  defaultCourses: array.isRequired,
 };
 
 AddCoursesButton.displayName = "AddCoursesButton";

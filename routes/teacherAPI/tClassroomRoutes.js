@@ -22,7 +22,7 @@ router.get("/:classroomId", (req, res) => {
   model.Classroom.findById(classroomId)
     .populate("institution", "name")
     .populate("members", "name email firstSurname secondSurname")
-    .populate("courses", "name")
+    .populate("courses", "name school")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);
@@ -140,7 +140,24 @@ router.put("/update/members", async (req, res) => {
       members,
     });
 
-    res.status(200).send("Los alumnos del curso fueron actualizados.");
+    res.status(200).send("Los alumnos del salón fueron actualizados.");
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error.");
+  }
+});
+
+// t_updateClassroomCourses
+// matches with /teacherAPI/classrooms/update/courses
+router.put("/update/courses", async (req, res) => {
+  const { classroomId, courses } = req.body;
+
+  try {
+    await model.Classroom.findByIdAndUpdate(classroomId, {
+      courses,
+    });
+
+    res.status(200).send("Los cursos del salón fueron actualizados.");
   } catch (err) {
     console.log("@error", err);
     res.status(422).send("Ocurrió un error.");

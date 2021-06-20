@@ -94,7 +94,7 @@ export const AddCoursesButton = React.memo(({ defaultCourses }) => {
   return (
     <>
       <Button
-        className="mt-2 shadow-sm"
+        className="mt-1 shadow-sm"
         onClick={handleShow}
         variant="dark"
         size="sm"

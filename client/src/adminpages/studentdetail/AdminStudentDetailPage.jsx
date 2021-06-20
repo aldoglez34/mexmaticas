@@ -72,7 +72,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
             </h5>
           </Col>
         </Row>
-        {/* courses bought */}
+        {/* courses */}
         <Row>
           <Col>
             <span className="text-muted d-flex">Cursos</span>

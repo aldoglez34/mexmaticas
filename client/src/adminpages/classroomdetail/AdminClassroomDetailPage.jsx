@@ -26,7 +26,6 @@ export const AdminClassroomDetailPage = React.memo((props) => {
   useEffect(() => {
     TeacherAPI.t_fetchOneClassroom(classroomId)
       .then((res) => {
-        console.log(res.data);
         setClassroom(res.data);
         const { name } = res.data;
         dispatch(setTitle(name));
@@ -122,11 +121,13 @@ export const AdminClassroomDetailPage = React.memo((props) => {
           <Col>
             <span className="text-muted">Cursos</span>
             {classroom.courses.length ? (
-              classroom.courses.map((c) => (
-                <h5 key={c._id} className="mb-0">
-                  {c.name}
-                </h5>
-              ))
+              <ul className="mb-2">
+                {classroom.courses.map((c) => (
+                  <li key={c._id}>
+                    <h5 className="mb-0">{c.name}</h5>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <h5 className="mb-0">-</h5>
             )}

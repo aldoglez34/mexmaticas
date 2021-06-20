@@ -4,6 +4,7 @@ import TeacherAPI from "../../utils/TeacherAPI";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
 import {
   AddStudentsButton,
+  AddCoursesButton,
   ClassroomDescriptionForm,
   ClassroomInstitutionForm,
   ClassroomNameForm,
@@ -11,6 +12,7 @@ import {
 } from "./components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
+import { StudentItem } from "../students/components";
 import moment from "moment";
 import "moment/locale/es";
 
@@ -24,6 +26,7 @@ export const AdminClassroomDetailPage = React.memo((props) => {
   useEffect(() => {
     TeacherAPI.t_fetchOneClassroom(classroomId)
       .then((res) => {
+        console.log(res.data);
         setClassroom(res.data);
         const { name } = res.data;
         dispatch(setTitle(name));
@@ -34,8 +37,14 @@ export const AdminClassroomDetailPage = React.memo((props) => {
       });
   }, [classroomId, dispatch]);
 
+  const optionsDropdown = [{ text: "Borrar salón", fn: () => undefined }];
+
   return classroom ? (
-    <AdminLayout backBttn="/admin/classrooms" leftBarActive="Salones">
+    <AdminLayout
+      backBttn="/admin/classrooms"
+      leftBarActive="Salones"
+      optionsDropdown={optionsDropdown}
+    >
       <Container fluid>
         {/* name */}
         <Row>
@@ -108,12 +117,65 @@ export const AdminClassroomDetailPage = React.memo((props) => {
             </h5>
           </Col>
         </Row>
-        {/* members */}
+        {/* courses */}
         <Row className="mt-2">
           <Col>
+            <span className="text-muted">Cursos</span>
+            {classroom.courses.length ? (
+              <h5 className="mb-0">-</h5>
+            ) : (
+              <h5 className="mb-0">-</h5>
+            )}
+            <AddCoursesButton
+              defaultMembers={classroom.members.map((s) => ({
+                studentId: s._id,
+                studentName: `${s.name} ${s.firstSurname} ${s.secondName} - ${s.email}`,
+              }))}
+            />
+          </Col>
+        </Row>
+        {/* members */}
+        <Row className="mt-3">
+          <Col>
             <span className="text-muted d-block">{`Miembros (${classroom.members.length})`}</span>
-            <div>{!classroom.members.length && <h5>-</h5>}</div>
-            <AddStudentsButton />
+            <div>
+              {classroom.members.length ? (
+                <div className="my-2">
+                  <Row>
+                    <Col md={{ offset: 0, span: 8 }}>
+                      {classroom.members
+                        .sort((a, b) =>
+                          String(`${a.name} ${a.firstSurname}`)
+                            .toUpperCase()
+                            .trim() <
+                          String(`${b.name} ${b.firstSurname}`)
+                            .toUpperCase()
+                            .trim()
+                            ? -1
+                            : 1
+                        )
+                        .map((s) => (
+                          <StudentItem
+                            _id={s._id}
+                            comesFrom={`/comesFrom=/admin/classrooms/edit/${classroom._id}`}
+                            email={s.email}
+                            key={s._id}
+                            name={`${s.name} ${s.firstSurname}`}
+                          />
+                        ))}
+                    </Col>
+                  </Row>
+                </div>
+              ) : (
+                <h5>-</h5>
+              )}
+            </div>
+            <AddStudentsButton
+              defaultMembers={classroom.members.map((s) => ({
+                studentId: s._id,
+                studentName: `${s.name} ${s.firstSurname} ${s.secondName} - ${s.email}`,
+              }))}
+            />
           </Col>
         </Row>
       </Container>

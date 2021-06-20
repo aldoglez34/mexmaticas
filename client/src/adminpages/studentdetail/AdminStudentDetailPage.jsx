@@ -8,6 +8,12 @@ import moment from "moment";
 import "moment/locale/es";
 
 export const AdminStudentDetailPage = React.memo((props) => {
+  const url = new URL(window.location.href);
+  const comesFrom =
+    url.href.split("comesFrom=").length === 2
+      ? url.href.split("comesFrom=").pop()
+      : undefined;
+
   const dispatch = useDispatch();
 
   const [student, setStudent] = useState();
@@ -28,7 +34,10 @@ export const AdminStudentDetailPage = React.memo((props) => {
   }, [studentId, dispatch]);
 
   return student ? (
-    <AdminLayout backBttn="/admin/students" leftBarActive="Alumnos">
+    <AdminLayout
+      backBttn={comesFrom || "/admin/students"}
+      leftBarActive="Alumnos"
+    >
       <Container fluid>
         {/* username */}
         <Row>

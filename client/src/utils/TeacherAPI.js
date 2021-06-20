@@ -41,6 +41,9 @@ export default {
   t_updateClassroomInstitution: (data) =>
     axios.put("/teacherAPI/classrooms/update/institution", data),
 
+  t_updateClassroomMembers: (data) =>
+    axios.put("/teacherAPI/classrooms/update/members", data),
+
   // ==============================================
   // COURSES
   // ==============================================

@@ -7,7 +7,7 @@ import cn from "classnames";
 
 import styles from "./addstudentsbutton.module.scss";
 
-export const AddStudentsButton = React.memo(({ defaultMembers }) => {
+export const AddCoursesButton = React.memo(({ defaultMembers }) => {
   const url = new URL(window.location.href);
   const classroomId = url.href.split("/").pop();
 
@@ -45,7 +45,7 @@ export const AddStudentsButton = React.memo(({ defaultMembers }) => {
           );
         });
     }
-  }, [defaultMembers, show]);
+  }, [show]);
 
   const handleSaveChanges = async () => {
     setIsLoading(true);
@@ -100,8 +100,8 @@ export const AddStudentsButton = React.memo(({ defaultMembers }) => {
         variant="dark"
         size="sm"
       >
-        <i className="fas fa-user-plus mr-2" />
-        <span>Agregar Alumnos</span>
+        <i className="fas fa-plus-square mr-2" />
+        <span>Agregar Cursos</span>
       </Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" size="lg">
@@ -171,8 +171,8 @@ export const AddStudentsButton = React.memo(({ defaultMembers }) => {
   );
 });
 
-AddStudentsButton.propTypes = {
+AddCoursesButton.propTypes = {
   defaultMembers: array.isRequired,
 };
 
-AddStudentsButton.displayName = "AddStudentsButton";
+AddCoursesButton.displayName = "AddCoursesButton";

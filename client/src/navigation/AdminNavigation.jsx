@@ -84,7 +84,6 @@ export default () => {
       {/* ================= STUDENTS ================= */}
       <Route exact path="/admin/students" component={AdminStudentsPage} />
       <Route
-        exact
         path="/admin/students/:studentId"
         render={(props) => <AdminStudentDetailPage routeProps={props} />}
       />

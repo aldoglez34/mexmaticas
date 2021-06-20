@@ -23,6 +23,12 @@ const schema = new Schema({
       ref: "Student",
     },
   ],
+  courses: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Student",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

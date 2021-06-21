@@ -153,9 +153,60 @@ router.put("/update/courses", async (req, res) => {
   const { classroomId, courses } = req.body;
 
   try {
+    // update the courses of the classroom
     await model.Classroom.findByIdAndUpdate(classroomId, {
       courses,
     });
+
+    // get all the basic exams of all the courses
+    const topicsIds = await model.Course.find({ _id: { $in: courses } })
+      .select("topics")
+      .then((res) => {
+        res.map((c) => {
+          const acc = [];
+          c.topics.map((t) => t._id);
+        });
+      });
+
+    console.log("topicsIds", topicsIds);
+
+    // let topicsIds = [];
+    // let getAllTopics = new Promise((resolve, reject) => {
+    //   courses
+    //     .forEach((value, index, array) => {
+    //       model.Course.findById(value)
+    //         .select("topics")
+    //         .then((res) => topicsIds.push(res.topics));
+    //     })
+    //     .then(() => {
+    //       if (index === array.length - 1) resolve();
+    //     });
+    // });
+
+    // await getAllTopics.then((res) => console.log("res", res));
+    // console.log("topicsIds", topicsIds);
+
+    // // get all the students (members) ids of the classroom
+    // const membersIds = await model.Classroom.findById(classroomId)
+    //   .select("members")
+    //   .then((res) => res.members);
+
+    // let addCoursesToAllStudents = new Promise((resolve, reject) => {
+    //   membersIds.forEach((value, index, array) => {
+    //     model.Student.update(
+    //       {
+    //         _id: value,
+    //       },
+    //       {
+    //         courses: courses,
+    //       }
+    //     ).then(() => {
+    //       if (index === array.length - 1) resolve();
+    //     });
+    //   });
+    // });
+
+    // await addCoursesToAllStudents();
 
     res.status(200).send("Los cursos del salón fueron actualizados.");
   } catch (err) {

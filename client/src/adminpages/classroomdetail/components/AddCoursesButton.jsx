@@ -44,7 +44,7 @@ export const AddCoursesButton = React.memo(({ defaultCourses }) => {
           );
         });
     }
-  }, [show]);
+  }, [defaultCourses, show]);
 
   const handleSaveChanges = async () => {
     setIsLoading(true);

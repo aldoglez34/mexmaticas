@@ -200,7 +200,7 @@ export const AdminStudentsPage = () => {
             </Form>
             {filtered ? (
               filtered.length ? (
-                <React.Fragment>
+                <>
                   <ListGroup>
                     {filtered.slice(offset, limit).map((s) => (
                       <StudentItem
@@ -220,7 +220,7 @@ export const AdminStudentsPage = () => {
                       />
                     </div>
                   )}
-                </React.Fragment>
+                </>
               ) : (
                 <div className="text-center mt-4">No hay alumnos.</div>
               )

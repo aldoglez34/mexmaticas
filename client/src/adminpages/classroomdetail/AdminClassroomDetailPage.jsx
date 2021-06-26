@@ -1,5 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Image,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
 import {
@@ -20,6 +28,8 @@ export const AdminClassroomDetailPage = React.memo((props) => {
   const dispatch = useDispatch();
 
   const [classroom, setClassroom] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const classroomId = props.routeProps.match.params.classroomId;
 
@@ -36,7 +46,23 @@ export const AdminClassroomDetailPage = React.memo((props) => {
       });
   }, [classroomId, dispatch]);
 
-  const optionsDropdown = [{ text: "Borrar salón", fn: () => undefined }];
+  const handleDeleteClassroom = async () => {
+    setIsDeleting(true);
+    try {
+      // delete classroom from database
+      const deleteRes = await TeacherAPI.t_deleteClassroom({ classroomId });
+      if (deleteRes.status === 200)
+        return (window.location.href = "/admin/classrooms");
+    } catch (err) {
+      console.log(err);
+      alert("Ocurrió un error al intentar borrar el salón.");
+    }
+  };
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  const optionsDropdown = [{ text: "Borrar Salón", fn: handleShowModal }];
 
   return classroom ? (
     <AdminLayout
@@ -191,6 +217,44 @@ export const AdminClassroomDetailPage = React.memo((props) => {
           </Col>
         </Row>
       </Container>
+      {/* delete classroom modal */}
+      <Modal centered onHide={handleCloseModal} show={showModal}>
+        <Modal.Body className="bg-light rounded shadow text-center py-4">
+          {isDeleting ? (
+            <div className="py-4">
+              <strong className="mb-2">Borrando...</strong>
+              <br />
+              <br />
+              <Spinner variant="danger" animation="border" role="status">
+                <span className="sr-only">Borrando...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <>
+              <Image
+                className="mb-3"
+                height="130"
+                src="/images/trash.png"
+                width="130"
+              />
+              <div className="lead text-center mt-2">{`¿Estás seguro que deseas borrar el salón: ${classroom.name}?`}</div>
+              <div className="d-flex flex-row justify-content-center mt-4">
+                <Button variant="dark" onClick={handleCloseModal}>
+                  Cancelar
+                </Button>
+                <Button
+                  variant="danger"
+                  className="ml-2"
+                  onClick={handleDeleteClassroom}
+                >
+                  Borrar
+                  <i className="fas fa-trash-alt ml-2" />
+                </Button>
+              </div>
+            </>
+          )}
+        </Modal.Body>
+      </Modal>
     </AdminLayout>
   ) : (
     <AdminSpinner />

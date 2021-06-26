@@ -1,4 +1,4 @@
-const model = require("../../models");
+const { Course, Student } = require("../../models");
 
 const utils = {
   getNextDifficulty: (diff) => {
@@ -41,6 +41,65 @@ const utils = {
     )[0];
 
     return latestTopic ? latestTopic.topicOrderNumber + 1 : 0;
+  },
+  getBasicExamsOfAnArrayOfCourses: async (courses) => {
+    const onlyBasicExamsIds = await Course.find({ _id: { $in: courses } })
+      .select("topics.exams")
+      .lean()
+      .populate("topics.exams", "difficulty")
+      .then((courses) => {
+        const topics = courses.reduce((acc, cv) => {
+          acc.push(...cv.topics);
+          return acc;
+        }, []);
+
+        const exams = topics.reduce((acc, cv) => {
+          acc.push(...cv.exams);
+          return acc;
+        }, []);
+
+        const onlyBasics = exams.filter(
+          ({ difficulty }) => difficulty === "Basic"
+        );
+
+        return onlyBasics.map((e) => e._id);
+      });
+
+    return onlyBasicExamsIds;
+  },
+  pushExamsIntoStudentsAccountsIfTheyDontExist: (
+    studentsIds,
+    coursesIds,
+    examsIds
+  ) => {
+    return new Promise((resolve, reject) => {
+      studentsIds.forEach((studentId, index, array) => {
+        Student.findOneAndUpdate(
+          { _id: studentId },
+          {
+            $addToSet: {
+              courses: coursesIds,
+              exams: examsIds,
+            },
+          }
+        ).then(() => {
+          if (index === array.length - 1) resolve();
+        });
+      });
+    });
+  },
+  removeInstitutionFromClassrooms: (institutionId, classrooms) => {
+    const classroomsArr = Array.isArray(classrooms) ? classrooms : [classrooms];
+    return new Promise((resolve, reject) => {
+      classroomsArr.forEach((classroomId, index, array) => {
+        Student.findOneAndUpdate(
+          { _id: institutionId },
+          { institution: null }
+        ).then(() => {
+          if (index === array.length - 1) resolve();
+        });
+      });
+    });
   },
 };
 

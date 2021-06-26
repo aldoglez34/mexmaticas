@@ -34,8 +34,15 @@ export const AddCoursesButton = React.memo(({ defaultCourses }) => {
                 ? -1
                 : 1
             );
+
+          // remove the already assigned courses of the selection
+          const rawWithoutDefault = rawCourses.filter(
+            ({ courseId }) =>
+              !defaultCourses.find((dc) => dc.courseId === courseId)
+          );
+
           setClassroomCourses(defaultCourses);
-          setAllCourses(rawCourses);
+          setAllCourses(rawWithoutDefault);
         })
         .catch((err) => {
           console.log("err", err);

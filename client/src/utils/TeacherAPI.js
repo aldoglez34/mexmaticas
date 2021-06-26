@@ -18,6 +18,9 @@ export default {
   t_updateInstitutionDescription: (data) =>
     axios.put("/teacherAPI/institutions/update/description", data),
 
+  t_deleteInstitution: (data) =>
+    axios.put("/teacherAPI/institutions/delete", data),
+
   // ==============================================
   // CLASSROOMS
   // ==============================================
@@ -46,6 +49,8 @@ export default {
 
   t_updateClassroomCourses: (data) =>
     axios.put("/teacherAPI/classrooms/update/courses", data),
+
+  t_deleteClassroom: (data) => axios.put("/teacherAPI/classrooms/delete", data),
 
   // ==============================================
   // COURSES

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const model = require("../../models");
+const utils = require("../utils/utils");
 
 // t_fetchClassrooms()
 // matches with /teacherAPI/classrooms/all
@@ -136,6 +137,23 @@ router.put("/update/members", async (req, res) => {
   const { classroomId, members } = req.body;
 
   try {
+    // get the courses ids of this classroom
+    const coursesIds = await model.Classroom.findById(classroomId)
+      .select("courses")
+      .then((res) => res.courses);
+
+    // get the basic exams of these courses
+    const onlyBasicExamsIds = await utils.getBasicExamsOfAnArrayOfCourses(
+      coursesIds
+    );
+
+    await utils.pushExamsIntoStudentsAccountsIfTheyDontExist(
+      members,
+      coursesIds,
+      onlyBasicExamsIds
+    );
+
+    // update members with new members list
     await model.Classroom.findByIdAndUpdate(classroomId, {
       members,
     });
@@ -158,60 +176,42 @@ router.put("/update/courses", async (req, res) => {
       courses,
     });
 
-    // get all the basic exams of all the courses
-    const topicsIds = await model.Course.find({ _id: { $in: courses } })
-      .select("topics")
-      .then((res) => {
-        res.map((c) => {
-          const acc = [];
-          c.topics.map((t) => t._id);
-        });
-      });
+    // out of the courses provided, grab the ids of all the basic exams of all the topics those courses contain
+    const onlyBasicExamsIds = await utils.getBasicExamsOfAnArrayOfCourses(
+      courses
+    );
 
-    console.log("topicsIds", topicsIds);
+    // get all the students (members) ids of the classroom
+    const membersIds = await model.Classroom.findById(classroomId)
+      .select("members")
+      .then((res) => res.members);
 
-    // let topicsIds = [];
-    // let getAllTopics = new Promise((resolve, reject) => {
-    //   courses
-    //     .forEach((value, index, array) => {
-    //       model.Course.findById(value)
-    //         .select("topics")
-    //         .then((res) => topicsIds.push(res.topics));
-    //     })
-    //     .then(() => {
-    //       if (index === array.length - 1) resolve();
-    //     });
-    // });
-
-    // await getAllTopics.then((res) => console.log("res", res));
-    // console.log("topicsIds", topicsIds);
-
-    // // get all the students (members) ids of the classroom
-    // const membersIds = await model.Classroom.findById(classroomId)
-    //   .select("members")
-    //   .then((res) => res.members);
-
-    // let addCoursesToAllStudents = new Promise((resolve, reject) => {
-    //   membersIds.forEach((value, index, array) => {
-    //     model.Student.update(
-    //       {
-    //         _id: value,
-    //       },
-    //       {
-    //         courses: courses,
-    //       }
-    //     ).then(() => {
-    //       if (index === array.length - 1) resolve();
-    //     });
-    //   });
-    // });
-
-    // await addCoursesToAllStudents();
+    await utils.pushExamsIntoStudentsAccountsIfTheyDontExist(
+      membersIds,
+      courses,
+      onlyBasicExamsIds
+    );
 
     res.status(200).send("Los cursos del salón fueron actualizados.");
   } catch (err) {
     console.log("@error", err);
     res.status(422).send("Ocurrió un error.");
+  }
+});
+
+// t_deleteClassroom()
+// matches with /teacherAPI/classrooms/delete
+router.put("/delete", async (req, res) => {
+  const { classroomId } = req.body;
+
+  try {
+    // delete the classroom
+    await model.Classroom.remove({ _id: classroomId });
+
+    res.status(200).send("El salón fue borrado con éxito.");
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error");
   }
 });
 

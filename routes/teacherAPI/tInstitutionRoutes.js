@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const model = require("../../models");
-const moment = require("moment");
+const utils = require("../utils/utils");
 
 // t_fetchInstitutions()
 // matches with /teacherAPI/institutions/all
@@ -101,6 +101,30 @@ router.put("/update/description", async (req, res) => {
   } catch (err) {
     console.log("@error", err);
     res.status(422).send("Ocurrió un error.");
+  }
+});
+
+// t_deleteInstitution()
+// matches with /teacherAPI/institutions/delete
+router.put("/delete", async (req, res) => {
+  const { institutionId } = req.body;
+
+  try {
+    // get the classrooomsIds that have this institution associated to them
+    const classroomsIds = await model.Classroom.find({
+      institution: institutionId,
+    }).then((res) => res.map((c) => c._id));
+
+    // remove this association from each classroom
+    await utils.removeInstitutionFromClassrooms(institutionId, classroomsIds);
+
+    // delete the topic from the course collection
+    await model.Institution.remove({ _id: institutionId });
+
+    res.status(200).send("El salón fue borrado con éxito.");
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error");
   }
 });
 

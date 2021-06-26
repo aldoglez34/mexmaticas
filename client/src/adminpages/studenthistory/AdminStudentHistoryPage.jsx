@@ -1,80 +1,224 @@
-import React, { useState, useEffect } from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
-import { AdminLayout, AdminSpinner } from "../components";
+import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
 import moment from "moment";
 import "moment/locale/es";
 
+const PAGE_SIZE = 25;
+const SORT_OPTIONS = ["Más Recientes", "Más Antiguos"];
+
 export const AdminStudentHistoryPage = React.memo((props) => {
+  const studentId = props.routeProps.match.params.studentId;
+
+  const searchRef = useRef(null);
+
+  const [pages, setPages] = useState();
+  const [activePage, setActivePage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [offset, setOffset] = useState(0);
+  const [sort, setSort] = useState();
   const [history, setHistory] = useState(false);
+  const [filtered, setFiltered] = useState();
 
   useEffect(() => {
-    const studentId = props.routeProps.match.params.studentId;
-
+    setSort(SORT_OPTIONS[0]);
+    //
     TeacherAPI.t_fetchStudentHistory(studentId)
-      .then((res) => setHistory(res.data))
+      .then((res) => {
+        const defaultSorting = res?.data?.sort((a, b) =>
+          a.date > b.date ? -1 : 1
+        );
+        setHistory(res.data);
+        setFiltered(defaultSorting);
+        setPages(Math.round(defaultSorting.length / PAGE_SIZE));
+      })
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [props.routeProps.match.params.studentId]);
+  }, [studentId]);
 
-  return history ? (
+  const handleSortHistory = (criteria) => {
+    setSort(criteria);
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
+    if (criteria === SORT_OPTIONS[0])
+      setFiltered((history) =>
+        history.sort((a, b) => (a.date > b.date ? -1 : 1))
+      );
+    if (criteria === SORT_OPTIONS[1])
+      setFiltered((history) =>
+        history.sort((a, b) => (a.date < b.date ? -1 : 1))
+      );
+  };
+
+  const handleFilterHistory = (criteria) => {
+    setSort(SORT_OPTIONS[0]);
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
+    if (criteria.length < 3) {
+      setFiltered(history.sort((a, b) => (a.date > b.date ? -1 : 1)));
+    }
+    if (criteria.length >= 3) {
+      const examNameMatches = history.filter((s) =>
+        String(`${s.exam.name}`)
+          .toUpperCase()
+          .trim()
+          .includes(criteria.toUpperCase())
+      );
+      setFiltered(examNameMatches);
+    }
+  };
+
+  const clearFilters = () => {
+    setSort(SORT_OPTIONS[0]);
+    setFiltered(history.sort((a, b) => (a.date > b.date ? -1 : 1)));
+    searchRef.current.value = "";
+    if (activePage !== 1) {
+      setActivePage(1);
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
+  };
+
+  const handleChangePage = (p) => {
+    setActivePage(p);
+    if (p === 1) {
+      setOffset(0);
+      setLimit(PAGE_SIZE);
+    }
+    if (p > 1) {
+      const _offset = (p - 1) * PAGE_SIZE;
+      setOffset(_offset);
+      setLimit(_offset + PAGE_SIZE);
+    }
+  };
+
+  return (
     <AdminLayout
       leftBarActive="Alumnos"
-      backBttn={"/admin/students/" + props.routeProps.match.params.studentId}
+      backBttn={`/admin/students/${studentId}`}
     >
       <Container>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>
-            <h3 className="mb-3">Exámenes...</h3>
-            {history.length ? (
-              <Table bordered size="sm">
-                <thead>
-                  <tr>
-                    <th
-                      className="py-3 text-center"
-                      style={{ backgroundColor: "#f4fbf8" }}
-                    >
-                      <h5 className="mb-0">Fecha</h5>
-                    </th>
-                    <th
-                      className="py-3 text-center"
-                      style={{ backgroundColor: "#f4fbf8" }}
-                    >
-                      <h5 className="mb-0">Examen</h5>
-                    </th>
-                    <th
-                      className="py-3 text-center"
-                      style={{ backgroundColor: "#f4fbf8" }}
-                    >
-                      <h5 className="mb-0">Calificación</h5>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {history.map((h) => {
-                    return (
-                      <tr key={h._id}>
-                        <td>{moment(h.date).format("L")}</td>
-                        <td>{h.exam.name}</td>
-                        <td className="text-center">{h.grade}</td>
+            <Form className="mb-3">
+              <Form.Row>
+                <Col md="4" className="d-flex">
+                  <div className="d-flex align-items-center mr-2">
+                    <i className="fas fa-sort" style={{ fontSize: "19px" }} />
+                  </div>
+                  <Form.Control
+                    as="select"
+                    value={sort}
+                    onChange={(opt) => handleSortHistory(opt.target.value)}
+                  >
+                    {SORT_OPTIONS.map((so) => (
+                      <option key={so} value={so}>
+                        {so}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                <Col md="8" className="d-flex">
+                  <div className="d-flex align-items-center mr-2">
+                    <i className="fas fa-search" style={{ fontSize: "19px" }} />
+                  </div>
+                  <Form.Control
+                    onChange={(str) =>
+                      handleFilterHistory(String(str.target.value))
+                    }
+                    placeholder="Buscar exámenes..."
+                    type="text"
+                    ref={searchRef}
+                  />
+                  <Button
+                    size="sm"
+                    variant="dark"
+                    className="ml-2"
+                    onClick={clearFilters}
+                  >
+                    <i className="fas fa-sync-alt px-1" />
+                  </Button>
+                </Col>
+              </Form.Row>
+            </Form>
+            {filtered ? (
+              filtered.length ? (
+                <>
+                  <Table bordered size="sm">
+                    <thead>
+                      <tr>
+                        <th
+                          className="py-3 text-center"
+                          style={{ backgroundColor: "#f4fbf8" }}
+                        >
+                          <h5 className="mb-0">Fecha</h5>
+                        </th>
+                        <th
+                          className="py-3 text-center"
+                          style={{ backgroundColor: "#f4fbf8" }}
+                        >
+                          <h5 className="mb-0">Examen</h5>
+                        </th>
+                        <th
+                          className="py-3 text-center"
+                          style={{ backgroundColor: "#f4fbf8" }}
+                        >
+                          <h5 className="mb-0">Calificación</h5>
+                        </th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
+                    </thead>
+                    <tbody>
+                      {filtered.slice(offset, limit).map((h) => {
+                        return (
+                          <tr key={h._id}>
+                            <td className="align-middle">
+                              <span className="d-block">
+                                {moment(h.date).format("L")}
+                              </span>
+                              <span className="d-block">
+                                {moment(h.date).format("h:mm:ss a")}
+                              </span>
+                            </td>
+                            <td className="align-middle">{h.exam.name}</td>
+                            <td className="align-middle text-center">
+                              {h.grade}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                  {filtered.length > PAGE_SIZE && (
+                    <div className="mt-3">
+                      <AdminPagination
+                        activePage={activePage}
+                        handleChangePage={(p) => handleChangePage(p)}
+                        pageCount={pages}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center mt-4">
+                  No hay registros de exámenes.
+                </div>
+              )
             ) : (
-              <div className="py-4 text-center">
-                <em>Este alumno no ha presentado ningún examen</em>
-              </div>
+              <AdminSpinner />
             )}
           </Col>
         </Row>
       </Container>
     </AdminLayout>
-  ) : (
-    <AdminSpinner />
   );
 });
 

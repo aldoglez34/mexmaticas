@@ -12,7 +12,6 @@ router.put("/buyCourse", function (req, res) {
     .lean()
     .populate("topics.exams", "difficulty")
     .then((data) => {
-      console.log(data);
       const courses = data.topics.reduce((acc, cv) => {
         acc.push(...cv.exams);
         return acc;

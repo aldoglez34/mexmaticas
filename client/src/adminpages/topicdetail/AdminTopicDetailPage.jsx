@@ -140,7 +140,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const optionsDropdown = [{ text: "Borrar tema", fn: handleShowModal }];
+  const optionsDropdown = [{ text: "Borrar Tema", fn: handleShowModal }];
 
   return topic ? (
     <AdminLayout

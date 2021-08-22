@@ -24,15 +24,15 @@ export const SimpleWithTwoAnswersForm = ({ question }) => {
   return (
     <Formik
       initialValues={{
-        qCALeft1: question?.qCorrectAnswers[0]?.complementLeft || "",
-        qCALeft2: question?.qCorrectAnswers[1]?.complementLeft || "",
-        qCARight1: question?.qCorrectAnswers[0]?.complementRight || "",
-        qCARight2: question?.qCorrectAnswers[1]?.complementRight || "",
-        qComment: question?.qComment || "",
-        qCorrectAnswer1: question?.qCorrectAnswers[0]?.answer || "",
-        qCorrectAnswer2: question?.qCorrectAnswers[1]?.answer || "",
-        qInstruction: question?.qTechnicalInstruction?.text || "",
-        qTechnicalInstruction: question?.qInstruction || "",
+        qCALeft1: question?.qCorrectAnswers[0]?.complementLeft ?? "",
+        qCALeft2: question?.qCorrectAnswers[1]?.complementLeft ?? "",
+        qCARight1: question?.qCorrectAnswers[0]?.complementRight ?? "",
+        qCARight2: question?.qCorrectAnswers[1]?.complementRight ?? "",
+        qComment: question?.qComment ?? "",
+        qCorrectAnswer1: question?.qCorrectAnswers[0]?.answer ?? "",
+        qCorrectAnswer2: question?.qCorrectAnswers[1]?.answer ?? "",
+        qInstruction: question?.qInstruction ?? "",
+        qTechnicalInstruction: question?.qTechnicalInstruction?.text ?? "",
       }}
       validationSchema={yupschema}
       onSubmit={(values, { setSubmitting }) => {

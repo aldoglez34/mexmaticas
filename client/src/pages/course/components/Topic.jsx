@@ -12,7 +12,7 @@ export const Topic = React.memo(({ courseName, topic }) => {
           <h1 className="display-4 topicName mb-2" style={{ color: "#48bf84" }}>
             {topic.name}
           </h1>
-          <div className="d-flex mb-3">
+          <div className="d-flex mb-2">
             <h3
               className="mb-0"
               style={{ backgroundColor: "#c6d9d7", color: "#212529" }}
@@ -26,8 +26,14 @@ export const Topic = React.memo(({ courseName, topic }) => {
       <Row>
         <Col lg={6}>
           <p className="mb-2">
-            <i className="fas fa-bullhorn mr-2 text-dark" />
-            {topic.description}
+            {topic.description &&
+              topic.description.split("\\n").map((c) => {
+                return (
+                  <span key={c} className="d-block text-muted">
+                    {String(c).trim()}
+                  </span>
+                );
+              })}
           </p>
           <p className="my-3">
             <Leaderboards topicId={topic._id} />

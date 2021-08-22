@@ -49,7 +49,6 @@ export const AdminTopicDetailPage = React.memo((props) => {
       TeacherAPI.t_fetchTopic(courseId, topicId)
         .then((res) => {
           const response = res.data;
-          console.log(response);
           const topicName = response.name;
           const unsortedExams = response.exams;
           const sortedExams = unsortedExams
@@ -188,7 +187,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
               <AdminModal
                 Form={TopicDescriptionForm}
                 formInitialText={topic.description}
-                formLabel="Descripción"
+                formLabel="Descripción (Utiliza el símbolo \n para saltos de línea)"
                 icon={<i className="fas fa-pen-alt" />}
               />
             </h5>

@@ -141,7 +141,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
               <AdminModal
                 Form={CourseDescriptionForm}
                 formInitialText={course.description}
-                formLabel="Descripción"
+                formLabel="Descripción (Utiliza el símbolo \n para saltos de línea)"
                 icon={<i className="fas fa-pen-alt" />}
               />
             </h5>

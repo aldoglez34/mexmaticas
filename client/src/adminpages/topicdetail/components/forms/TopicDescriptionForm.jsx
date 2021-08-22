@@ -55,7 +55,7 @@ export const TopicDescriptionForm = React.memo(
               <Form.Group as={Col}>
                 <Form.Label>{formLabel}</Form.Label>
                 <Form.Control
-                  maxLength="250"
+                  maxLength="500"
                   as="textarea"
                   rows="5"
                   type="text"

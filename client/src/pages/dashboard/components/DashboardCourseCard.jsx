@@ -20,7 +20,16 @@ export const DashboardCourseCard = React.memo(({ course }) => {
         <Card.Title className="d-flex flex-row">
           <h2 className="mb-0">{course.name}</h2>
         </Card.Title>
-        <Card.Text>{course.description}</Card.Text>
+        <Card.Text>
+          {course.description &&
+            course.description.split("\\n").map((c) => {
+              return (
+                <span key={c} className="d-block text-muted">
+                  {String(c).trim()}
+                </span>
+              );
+            })}
+        </Card.Text>
       </Card.Body>
       <ListGroup className="list-group-flush">
         {course.topics

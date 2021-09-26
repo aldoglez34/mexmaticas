@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Formik, ErrorMessage } from "formik";
 import { Alert, Button, Col, Form } from "react-bootstrap";
 import * as yup from "yup";
-import { useSignUpUser } from "../hooks/signUp";
+import { useSendEmailVerification, useSignUpUser } from "../hooks/signUp";
 
 export const SignUpForm = () => {
   const [emailToVerify, setEmailToVerify] = useState();
-  
+
   const { signUpUser } = useSignUpUser();
+  const { sendEmailVerification } = useSendEmailVerification();
 
   const yupSchema = yup.object({
     email: yup
@@ -77,7 +78,14 @@ export const SignUpForm = () => {
         <>
           {emailToVerify && (
             <Alert className="mb-3" variant="success">
-              {`Se ha enviado un correo de verificación a ${emailToVerify}`}
+              <span>{`Se ha enviado un correo de verificación a ${emailToVerify}`}</span>
+              <small className="d-block">
+                ¿No te llegó el correo?{" "}
+                <Alert.Link onClick={sendEmailVerification}>
+                  haz click aquí
+                </Alert.Link>{" "}
+                para enviarlo de nuevo.
+              </small>
             </Alert>
           )}
           <Form noValidate onSubmit={handleSubmit}>
@@ -185,7 +193,7 @@ export const SignUpForm = () => {
                   </strong>
                   <br />
                   <small className="text-muted">
-                    Las contraseñas deben tener por lo menos 6 caracteres
+                    La contraseña deben tener por lo menos 6 caracteres
                   </small>
                 </Form.Label>
                 <Form.Control

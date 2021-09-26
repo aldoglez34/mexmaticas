@@ -54,3 +54,26 @@ export const useSignUpUser = () => {
 
   return { signUpUser };
 };
+
+export const useSendEmailVerification = () => {
+  const purchase = useSelector((state) => state.purchase);
+
+  const sendEmailVerification = async () => {
+    try {
+      if (firebaseAuth.currentUser) {
+        await firebaseAuth.currentUser.sendEmailVerification({
+          url: purchase
+            ? `http://localhost:3000/payment/${purchase.school}/${purchase.courseId}`
+            : "http://localhost:3000/dashboard",
+          handleCodeInApp: true,
+        });
+
+        alert("Nuevo correo enviado");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { sendEmailVerification };
+};

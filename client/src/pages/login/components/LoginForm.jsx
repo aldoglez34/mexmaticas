@@ -1,8 +1,9 @@
 import React from "react";
-import { Formik, ErrorMessage } from "formik";
-import { Form, Col, Button } from "react-bootstrap";
+import { ErrorMessage, Formik } from "formik";
+import { Button, Col, Form } from "react-bootstrap";
 import * as yup from "yup";
 import { useLoginUser } from "../hooks/login";
+import { ForgotPassword } from "./";
 
 export const LoginForm = () => {
   const { loginUser } = useLoginUser();
@@ -92,19 +93,15 @@ export const LoginForm = () => {
             </Form.Group>
           </Form.Row>
           <Button
+            block
             className="shadow-sm mt-2 genericButton"
             disabled={isSubmitting}
             size="lg"
             type="submit"
-            block
           >
             Entrar
           </Button>
-          <div className="text-right mt-2">
-            <a className="text-success" href="/">
-              <small>¿Olvidaste tu contraseña?</small>
-            </a>
-          </div>
+          <ForgotPassword />
         </Form>
       )}
     </Formik>

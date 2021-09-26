@@ -23,7 +23,7 @@ export const SignUpPage = () => {
           </Col>
           <Col lg={6} id="su_rightCol">
             <SignUpForm />
-            <strong className="d-block pt-4">
+            {/* <strong className="d-block pt-4">
               Regístrate usando alguna de tus cuentas:
             </strong>
             <div className="d-flex justify-content-between mt-3">
@@ -45,7 +45,7 @@ export const SignUpPage = () => {
                   style={{ fontSize: "25px", paddingTop: "3px" }}
                 />
               </Button>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </Container>

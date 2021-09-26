@@ -60,5 +60,5 @@ export const useForgotPassword = () => {
     return { isError };
   };
 
-  return { useForgotPassword };
+  return { forgotPassword };
 };

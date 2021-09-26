@@ -17,7 +17,7 @@ export const MessagesPage = () => {
   useEffect(() => {
     if (zenMode) dispatch(zenModeActions.zenModeOff());
 
-    API.fetchMessages(student.username)
+    API.fetchMessages(student?.username)
       .then((res) => {
         setMessages(res.data);
         // console.log(res.data);
@@ -27,7 +27,7 @@ export const MessagesPage = () => {
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
 
-    API.markAllMessagesSeen(student._id)
+    API.markAllMessagesSeen(student?._id)
       .then(() => {
         // console.log(res.data);
         console.log("Todos los mensajes han sido marcados como vistos");
@@ -38,7 +38,7 @@ export const MessagesPage = () => {
       });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [student._id]);
+  }, [student?._id]);
 
   return (
     <StudentLayout>

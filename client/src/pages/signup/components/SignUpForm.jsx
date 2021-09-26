@@ -6,6 +6,7 @@ import { useSignUpUser } from "../hooks/signUp";
 
 export const SignUpForm = () => {
   const [emailToVerify, setEmailToVerify] = useState();
+  
   const { signUpUser } = useSignUpUser();
 
   const yupSchema = yup.object({

@@ -1,22 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik, ErrorMessage } from "formik";
 import { Form, Col, Button } from "react-bootstrap";
-import { firebaseAuth } from "../../../firebase/firebase";
-import fbApp from "firebase/app";
 import * as yup from "yup";
-import { useSelector, useDispatch } from "react-redux";
-import { loginStudent } from "../../../redux/actions/student";
-import API from "../../../utils/API";
+import { useLoginUser } from "../hooks/login";
 
 export const LoginForm = () => {
-  const dispatch = useDispatch();
-
-  const purchase = useSelector((state) => state.purchase);
-  const student = useSelector((state) => state.student);
-
-  useEffect(() => {
-    if (student) window.location.href = "/dashboard";
-  }, [student]);
+  const { loginUser } = useLoginUser();
 
   const yupSchema = yup.object({
     email: yup
@@ -35,33 +24,10 @@ export const LoginForm = () => {
       validationSchema={yupSchema}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
-        try {
-          // set persistence in firebase
-          await firebaseAuth.setPersistence(fbApp.auth.Auth.Persistence.LOCAL);
 
-          // sign in user in firebase
-          const fbUser = await firebaseAuth.signInWithEmailAndPassword(
-            values.email,
-            values.password
-          );
+        const { isError } = await loginUser(values);
 
-          // fetch user info from database
-          const dbStudent = await API.fetchStudentByUID(fbUser.user.uid).then(
-            (res) => res.data
-          );
-
-          // if there's a purchase pending, redirect user to payment page
-          if (purchase)
-            window.location.href = `/payment/${purchase.school}/${purchase.courseId}`;
-
-          // if not then send user to dashboard
-          dispatch(loginStudent(dbStudent));
-        } catch (err) {
-          console.log("err", err);
-          alert(
-            "Ha ocurrido un error, por favor verifica que tus datos sean correctos."
-          );
-          firebaseAuth.signOut();
+        if (isError) {
           setSubmitting(false);
         }
       }}

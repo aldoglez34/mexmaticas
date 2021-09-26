@@ -3,17 +3,14 @@ import { AuthUserContext } from "../session";
 import GuestNavigation from "./GuestNavigation";
 import StudentNavigation from "./StudentNavigation";
 import AdminNavigation from "./AdminNavigation";
+import { isEqual } from "lodash";
 
 const Navigation = () => (
   <AuthUserContext.Consumer>
     {(navigation) => {
-      return navigation === "Student" ? (
-        <StudentNavigation />
-      ) : navigation === "Teacher" ? (
-        <AdminNavigation />
-      ) : (
-        <GuestNavigation />
-      );
+      if (isEqual(navigation, "Student")) return <StudentNavigation />;
+      if (isEqual(navigation, "Teacher")) return <AdminNavigation />;
+      if (isEqual(navigation, "Guest")) return <GuestNavigation />;
     }}
   </AuthUserContext.Consumer>
 );

@@ -2,10 +2,11 @@ import React from "react";
 import AuthUserContext from "./context";
 import { connect } from "react-redux";
 import { firebaseAuth } from "../firebase/firebase";
-import { logoutStudent } from "../redux/actions/student";
+import { loginStudent, logoutStudent } from "../redux/actions/student";
 import { AdminSpinner } from "../adminpages/components";
+import { isEqual } from "lodash";
+import API from "../utils/API";
 
-// higher order component
 const withNavigation = (Component) => {
   class WithNavigation extends React.Component {
     state = {
@@ -13,14 +14,44 @@ const withNavigation = (Component) => {
     };
 
     componentDidMount() {
-      firebaseAuth.onAuthStateChanged((fbUser) => {
-        fbUser
-          ? this.setState({ navigation: fbUser.displayName })
-          : this.props.user
-          ? this.setState({ navigation: "Guest" }, () =>
-              this.props.logoutStudent()
-            )
-          : this.setState({ navigation: "Guest" });
+      firebaseAuth.onAuthStateChanged((user) => {
+        // authenticated users (students or teacher)
+        if (user?.displayName) {
+          const isUnverifiedStudent =
+            !isEqual(user.displayName, "Teacher") && !user.emailVerified;
+          const isVerifiedStudent =
+            !isEqual(user.displayName, "Teacher") && user.emailVerified;
+          const isTeacher = isEqual(user.displayName, "Teacher");
+
+          if (isUnverifiedStudent)
+            return this.setState({ navigation: "Guest" });
+
+          if (isVerifiedStudent) {
+            // set user data to redux if needed
+            if (!this.props.user) {
+              API.fetchStudentByUID(user.uid).then((res) =>
+                this.props.loginStudent({
+                  _id: res.data._id,
+                  email: res.data.email,
+                  firstSurname: res.data.firstSurname,
+                  name: res.data.name,
+                  secondSurname: res.data.secondSurname,
+                })
+              );
+            }
+            // return navigation
+            return this.setState({ navigation: "Student" });
+          }
+
+          if (isTeacher) return this.setState({ navigation: "Teacher" });
+        }
+
+        // not authenticated users
+        // logout user from redux if needed
+        if (this.props.user) this.props.logoutStudent();
+
+        // return default navigation
+        return this.setState({ navigation: "Guest" });
       });
     }
 
@@ -42,6 +73,7 @@ const withNavigation = (Component) => {
   };
 
   const mapDispatchToProps = {
+    loginStudent,
     logoutStudent,
   };
 

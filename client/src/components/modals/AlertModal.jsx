@@ -14,7 +14,9 @@ export const AlertModal = React.memo(({ children, image, show }) => {
       show={show}
     >
       <Modal.Body className="bg-light rounded shadow text-center py-4">
-        <Image height="130" src={image} width="130" className="mb-3" />
+        {image && (
+          <Image height="130" src={image} width="130" className="mb-3" />
+        )}
         {children}
       </Modal.Body>
     </Modal>

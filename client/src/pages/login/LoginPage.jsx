@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "../../components/Layout";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { LoginForm } from "./components";
 import "./loginpage.scss";
 
@@ -26,7 +26,7 @@ export const LoginPage = () => {
           </Col>
           <Col lg={6} id="log_rightCol">
             <LoginForm />
-            <strong className="d-block pt-4">
+            {/* <strong className="d-block pt-4">
               Inicia sesión con alguna de tus cuentas:
             </strong>
             <div className="d-flex justify-content-between mt-3">
@@ -48,7 +48,7 @@ export const LoginPage = () => {
                   style={{ fontSize: "25px", paddingTop: "3px" }}
                 />
               </Button>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </Container>

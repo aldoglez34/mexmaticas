@@ -11,7 +11,7 @@ export const ForgotPassword = () => {
   const [show, setShow] = useState(false);
   const [emailToRecover, setEmailToRecover] = useState();
 
-  const { forgotPassword } = useForgotPassword();
+  const forgotPassword = useForgotPassword();
 
   const handleShowModal = () => setShow((prevState) => setShow(!prevState));
 
@@ -99,7 +99,7 @@ export const ForgotPassword = () => {
                   <Button
                     block
                     className="shadow-sm mt-2 genericButton"
-                    disabled={isSubmitting}
+                    disabled={emailToRecover ?? isSubmitting}
                     size="lg"
                     type="submit"
                   >

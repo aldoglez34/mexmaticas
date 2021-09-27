@@ -42,10 +42,18 @@ export const useSignUpUser = () => {
       });
     } catch (err) {
       setIsError(true);
-      console.log("err", err);
+
       firebaseAuth.signOut();
-      if (isEqual(err.code, "auth/email-already-in-use"))
-        return alert("Este correo ya está en uso");
+
+      if (isEqual(err?.code, "auth/email-already-in-use"))
+        return alert("El correo ya está en uso. ");
+
+      if (isEqual(err?.code, "auth/invalid-email"))
+        return alert("El correo es inválido.");
+
+      if (isEqual(err?.code, "auth/weak-password"))
+        return alert("La contraseña es inválida.");
+
       return alert("Ocurrió un error");
     }
 
@@ -68,7 +76,7 @@ export const useSendEmailVerification = () => {
           handleCodeInApp: true,
         });
 
-        alert("Nuevo correo enviado");
+        alert("Correo enviado.");
       }
     } catch (error) {
       console.log(error);

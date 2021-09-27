@@ -28,9 +28,7 @@ export const LoginForm = () => {
 
         const { isError } = await loginUser(values);
 
-        if (isError) {
-          setSubmitting(false);
-        }
+        if (isError) setSubmitting(false);
       }}
     >
       {({

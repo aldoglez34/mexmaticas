@@ -38,7 +38,12 @@ router.get("/fetchCoursesBySchool/:school/:studentId", function (req, res) {
               return acc;
             }, []);
 
-            res.json(coursesWithPurchaseField);
+            const onyCoursesWithPaypalId = coursesWithPurchaseField.filter(
+              (c) => c.paypalId
+            );
+
+            // return only courses that are not purchased and have paypalId
+            res.json(onyCoursesWithPaypalId);
           })
           .catch((err) => {
             console.log("@error", err);

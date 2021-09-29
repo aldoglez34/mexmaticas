@@ -8,9 +8,12 @@ import { clearPurchase } from "../../redux/actions/purchase";
 import TeacherAPI from "../../utils/TeacherAPI";
 import API from "../../utils/API";
 import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
+import { useHistory } from "react-router-dom";
 
 export const PaymentPage = React.memo((props) => {
   const [course, setCourse] = useState();
+
+  const { goBack } = useHistory();
 
   const dispatch = useDispatch();
 
@@ -24,6 +27,9 @@ export const PaymentPage = React.memo((props) => {
 
     TeacherAPI.t_fetchOneCourse(courseId).then((res) => setCourse(res.data));
   }, [courseId, dispatch, purchase]);
+
+  // take the user back if the course doesn't have a paypalId
+  useEffect(() => course && !course.paypalId && goBack(), [course, goBack]);
 
   const addCourseToUser = async () => {
     try {

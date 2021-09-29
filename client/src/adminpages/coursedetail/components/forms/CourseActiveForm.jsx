@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import { bool, oneOfType, string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
@@ -6,7 +6,7 @@ import * as yup from "yup";
 import TeacherAPI from "../../../../utils/TeacherAPI";
 import { useSelector } from "react-redux";
 
-export const CourseActiveForm = React.memo(({ formLabel, formInitialText }) => {
+export const CourseActiveForm = memo(({ formLabel, formInitialText }) => {
   const courseId = useSelector((state) => state.admin.course.courseId);
 
   const yupschema = yup.object({

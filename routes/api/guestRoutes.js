@@ -30,15 +30,19 @@ router.get("/fetchCoursesBySchool/:school/:studentId", function (req, res) {
       .then(({ courses: coursesPurchased }) => {
         model.Course.find({ school, isActive: true })
           .then((allCourses) => {
-            const coursesWithPurchaseField = allCourses.reduce((acc, cv) => {
-              acc.push({
-                ...cv._doc,
-                isCoursePurchased: coursesPurchased.includes(String(cv._id)),
-              });
-              return acc;
-            }, []);
+            const filteredCourses = allCourses
+              .reduce((acc, cv) => {
+                acc.push({
+                  ...cv._doc,
+                  isCoursePurchased: coursesPurchased.includes(String(cv._id)),
+                });
+                return acc;
+              }, [])
+              .filter((c) => c.paypalId)
+              .filter((c) => c.topics.length);
 
-            res.json(coursesWithPurchaseField);
+            // return only courses that are not purchased, have paypalId and have at least one topic
+            res.json(filteredCourses);
           })
           .catch((err) => {
             console.log("@error", err);

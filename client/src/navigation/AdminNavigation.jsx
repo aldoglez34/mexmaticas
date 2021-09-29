@@ -103,12 +103,7 @@ export default () => {
       <Route exact path="/admin/messages" component={AdminMessagesPage} />
 
       {/* ================= REDIRECT ================= */}
-      {/* <Redirect from="/admin" to="/admin/courses" />
-      <Redirect from="/" to="/admin/courses" /> */}
-      <Redirect from="*" to="/admin/courses" />
-
-      {/* 404 not found */}
-      {/* <Route component={AdminCourses} /> */}
+      <Redirect from="*" to="/admin/students" />
     </Switch>
   );
 };

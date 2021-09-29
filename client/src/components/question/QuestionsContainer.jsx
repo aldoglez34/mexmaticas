@@ -315,12 +315,12 @@ export const QuestionsContainer = React.memo(
                           )}
                           {/* input */}
                           <input
-                            type="text"
-                            maxLength="20"
                             autoComplete="off"
-                            onKeyDown={handleKeyDown}
                             className="border rounded px-2"
                             id={`answer${idx}`}
+                            maxLength="100"
+                            onKeyDown={handleKeyDown}
+                            type="text"
                           />
                           {/* right comment */}
                           {ca.complementRight && (

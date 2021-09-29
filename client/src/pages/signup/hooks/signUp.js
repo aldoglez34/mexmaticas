@@ -19,7 +19,7 @@ export const useSignUpUser = () => {
 
       // edit user display name to customize the verification email
       await fbRes.user.updateProfile({
-        displayName: `${values.firstSurname} ${values.secondSurname}`,
+        displayName: `${values.name} ${values.firstSurname}`,
       });
 
       // push new user to database

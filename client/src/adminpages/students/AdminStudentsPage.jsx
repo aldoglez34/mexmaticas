@@ -119,10 +119,7 @@ export const AdminStudentsPage = () => {
           .trim()
           .includes(criteria.toUpperCase())
       );
-      const emailMatches = students.filter((s) =>
-        String(s.email).toUpperCase().trim().includes(criteria.toUpperCase())
-      );
-      setFiltered([...nameMatches, ...emailMatches]);
+      setFiltered(nameMatches);
     }
   };
 

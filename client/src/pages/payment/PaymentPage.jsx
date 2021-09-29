@@ -29,7 +29,7 @@ export const PaymentPage = React.memo((props) => {
   }, [courseId, dispatch, purchase]);
 
   // take the user back if the course doesn't have a paypalId
-  useEffect(() => course && !course.paypalId && goBack(), [course]);
+  useEffect(() => course && !course.paypalId && goBack(), [course, goBack]);
 
   const addCourseToUser = async () => {
     try {

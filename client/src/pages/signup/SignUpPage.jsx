@@ -23,29 +23,6 @@ export const SignUpPage = () => {
           </Col>
           <Col lg={6} id="su_rightCol">
             <SignUpForm />
-            {/* <strong className="d-block pt-4">
-              Regístrate usando alguna de tus cuentas:
-            </strong>
-            <div className="d-flex justify-content-between mt-3">
-              <Button className="shadow-sm" variant="primary" block>
-                <i
-                  className="fab fa-facebook"
-                  style={{ fontSize: "25px", paddingTop: "3px" }}
-                />
-              </Button>
-              <Button className="shadow-sm mt-0" variant="light" block>
-                <i
-                  className="fab fa-google"
-                  style={{ fontSize: "23px", paddingTop: "3px" }}
-                />
-              </Button>
-              <Button className="shadow-sm mt-0" variant="dark" block>
-                <i
-                  className="fab fa-apple"
-                  style={{ fontSize: "25px", paddingTop: "3px" }}
-                />
-              </Button>
-            </div> */}
           </Col>
         </Row>
       </Container>

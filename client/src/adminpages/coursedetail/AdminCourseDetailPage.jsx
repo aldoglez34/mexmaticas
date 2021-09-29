@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
@@ -18,11 +18,16 @@ import moment from "moment";
 import "moment/locale/es";
 
 export const AdminCourseDetailPage = React.memo((props) => {
+  const [course, setCourse] = useState();
+  const [canEditStatus, setCanEditStatus] = useState(true);
+
   const dispatch = useDispatch();
 
-  const [course, setCourse] = useState();
-
   const courseId = props.routeProps.match.params.courseId;
+
+  const hasTopics = Boolean(course?.topics?.length);
+  const hasPaypal = !!course?.paypalId;
+  const isCourseActive = course?.isActive;
 
   useEffect(() => {
     TeacherAPI.t_fetchOneCourse(courseId)
@@ -42,6 +47,16 @@ export const AdminCourseDetailPage = React.memo((props) => {
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
   }, [courseId, dispatch]);
+
+  useEffect(() => {
+    if (!hasTopics || !hasPaypal) {
+      setCanEditStatus(false);
+      if (isCourseActive)
+        TeacherAPI.t_updateCourseStatus({ courseId, newStatus: false });
+    } else {
+      setCanEditStatus(true);
+    }
+  }, [canEditStatus, course, courseId, hasPaypal, hasTopics, isCourseActive]);
 
   return course ? (
     <AdminLayout leftBarActive="Cursos" backBttn="/admin/courses">
@@ -116,19 +131,27 @@ export const AdminCourseDetailPage = React.memo((props) => {
         {/* status */}
         <Row>
           <Col>
-            <span className="text-muted">Estatus</span>
-            <h4>
+            <span className="text-muted">
+              Estatus{" "}
+              <small>
+                (para cambiar el estatus es necesario que el Curso tenga Temas y
+                PayPal ID)
+              </small>
+            </span>
+            <h4 className="mb-3">
               {course.isActive ? (
                 <Badge variant="success">Activo</Badge>
               ) : (
                 <Badge variant="danger">No activo</Badge>
               )}
-              <AdminModal
-                Form={CourseActiveForm}
-                formInitialText={course.isActive}
-                formLabel="Estatus"
-                icon={<i className="fas fa-pen-alt" />}
-              />
+              {canEditStatus && (
+                <AdminModal
+                  Form={CourseActiveForm}
+                  formInitialText={course.isActive}
+                  formLabel="Estatus"
+                  icon={<i className="fas fa-pen-alt" />}
+                />
+              )}
             </h4>
           </Col>
         </Row>

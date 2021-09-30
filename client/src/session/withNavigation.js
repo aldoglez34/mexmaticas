@@ -19,14 +19,18 @@ const withNavigation = (Component) => {
         if (user?.displayName) {
           const isUnverifiedStudent =
             !isEqual(user.displayName, "Teacher") && !user.emailVerified;
+
           const isVerifiedStudent =
             !isEqual(user.displayName, "Teacher") && user.emailVerified;
+
           const isTeacher = isEqual(user.displayName, "Teacher");
 
           if (isUnverifiedStudent)
             return this.setState({ navigation: "Guest" });
 
-          if (isVerifiedStudent) {
+          // TODO: change this to verified
+          // if (isVerifiedStudent) {
+          if (isUnverifiedStudent) {
             // set user data to redux if needed
             if (!this.props.user) {
               API.fetchStudentByUID(user.uid).then((res) =>

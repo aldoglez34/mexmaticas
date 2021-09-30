@@ -26,6 +26,7 @@ const withNavigation = (Component) => {
 
           if (isStudent) {
             if (!user.emailVerified) {
+              if (this.props.user) this.props.logoutStudent();
               return this.setState({ navigation: "Guest" });
             }
 

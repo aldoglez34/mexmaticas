@@ -8,6 +8,7 @@ import { isEqual } from "lodash";
 const Navigation = () => (
   <AuthUserContext.Consumer>
     {(navigation) => {
+      console.log("navigation", navigation);
       if (isEqual(navigation, "Student")) return <StudentNavigation />;
       if (isEqual(navigation, "Teacher")) return <AdminNavigation />;
       if (isEqual(navigation, "Guest")) return <GuestNavigation />;

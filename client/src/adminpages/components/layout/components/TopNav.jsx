@@ -7,7 +7,7 @@ import cn from "classnames";
 import styles from "./topnav.module.scss";
 
 export const TopNav = React.memo(({ backBttn, buttons, optionsDropdown }) => {
-  const title = useSelector((state) => state.admin.title);
+  const title = useSelector((state) => state?.admin?.title);
 
   return (
     <div style={{ backgroundColor: "#0f5257" }}>

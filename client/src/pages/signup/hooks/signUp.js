@@ -3,6 +3,7 @@ import { firebaseAuth } from "../../../firebase/firebase";
 import API from "../../../utils/API";
 import { useSelector } from "react-redux";
 import { isEqual } from "lodash";
+import { getForwardUrl } from "../../../utils/utils";
 
 export const useSignUpUser = () => {
   const [isError, setIsError] = useState(false);
@@ -34,16 +35,17 @@ export const useSignUpUser = () => {
       // send verify email to user
       // send user to either the dashboard or the payment screen
       // depending on whether user has a purchase pending
+      const url = getForwardUrl(purchase);
+
       await firebaseAuth.currentUser.sendEmailVerification({
-        url: purchase
-          ? `http://localhost:3000/payment/${purchase.school}/${purchase.courseId}`
-          : "http://localhost:3000/dashboard",
+        url,
         handleCodeInApp: true,
       });
+
+      // logout user
+      await firebaseAuth.signOut();
     } catch (err) {
       setIsError(true);
-
-      firebaseAuth.signOut();
 
       if (isEqual(err?.code, "auth/email-already-in-use"))
         return alert("El correo ya está en uso. ");

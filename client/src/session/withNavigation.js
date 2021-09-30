@@ -14,48 +14,51 @@ const withNavigation = (Component) => {
     };
 
     componentDidMount() {
-      firebaseAuth.onAuthStateChanged((user) => {
+      firebaseAuth.onAuthStateChanged(async (user) => {
+        console.log("user", user);
+
         // authenticated users (students or teacher)
-        if (user?.displayName) {
-          const isUnverifiedStudent =
-            !isEqual(user.displayName, "Teacher") && !user.emailVerified;
+        const isAuth = !!user?.displayName;
 
-          const isVerifiedStudent =
-            !isEqual(user.displayName, "Teacher") && user.emailVerified;
-
+        if (isAuth) {
+          const isStudent = !isEqual(user.displayName, "Teacher");
           const isTeacher = isEqual(user.displayName, "Teacher");
 
-          if (isUnverifiedStudent)
-            return this.setState({ navigation: "Guest" });
-
-          // TODO: change this to verified
-          // if (isVerifiedStudent) {
-          if (isUnverifiedStudent) {
-            // set user data to redux if needed
-            if (!this.props.user) {
-              API.fetchStudentByUID(user.uid).then((res) =>
-                this.props.loginStudent({
-                  _id: res.data._id,
-                  email: res.data.email,
-                  firstSurname: res.data.firstSurname,
-                  name: res.data.name,
-                  secondSurname: res.data.secondSurname,
-                })
-              );
+          if (isStudent) {
+            if (!user.emailVerified) {
+              await firebaseAuth.signOut();
+              await this.props.logoutStudent();
+              return this.setState({ navigation: "Guest" });
             }
-            // return navigation
-            return this.setState({ navigation: "Student" });
+
+            if (user.emailVerified) {
+              if (!this.props.user) {
+                API.fetchStudentByUID(user.uid).then((res) =>
+                  this.props.loginStudent({
+                    _id: res.data._id,
+                    email: res.data.email,
+                    firstSurname: res.data.firstSurname,
+                    name: res.data.name,
+                    secondSurname: res.data.secondSurname,
+                  })
+                );
+              }
+              return this.setState({ navigation: "Student" });
+            }
           }
 
-          if (isTeacher) return this.setState({ navigation: "Teacher" });
+          if (isTeacher) {
+            return this.setState({ navigation: "Teacher" });
+          }
         }
 
-        // not authenticated users
-        // logout user from redux if needed
-        if (this.props.user) this.props.logoutStudent();
+        if (!isAuth) {
+          // logout user from redux if needed
+          if (this.props.user) this.props.logoutStudent();
 
-        // return default navigation
-        return this.setState({ navigation: "Guest" });
+          // return default navigation
+          return this.setState({ navigation: "Guest" });
+        }
       });
     }
 

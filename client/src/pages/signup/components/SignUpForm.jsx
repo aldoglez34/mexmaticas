@@ -79,13 +79,6 @@ export const SignUpForm = () => {
           {emailToVerify && (
             <Alert className="mb-3" variant="success">
               <span>{`Se ha enviado un correo de verificación a ${emailToVerify}`}</span>
-              <small className="d-block">
-                ¿No te llegó el correo?{" "}
-                <Alert.Link onClick={sendEmailVerification}>
-                  haz click aquí
-                </Alert.Link>{" "}
-                para enviarlo de nuevo.
-              </small>
             </Alert>
           )}
           <Form noValidate onSubmit={handleSubmit}>

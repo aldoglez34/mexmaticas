@@ -26,8 +26,6 @@ const withNavigation = (Component) => {
 
           if (isStudent) {
             if (!user.emailVerified) {
-              await firebaseAuth.signOut();
-              await this.props.logoutStudent();
               return this.setState({ navigation: "Guest" });
             }
 

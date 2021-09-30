@@ -26,6 +26,9 @@ export const useLoginUser = () => {
           handleCodeInApp: true,
         });
 
+        await firebaseAuth.signOut();
+        await this.props.logoutStudent();
+
         alert(
           `Estás intentando iniciar sesión con una cuenta que no está verificada, es necesario que vayas a tu correo ${values.email} para verificarla.`
         );

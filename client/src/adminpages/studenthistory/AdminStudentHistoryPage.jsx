@@ -1,25 +1,33 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
-import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
+import {
+  AdminLayout,
+  AdminPagination,
+  AdminSpinner,
+  ExportToExcel,
+} from "../components";
+import { useSelector } from "react-redux";
 import moment from "moment";
 import "moment/locale/es";
 
 const PAGE_SIZE = 25;
 const SORT_OPTIONS = ["Más Recientes", "Más Antiguos"];
 
-export const AdminStudentHistoryPage = React.memo((props) => {
-  const studentId = props.routeProps.match.params.studentId;
-
-  const searchRef = useRef(null);
-
+export const AdminStudentHistoryPage = memo((props) => {
   const [pages, setPages] = useState();
   const [activePage, setActivePage] = useState(1);
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [offset, setOffset] = useState(0);
   const [sort, setSort] = useState();
-  const [history, setHistory] = useState(false);
+  const [history, setHistory] = useState();
   const [filtered, setFiltered] = useState();
+  const [showExportToExcel, setShowExportToExcel] = useState(false);
+
+  const studentId = props.routeProps.match.params.studentId;
+  const studentName = useSelector((state) => state?.admin?.title);
+
+  const searchRef = useRef(null);
 
   useEffect(() => {
     setSort(SORT_OPTIONS[0]);
@@ -101,11 +109,37 @@ export const AdminStudentHistoryPage = React.memo((props) => {
     }
   };
 
+  const optionsDropdown = [
+    {
+      text: "Exportar a Excel",
+      fn: () => setShowExportToExcel(true),
+    },
+  ];
+
+  const headers = [
+    { label: "Fecha", key: "date" },
+    { label: "Examen", key: "exam" },
+    { label: "Calificación", key: "grade" },
+  ];
+
   return (
     <AdminLayout
-      leftBarActive="Alumnos"
       backBttn={`/admin/students/${studentId}`}
+      leftBarActive="Alumnos"
+      optionsDropdown={optionsDropdown}
     >
+      {showExportToExcel && (
+        <ExportToExcel
+          data={history?.reduce((acc, cv) => {
+            acc.push({ date: cv.date, grade: cv.grade, exam: cv.exam.name });
+            return acc;
+          }, [])}
+          fileName={studentName}
+          headers={headers}
+          setShow={setShowExportToExcel}
+          show={showExportToExcel}
+        />
+      )}
       <Container>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>

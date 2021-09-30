@@ -80,9 +80,6 @@ export const SignUpForm = () => {
             <Alert className="mb-3" variant="success">
               <span>{`Se ha enviado un correo de verificación a ${emailToVerify}`}</span>
               <small className="d-block">
-                Esto puede tardar varios minutos.
-              </small>
-              <small className="d-block">
                 ¿No te llegó el correo?{" "}
                 <Alert.Link onClick={sendEmailVerification}>
                   haz click aquí

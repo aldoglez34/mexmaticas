@@ -1,4 +1,4 @@
-export const APP_VERSION = "5.2";
+export const APP_VERSION = "5.3";
 
 export const IMAGES = {
   SIZE: 1000000,

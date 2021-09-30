@@ -2,6 +2,7 @@ import { useState } from "react";
 import { firebaseAuth } from "../../../firebase/firebase";
 import { isEqual } from "lodash";
 import fbApp from "firebase/app";
+import { getForwardUrl } from "../../../utils/utils";
 
 export const useLoginUser = () => {
   const [isError, setIsError] = useState(false);
@@ -10,10 +11,25 @@ export const useLoginUser = () => {
     try {
       await firebaseAuth.setPersistence(fbApp.auth.Auth.Persistence.LOCAL);
 
-      await firebaseAuth.signInWithEmailAndPassword(
+      const { user } = await firebaseAuth.signInWithEmailAndPassword(
         values.email,
         values.password
       );
+
+      const isUserVerified = user?.emailVerified;
+
+      if (!isUserVerified) {
+        const url = getForwardUrl();
+
+        await firebaseAuth.currentUser.sendEmailVerification({
+          url,
+          handleCodeInApp: true,
+        });
+
+        alert(
+          `Estás intentando iniciar sesión con una cuenta que no está verificada, es necesario que vayas a tu correo ${values.email} para verificarla.`
+        );
+      }
     } catch (err) {
       setIsError(true);
 

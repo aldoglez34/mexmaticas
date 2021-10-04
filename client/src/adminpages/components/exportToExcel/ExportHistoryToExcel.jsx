@@ -3,9 +3,16 @@ import { CSVLink } from "react-csv";
 import { Modal } from "react-bootstrap";
 import { arrayOf, bool, func, object, string } from "prop-types";
 
-export const ExportToExcel = memo(
-  ({ data, fileName, headers, setShow, show }) => {
+export const ExportHistoryToExcel = memo(
+  ({ data = [], fileName = "", setShow, show = false }) => {
     const handleOnHide = () => setShow(false);
+
+    const headers = [
+      { label: "Alumno", key: "student" },
+      { label: "Fecha", key: "date" },
+      { label: "Examen", key: "exam" },
+      { label: "Calificación", key: "grade" },
+    ];
 
     return (
       <Modal show={show} onHide={handleOnHide}>
@@ -32,12 +39,11 @@ export const ExportToExcel = memo(
   }
 );
 
-ExportToExcel.propTypes = {
+ExportHistoryToExcel.propTypes = {
   data: arrayOf(object),
   fileName: string,
-  headers: arrayOf(object),
   setShow: func,
   show: bool,
 };
 
-ExportToExcel.displayName = "ExportToExcel";
+ExportHistoryToExcel.displayName = "ExportHistoryToExcel";

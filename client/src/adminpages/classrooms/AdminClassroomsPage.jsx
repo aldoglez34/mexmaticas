@@ -15,9 +15,6 @@ const SORT_OPTIONS = [
 ];
 
 export const AdminClassroomsPage = () => {
-  const dispatch = useDispatch();
-  const searchRef = useRef(null);
-
   const [pages, setPages] = useState();
   const [activePage, setActivePage] = useState(1);
   const [limit, setLimit] = useState(PAGE_SIZE);
@@ -26,6 +23,9 @@ export const AdminClassroomsPage = () => {
   const [classrooms, setClassrooms] = useState();
   const [filtered, setFiltered] = useState();
   const [filter, setFilter] = useState();
+
+  const dispatch = useDispatch();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     dispatch(setTitle("Salones"));

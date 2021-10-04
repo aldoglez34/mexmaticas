@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { Formik, ErrorMessage } from "formik";
 import { Alert, Button, Col, Form } from "react-bootstrap";
 import * as yup from "yup";
-import { useSendEmailVerification, useSignUpUser } from "../hooks/signUp";
+import { useSignUpUser } from "../hooks/signUp";
 
 export const SignUpForm = () => {
   const [emailToVerify, setEmailToVerify] = useState();
 
   const { signUpUser } = useSignUpUser();
-  const { sendEmailVerification } = useSendEmailVerification();
 
   const yupSchema = yup.object({
     email: yup
@@ -78,7 +77,9 @@ export const SignUpForm = () => {
         <>
           {emailToVerify && (
             <Alert className="mb-3" variant="success">
-              <span>{`Se ha enviado un correo de verificación a ${emailToVerify}`}</span>
+              <span>
+                Se ha enviado un correo de verificación a <b>{emailToVerify}</b>
+              </span>
             </Alert>
           )}
           <Form noValidate onSubmit={handleSubmit}>

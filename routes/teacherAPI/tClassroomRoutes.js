@@ -215,4 +215,48 @@ router.put("/delete", async (req, res) => {
   }
 });
 
+// t_fetchClassroomHistory()
+// matches with /teacherAPI/classrooms/history/:classroomId
+router.get("/history/:classroomId", async (req, res) => {
+  const { classroomId } = req.params;
+
+  try {
+    // populate two layers deep
+    const studentsIds = await model.Classroom.findById(classroomId)
+      .select("members")
+      .populate({
+        path: "members",
+        select: "_id attempts name firstSurname secondSurname",
+        populate: {
+          path: "attempts",
+          populate: {
+            path: "exam",
+            select: "name",
+          },
+        },
+      })
+      .then(({ members }) => members);
+
+    const data = studentsIds.reduce((acc, cv) => {
+      const student = `${cv.name} ${cv.firstSurname} ${cv.firstSurname}`;
+
+      const history = cv.attempts.map((a) => ({
+        student,
+        date: a.date,
+        exam: a.exam.name,
+        grade: a.grade,
+      }));
+
+      acc.push(...history);
+
+      return acc;
+    }, []);
+
+    res.status(200).send(data);
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error.");
+  }
+});
+
 module.exports = router;

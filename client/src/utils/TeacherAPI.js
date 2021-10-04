@@ -30,6 +30,9 @@ export default {
   t_fetchOneClassroom: (classroomId) =>
     axios.get("/teacherAPI/classrooms/" + classroomId),
 
+  t_fetchClassroomHistory: (classroomId) =>
+    axios.get("/teacherAPI/classrooms/history/" + classroomId),
+
   t_newClassroom: (data) => axios.post("/teacherAPI/classrooms/new", data),
 
   t_updateClassroomName: (data) =>

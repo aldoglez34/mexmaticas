@@ -5,7 +5,7 @@ import {
   AdminLayout,
   AdminPagination,
   AdminSpinner,
-  ExportToExcel,
+  ExportHistoryToExcel,
 } from "../components";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -111,15 +111,9 @@ export const AdminStudentHistoryPage = memo((props) => {
 
   const optionsDropdown = [
     {
-      text: "Exportar a Excel",
+      text: "Exportar calificaciones a .csv",
       fn: () => setShowExportToExcel(true),
     },
-  ];
-
-  const headers = [
-    { label: "Fecha", key: "date" },
-    { label: "Examen", key: "exam" },
-    { label: "Calificación", key: "grade" },
   ];
 
   return (
@@ -129,13 +123,17 @@ export const AdminStudentHistoryPage = memo((props) => {
       optionsDropdown={optionsDropdown}
     >
       {showExportToExcel && (
-        <ExportToExcel
+        <ExportHistoryToExcel
           data={history?.reduce((acc, cv) => {
-            acc.push({ date: cv.date, grade: cv.grade, exam: cv.exam.name });
+            acc.push({
+              student: studentName,
+              date: cv.date,
+              grade: cv.grade,
+              exam: cv.exam.name,
+            });
             return acc;
           }, [])}
           fileName={studentName}
-          headers={headers}
           setShow={setShowExportToExcel}
           show={showExportToExcel}
         />

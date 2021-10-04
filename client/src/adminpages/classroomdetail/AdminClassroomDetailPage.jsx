@@ -9,7 +9,12 @@ import {
   Spinner,
 } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
-import { AdminLayout, AdminModal, AdminSpinner } from "../components";
+import {
+  AdminLayout,
+  AdminModal,
+  AdminSpinner,
+  ExportHistoryToExcel,
+} from "../components";
 import {
   AddStudentsButton,
   AddCoursesButton,
@@ -25,11 +30,13 @@ import moment from "moment";
 import "moment/locale/es";
 
 export const AdminClassroomDetailPage = React.memo((props) => {
-  const dispatch = useDispatch();
-
+  const [showExportToExcel, setShowExportToExcel] = useState(false);
   const [classroom, setClassroom] = useState();
   const [showModal, setShowModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [history, setHistory] = useState();
+
+  const dispatch = useDispatch();
 
   const classroomId = props.routeProps.match.params.classroomId;
 
@@ -62,9 +69,25 @@ export const AdminClassroomDetailPage = React.memo((props) => {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const optionsDropdown = [{ text: "Borrar Salón", fn: handleShowModal }];
+  const optionsDropdown = [
+    { text: "Borrar Salón", fn: handleShowModal },
+    {
+      text: "Exportar calificaciones a .csv",
+      fn: () => setShowExportToExcel(true),
+    },
+  ];
 
-  return classroom ? (
+  useEffect(() => {
+    try {
+      TeacherAPI.t_fetchClassroomHistory(classroomId).then((res) =>
+        setHistory(res.data)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }, [classroomId]);
+
+  return classroom && history ? (
     <AdminLayout
       backBttn="/admin/classrooms"
       leftBarActive="Salones"
@@ -255,6 +278,15 @@ export const AdminClassroomDetailPage = React.memo((props) => {
           )}
         </Modal.Body>
       </Modal>
+      {/* export students history modal */}
+      {showExportToExcel && (
+        <ExportHistoryToExcel
+          data={history}
+          fileName={classroom?.name}
+          setShow={setShowExportToExcel}
+          show={showExportToExcel}
+        />
+      )}
     </AdminLayout>
   ) : (
     <AdminSpinner />

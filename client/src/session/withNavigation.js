@@ -15,7 +15,7 @@ const withNavigation = (Component) => {
 
     componentDidMount() {
       firebaseAuth.onAuthStateChanged(async (user) => {
-        console.log("user", user);
+        // console.log("user", user);
 
         // authenticated users (students or teacher)
         const isAuth = !!user?.displayName;

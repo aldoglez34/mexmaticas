@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -16,8 +16,8 @@ import {
   ExportHistoryToExcel,
 } from "../components";
 import {
-  AddStudentsButton,
   AddCoursesButton,
+  AddStudentsButton,
   ClassroomDescriptionForm,
   ClassroomInstitutionForm,
   ClassroomNameForm,
@@ -29,7 +29,7 @@ import { StudentItem } from "../students/components";
 import moment from "moment";
 import "moment/locale/es";
 
-export const AdminClassroomDetailPage = React.memo((props) => {
+export const AdminClassroomDetailPage = memo((props) => {
   const [showExportToExcel, setShowExportToExcel] = useState(false);
   const [classroom, setClassroom] = useState();
   const [showModal, setShowModal] = useState(false);

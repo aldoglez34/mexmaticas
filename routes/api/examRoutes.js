@@ -99,7 +99,11 @@ router.put("/registerAttempt", async (req, res) => {
     // REGISTER ATTEMPT (regardless if it's approved or not)
     await model.Student.findOneAndUpdate(
       { _id: studentId },
-      { $push: { attempts: { exam: examId, grade: grade } } }
+      {
+        $push: {
+          attempts: { course: courseId, topicId, exam: examId, grade: grade },
+        },
+      }
     );
 
     // REGISTER PERFECT GRADE (only if it doesn't exist)
@@ -114,12 +118,12 @@ router.put("/registerAttempt", async (req, res) => {
     // REGISTER REWARD/CROWN (only for last exam)
     if (isLastExam && isExamApproved) {
       // check if the student already has the a reward for this topic
-      const hasReward = await model.Student.findById(
-        studentId
-      ).then(({ rewards }) =>
-        rewards.filter((r) => String(r.topicId) === String(topicId)).length > 0
-          ? true
-          : false
+      const hasReward = await model.Student.findById(studentId).then(
+        ({ rewards }) =>
+          rewards.filter((r) => String(r.topicId) === String(topicId)).length >
+          0
+            ? true
+            : false
       );
 
       if (!hasReward) {

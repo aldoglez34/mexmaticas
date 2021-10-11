@@ -16,18 +16,39 @@ router.get("/all", function (req, res) {
 
 // t_fetchStudentHistory()
 // matches with /teacherAPI/students/history/:studentId
-router.get("/history/:studentId", function (req, res) {
+router.get("/history/:studentId", async (req, res) => {
   const { studentId } = req.params;
 
-  model.Student.findById(studentId)
-    .select("attempts")
-    .lean()
-    .populate("attempts.exam", "name")
-    .then((data) => res.json(data.attempts))
-    .catch((err) => {
-      console.log("@error", err);
-      res.status(422).send("Ocurrió un error.");
+  try {
+    const { attempts } = await model.Student.findById(studentId).populate({
+      path: "attempts",
+      populate: {
+        path: "exam course",
+        select: "name topics._id topics.name",
+      },
     });
+
+    const data = (attempts || []).map((a) => {
+      const courseName = a.course?.name;
+      const topicName = a.course?.topics?.find(
+        ({ _id }) => String(_id) === String(a.topicId)
+      )?.name;
+
+      return {
+        grade: a.grade,
+        date: a.date,
+        _id: a._id,
+        exam: a.exam?.name,
+        courseName,
+        topicName,
+      };
+    });
+
+    return res.json(data);
+  } catch (err) {
+    console.log("@error", err);
+    res.status(422).send("Ocurrió un error.");
+  }
 });
 
 // t_fetchStudentUnpurchased()

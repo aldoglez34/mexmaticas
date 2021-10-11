@@ -41,6 +41,14 @@ const schema = new Schema({
   ],
   attempts: [
     {
+      course: {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+      },
+      topicId: {
+        type: String,
+        required: true,
+      },
       exam: {
         type: Schema.Types.ObjectId,
         ref: "Exam",

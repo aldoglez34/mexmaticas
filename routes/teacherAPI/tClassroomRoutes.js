@@ -230,8 +230,8 @@ router.get("/history/:classroomId", async (req, res) => {
         populate: {
           path: "attempts",
           populate: {
-            path: "exam",
-            select: "name",
+            path: "exam course",
+            select: "name topics._id topics.name",
           },
         },
       })
@@ -240,12 +240,20 @@ router.get("/history/:classroomId", async (req, res) => {
     const data = studentsIds.reduce((acc, cv) => {
       const student = `${cv.name} ${cv.firstSurname} ${cv.firstSurname}`;
 
-      const history = cv.attempts.map((a) => ({
-        student,
-        date: a.date,
-        exam: a.exam.name,
-        grade: a.grade,
-      }));
+      const history = cv.attempts.map((a) => {
+        const topicName = a.course?.topics?.find(
+          ({ _id }) => String(_id) === String(a.topicId)
+        )?.name;
+
+        return {
+          course: a.course?.name,
+          date: a.date,
+          exam: a.exam.name,
+          grade: a.grade,
+          student,
+          topic: topicName,
+        };
+      });
 
       acc.push(...history);
 

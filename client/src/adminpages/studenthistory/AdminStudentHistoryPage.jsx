@@ -76,7 +76,7 @@ export const AdminStudentHistoryPage = memo((props) => {
     }
     if (criteria.length >= 3) {
       const examNameMatches = history.filter((s) =>
-        String(`${s.exam.name}`)
+        String(`${s.exam}`)
           .toUpperCase()
           .trim()
           .includes(criteria.toUpperCase())
@@ -126,10 +126,12 @@ export const AdminStudentHistoryPage = memo((props) => {
         <ExportHistoryToExcel
           data={history?.reduce((acc, cv) => {
             acc.push({
-              student: studentName,
               date: cv.date,
+              student: studentName,
+              course: cv.courseName,
+              topic: cv.topicName,
               grade: cv.grade,
-              exam: cv.exam.name,
+              exam: cv.exam,
             });
             return acc;
           }, [])}
@@ -198,6 +200,18 @@ export const AdminStudentHistoryPage = memo((props) => {
                           className="py-3 text-center"
                           style={{ backgroundColor: "#f4fbf8" }}
                         >
+                          <h5 className="mb-0">Curso</h5>
+                        </th>
+                        <th
+                          className="py-3 text-center"
+                          style={{ backgroundColor: "#f4fbf8" }}
+                        >
+                          <h5 className="mb-0">Tema</h5>
+                        </th>
+                        <th
+                          className="py-3 text-center"
+                          style={{ backgroundColor: "#f4fbf8" }}
+                        >
                           <h5 className="mb-0">Examen</h5>
                         </th>
                         <th
@@ -220,7 +234,9 @@ export const AdminStudentHistoryPage = memo((props) => {
                                 {moment(h.date).format("h:mm:ss a")}
                               </span>
                             </td>
-                            <td className="align-middle">{h.exam.name}</td>
+                            <td className="align-middle">{h.courseName}</td>
+                            <td className="align-middle">{h.topicName}</td>
+                            <td className="align-middle">{h.exam}</td>
                             <td className="align-middle text-center">
                               {h.grade}
                             </td>

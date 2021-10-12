@@ -144,8 +144,8 @@ export const QuestionsContainer = React.memo(
     };
 
     const pushFreestyleAttempt = () => {
-      // ignore the user test luis@test.com
-      const isStudentTest = student.email === "luis@test.com";
+      // ignore the test user
+      const isStudentTest = student.email === "lrlu.very@gmail.com";
       if (!isStudentTest) {
         API.registerFreestyleAttempt({
           courseId: course._id,

@@ -2,7 +2,6 @@ import React from "react";
 import { Navbar, Nav, Col, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { CoursesDropdown, StudentDropdown } from "./components";
-import { APP_VERSION } from "../../constants/constants";
 import cn from "classnames";
 
 import styles from "./navbar.module.scss";
@@ -15,14 +14,13 @@ export const MyNavbar = () => {
     return zenMode ? (
       <h2 className={cn("mb-0", styles.logo, styles.zen)}>
         <s>MeXmáticas</s>
-        <small className={styles.beta}>{APP_VERSION}</small>
       </h2>
     ) : (
       <h2
         className={cn("mb-0", styles.logo)}
         onClick={() => (window.location.href = "/")}
       >
-        MeXmáticas<small className={styles.beta}>{APP_VERSION}</small>
+        MeXmáticas
       </h2>
     );
   };

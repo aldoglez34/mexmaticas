@@ -22,6 +22,8 @@ export const PaymentPage = React.memo((props) => {
   const purchase = useSelector((state) => state.purchase);
   const student = useSelector((state) => state.student);
 
+  console.log(course);
+
   useEffect(() => {
     if (purchase) dispatch(clearPurchase());
 
@@ -29,7 +31,9 @@ export const PaymentPage = React.memo((props) => {
   }, [courseId, dispatch, purchase]);
 
   // take the user back if the course doesn't have a paypalId
-  useEffect(() => course && !course.paypalId && goBack(), [course, goBack]);
+  useEffect(() => {
+    if (course && !course.paypalId) return goBack();
+  }, [course, goBack]);
 
   const addCourseToUser = async () => {
     try {
@@ -44,7 +48,6 @@ export const PaymentPage = React.memo((props) => {
     }
   };
 
-  /* paypal functions */
   const paypalSubscribe = (data, actions) => {
     return actions.subscription.create({
       plan_id: course.paypalId,
@@ -57,9 +60,8 @@ export const PaymentPage = React.memo((props) => {
     );
   };
   const paypalOnApprove = (data, detail) => {
-    // call the backend api to store transaction details
-    console.log("Paypal approved");
-    console.log(data.subscriptionID);
+    console.log({ data });
+    console.log({ detail });
     addCourseToUser();
   };
 

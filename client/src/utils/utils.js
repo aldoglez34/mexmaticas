@@ -11,8 +11,8 @@ export const getForwardUrl = (purchase) => {
       : "http://localhost:3000/dashboard";
   } else {
     url = purchase
-      ? `https://mexmaticas.herokuapp.com/${purchase.school}/${purchase.courseId}`
-      : "https://mexmaticas.herokuapp.com/dashboard";
+      ? `https://www.mexmaticas.com.mx/${purchase.school}/${purchase.courseId}`
+      : "https://www.mexmaticas.com.mx/dashboard";
   }
 
   return url;

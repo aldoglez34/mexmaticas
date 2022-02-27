@@ -25,7 +25,7 @@ export const AlertModal = React.memo(({ children, image, show }) => {
 
 AlertModal.propTypes = {
   children: node.isRequired,
-  image: string.isRequired,
+  image: string,
   show: bool.isRequired,
 };
 

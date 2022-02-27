@@ -82,7 +82,7 @@ export const CourseInfoCard = React.memo(
             })}
             <div className="text-center mt-auto">
               <strong className={cn("mt-1", "lead", styles.priceLabel)}>
-                Mensualidades de
+                Pago único de:
               </strong>
             </div>
             <Row>

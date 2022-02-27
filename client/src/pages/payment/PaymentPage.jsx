@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { ScrollButton } from "../../components/scrollbutton/ScrollButton";
-import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { BackButton } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
@@ -9,9 +9,17 @@ import TeacherAPI from "../../utils/TeacherAPI";
 import API from "../../utils/API";
 import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
 import { useHistory } from "react-router-dom";
+import { AdminSpinner } from "../../adminpages/components";
 
 export const PaymentPage = React.memo((props) => {
   const [course, setCourse] = useState();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+  const strDBError =
+    "Ocurrió un error con este curso, ponte en contacto con el maestro.";
+
+  const strPaypalError =
+    "Ocurrió un error con tu cuenta de PayPal, no se pudo efectuar el pago. Por favor revisa tus datos.";
 
   const { goBack } = useHistory();
 
@@ -22,8 +30,6 @@ export const PaymentPage = React.memo((props) => {
   const purchase = useSelector((state) => state.purchase);
   const student = useSelector((state) => state.student);
 
-  console.log(course);
-
   useEffect(() => {
     if (purchase) dispatch(clearPurchase());
 
@@ -32,37 +38,37 @@ export const PaymentPage = React.memo((props) => {
 
   // take the user back if the course doesn't have a paypalId
   useEffect(() => {
-    if (course && !course.paypalId) return goBack();
+    if (course && !course.paypalId) {
+      alert(strDBError);
+      return goBack();
+    }
   }, [course, goBack]);
 
-  const addCourseToUser = async () => {
-    try {
-      await API.buyCourse({ courseId, studentId: student._id });
-      alert("Has comprado el curso satisfactoriamente.");
-      window.location.href = "/";
-    } catch (err) {
-      console.log(err);
-      alert(
-        "Ocurrió un error con la aplicación, ponte en contacto con el maestro."
-      );
-    }
+  const catchError = (error) => {
+    console.log("@onError", error);
+    alert(strPaypalError);
+    window.location.href = `/courses/${school}`;
   };
 
-  const paypalSubscribe = (data, actions) => {
-    return actions.subscription.create({
-      plan_id: course.paypalId,
-    });
+  const onError = (error) => {
+    console.log("@onError", error);
+    alert(strPaypalError);
+    window.location.href = `/courses/${school}`;
   };
-  const paypalOnError = (err) => {
-    console.log("Error");
-    alert(
-      "Ocurrió un error con la aplicación, ponte en contacto con el maestro."
-    );
-  };
-  const paypalOnApprove = (data, detail) => {
-    console.log({ data });
-    console.log({ detail });
-    addCourseToUser();
+
+  const onSuccess = async (details, data) => {
+    setShowPaymentModal(true);
+    console.log("@onSuccess");
+    console.log("payment approved", { details, data });
+
+    // adding course to user if everything went well
+    try {
+      await API.buyCourse({ courseId, studentId: student._id });
+      setTimeout(() => (window.location.href = "/"), 10000);
+    } catch (err) {
+      console.log(err);
+      alert(strDBError);
+    }
   };
 
   return (
@@ -78,29 +84,37 @@ export const PaymentPage = React.memo((props) => {
           <Container>
             <Row>
               <Col md={{ span: 5, offset: 4 }} className="p-0">
-                <p>{`Al comprar este curso, recibirás acceso a todo el material que contienen sus temas. Se cargará una cantidad mensual de $${course.price} a tu cuenta.`}</p>
-                <Image className="mb-4" src="/images/paypal.png" fluid />
+                <Image className="mb-4 w-50" src="/images/paypal.png" fluid />
+                <p>{`Al comprar este curso, recibirás acceso a todo el material que contienen sus temas. Se hará un cargo a tu cuenta de PayPal por $${course.price} MXN.`}</p>
                 <div className="mb-3">
-                  <span className="lead">Curso:</span>
+                  <span>Nombre:</span>
                   <h2>{course.name}</h2>
                 </div>
                 <div className="mb-4">
-                  <span className="lead">Precio:</span>
+                  <span>Precio:</span>
                   <h2>{`$${course.price} MXN`}</h2>
                 </div>
                 <PayPalButtonComponent
-                  amount={course.price}
-                  catchError={paypalOnError}
-                  createSubscription={paypalSubscribe}
-                  currency="MXN"
-                  locale="es_MX"
-                  onApprove={paypalOnApprove}
-                  onCancel={paypalOnError}
-                  onError={paypalOnError}
+                  {...{
+                    amount: course.price,
+                    catchError,
+                    currency: "MXN",
+                    locale: "es_MX",
+                    onError,
+                    onSuccess,
+                  }}
                 />
               </Col>
             </Row>
           </Container>
+          {/* modal */}
+          <Modal show={showPaymentModal} size="sm">
+            <Modal.Body>
+              <strong>Efectuando pago y asignando curso...</strong>
+            </Modal.Body>
+            <AdminSpinner />
+            <br />
+          </Modal>
         </Container>
       ) : (
         <div className="my-2 text-center">

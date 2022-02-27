@@ -47,6 +47,7 @@ export const useLoginUser = () => {
       if (isEqual(err?.code, "auth/wrong-password"))
         return alert("La contraseña es incorrecta.");
 
+      console.log(err);
       return alert("Ha ocurrido un error.");
     }
 

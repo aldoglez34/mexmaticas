@@ -64,7 +64,10 @@ export const PaymentPage = React.memo((props) => {
     // adding course to user if everything went well
     try {
       await API.buyCourse({ courseId, studentId: student._id });
-      setTimeout(() => (window.location.href = "/"), 10000);
+      setTimeout(() => {
+        setShowPaymentModal(false);
+        return (window.location.href = "/");
+      }, 10000);
     } catch (err) {
       console.log(err);
       alert(strDBError);

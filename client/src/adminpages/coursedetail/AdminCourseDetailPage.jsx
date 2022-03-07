@@ -8,7 +8,6 @@ import {
   CourseActiveForm,
   CourseDescriptionForm,
   CourseNameForm,
-  CoursePayPalIdForm,
   CoursePriceForm,
   CourseSchoolForm,
   CourseSummaryForm,
@@ -26,7 +25,6 @@ export const AdminCourseDetailPage = React.memo((props) => {
   const courseId = props.routeProps.match.params.courseId;
 
   const hasTopics = Boolean(course?.topics?.length);
-  const hasPaypal = !!course?.paypalId;
   const isCourseActive = course?.isActive;
 
   useEffect(() => {
@@ -49,14 +47,15 @@ export const AdminCourseDetailPage = React.memo((props) => {
   }, [courseId, dispatch]);
 
   useEffect(() => {
-    if (!hasTopics || !hasPaypal) {
+    // TODO: fix edit status to inactive if course has no topics
+    if (!hasTopics) {
       setCanEditStatus(false);
       if (isCourseActive)
         TeacherAPI.t_updateCourseStatus({ courseId, newStatus: false });
     } else {
       setCanEditStatus(true);
     }
-  }, [canEditStatus, course, courseId, hasPaypal, hasTopics, isCourseActive]);
+  }, [canEditStatus, course, courseId, hasTopics, isCourseActive]);
 
   return course ? (
     <AdminLayout leftBarActive="Cursos" backBttn="/admin/courses">
@@ -66,21 +65,6 @@ export const AdminCourseDetailPage = React.memo((props) => {
           <Col>
             <span className="text-muted">ID</span>
             <h4 className="mb-3">{course._id}</h4>
-          </Col>
-        </Row>
-        {/* paypal id */}
-        <Row>
-          <Col>
-            <span className="text-muted">PayPal ID</span>
-            <h4>
-              {course.paypalId ? course.paypalId : "-"}
-              <AdminModal
-                Form={CoursePayPalIdForm}
-                formInitialText={course.paypalId}
-                formLabel="PayPal ID"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h4>
           </Col>
         </Row>
         {/* course name */}
@@ -134,8 +118,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
             <span className="text-muted">
               Estatus{" "}
               <small>
-                (para cambiar el estatus es necesario que el Curso tenga Temas y
-                PayPal ID)
+                (para cambiar el estatus es necesario que el Curso tenga Temas)
               </small>
             </span>
             <h4 className="mb-3">

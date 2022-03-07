@@ -38,10 +38,9 @@ router.get("/fetchCoursesBySchool/:school/:studentId", function (req, res) {
                 });
                 return acc;
               }, [])
-              .filter((c) => c.paypalId)
               .filter((c) => c.topics.length);
 
-            // return only courses that are not purchased, have paypalId and have at least one topic
+            // return only courses that are not purchased and have at least one topic
             res.json(filteredCourses);
           })
           .catch((err) => {

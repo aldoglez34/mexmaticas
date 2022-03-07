@@ -36,16 +36,16 @@ export const PaymentPage = React.memo((props) => {
     TeacherAPI.t_fetchOneCourse(courseId).then((res) => setCourse(res.data));
   }, [courseId, dispatch, purchase]);
 
-  // take the user back if the course doesn't have a paypalId
+  // take the user back if there's no course
   useEffect(() => {
-    if (course && !course.paypalId) {
+    if (!course) {
       alert(strDBError);
       return goBack();
     }
   }, [course, goBack]);
 
   const catchError = (error) => {
-    console.log("@onError", error);
+    console.log("@catchError", error);
     alert(strPaypalError);
     window.location.href = `/courses/${school}`;
   };
@@ -58,8 +58,7 @@ export const PaymentPage = React.memo((props) => {
 
   const onSuccess = async (details, data) => {
     setShowPaymentModal(true);
-    console.log("@onSuccess");
-    console.log("payment approved", { details, data });
+    console.log("@onSuccess, payment approved", { details, data });
 
     // adding course to user if everything went well
     try {
@@ -76,7 +75,7 @@ export const PaymentPage = React.memo((props) => {
 
   return (
     <Layout backgroundColor="white">
-      {course && course.paypalId ? (
+      {course ? (
         <Container
           style={{
             paddingTop: "40px",
@@ -87,14 +86,16 @@ export const PaymentPage = React.memo((props) => {
           <Container>
             <Row>
               <Col md={{ span: 5, offset: 4 }} className="p-0">
-                <Image className="mb-4 w-50" src="/images/paypal.png" fluid />
+                <div className="text-center">
+                  <Image className="mb-4 w-75" src="/images/paypal.png" fluid />
+                </div>
                 <p>{`Al comprar este curso, recibirás acceso a todo el material que contienen sus temas. Se hará un cargo a tu cuenta de PayPal por $${course.price} MXN.`}</p>
                 <div className="mb-3">
-                  <span>Nombre:</span>
+                  <strong>Nombre:</strong>
                   <h2>{course.name}</h2>
                 </div>
                 <div className="mb-4">
-                  <span>Precio:</span>
+                  <strong>Precio:</strong>
                   <h2>{`$${course.price} MXN`}</h2>
                 </div>
                 <PayPalButtonComponent
@@ -111,12 +112,16 @@ export const PaymentPage = React.memo((props) => {
             </Row>
           </Container>
           {/* modal */}
-          <Modal show={showPaymentModal} size="sm">
+          <Modal show={showPaymentModal} size="sm" centered>
             <Modal.Body>
-              <strong>Efectuando pago y asignando curso...</strong>
+              <strong className="d-block">Realizando pago...</strong>
+              <strong className="d-block">Asignando curso...</strong>
+              <strong className="d-block">Asignando temas...</strong>
+              <strong className="d-block mb-3">Asignando ejercicios...</strong>
             </Modal.Body>
-            <AdminSpinner />
-            <br />
+            <div className="mb-2 pb-4">
+              <AdminSpinner />
+            </div>
           </Modal>
         </Container>
       ) : (

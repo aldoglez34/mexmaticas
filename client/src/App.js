@@ -5,7 +5,7 @@ import { withNavigation } from "./session";
 import { APP_VERSION } from "./constants/constants";
 
 const App = () => {
-  console.log(`v${APP_VERSION}`);
+  console.log(`RELEASE v${APP_VERSION}`);
   return (
     <Router>
       <Navigation />

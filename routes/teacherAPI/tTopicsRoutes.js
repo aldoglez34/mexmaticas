@@ -295,12 +295,14 @@ router.put("/delete", async (req, res) => {
 
   try {
     // first get the ids of the exams that belong to this topic
-    const examsIds = await model.Course.findById(courseId)
+    // also check if the topic that's being removed is the last one in this course
+    const { examsIds, isLastTopic } = await model.Course.findById(courseId)
       .select("topics")
-      .then(
-        ({ topics }) =>
-          topics.filter((t) => String(t._id) === String(topicId))[0].exams
-      );
+      .then(({ topics }) => ({
+        examsIds: topics.filter((t) => String(t._id) === String(topicId))[0]
+          .exams,
+        isLastTopic: topics.length === 1,
+      }));
 
     // then remove all the exams from the Exam model
     await model.Exam.deleteMany({ _id: examsIds });
@@ -310,6 +312,14 @@ router.put("/delete", async (req, res) => {
       { _id: courseId },
       { $pull: { topics: { _id: topicId } } }
     );
+
+    // if this is the last topic on the course, set the course status to inactive
+    if (isLastTopic) {
+      await model.Course.findOneAndUpdate(
+        { _id: courseId },
+        { isActive: false }
+      );
+    }
 
     // to delete all the remaining keys in the Student collection
     // first get all the students ids that have purchased this course

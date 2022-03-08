@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import TeacherAPI from "../../utils/TeacherAPI";
 import { useDispatch } from "react-redux";
@@ -18,14 +18,12 @@ import "moment/locale/es";
 
 export const AdminCourseDetailPage = React.memo((props) => {
   const [course, setCourse] = useState();
-  const [canEditStatus, setCanEditStatus] = useState(true);
 
   const dispatch = useDispatch();
 
   const courseId = props.routeProps.match.params.courseId;
 
-  const hasTopics = Boolean(course?.topics?.length);
-  const isCourseActive = course?.isActive;
+  const hasTopics = useMemo(() => Boolean(course?.topics?.length), [course]);
 
   useEffect(() => {
     TeacherAPI.t_fetchOneCourse(courseId)
@@ -45,17 +43,6 @@ export const AdminCourseDetailPage = React.memo((props) => {
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
   }, [courseId, dispatch]);
-
-  useEffect(() => {
-    // TODO: fix edit status to inactive if course has no topics
-    if (!hasTopics) {
-      setCanEditStatus(false);
-      if (isCourseActive)
-        TeacherAPI.t_updateCourseStatus({ courseId, newStatus: false });
-    } else {
-      setCanEditStatus(true);
-    }
-  }, [canEditStatus, course, courseId, hasTopics, isCourseActive]);
 
   return course ? (
     <AdminLayout leftBarActive="Cursos" backBttn="/admin/courses">
@@ -116,10 +103,15 @@ export const AdminCourseDetailPage = React.memo((props) => {
         <Row>
           <Col>
             <span className="text-muted">
-              Estatus{" "}
-              <small>
-                (para cambiar el estatus es necesario que el Curso tenga Temas)
-              </small>
+              Estatus
+              {!hasTopics && (
+                <>
+                  {" "}
+                  <small>
+                    (para activar este curso es necesario agregar temas)
+                  </small>
+                </>
+              )}
             </span>
             <h4 className="mb-3">
               {course.isActive ? (
@@ -127,7 +119,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
               ) : (
                 <Badge variant="danger">No activo</Badge>
               )}
-              {canEditStatus && (
+              {hasTopics && (
                 <AdminModal
                   Form={CourseActiveForm}
                   formInitialText={course.isActive}

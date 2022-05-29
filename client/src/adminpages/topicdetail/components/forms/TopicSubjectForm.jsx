@@ -3,7 +3,7 @@ import { Button, Form, Col } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { updateTopicSubject } from "../../../../services";
 import { useSelector } from "react-redux";
 
 export const TopicSubjectForm = React.memo(({ formLabel, formInitialText }) => {
@@ -27,7 +27,7 @@ export const TopicSubjectForm = React.memo(({ formLabel, formInitialText }) => {
         setSubmitting(true);
         values.courseId = courseId;
         values.topicId = topicId;
-        TeacherAPI.t_updateTopicSubject(values)
+        updateTopicSubject(values)
           .then((res) => {
             console.log(res.data);
             window.location.reload();

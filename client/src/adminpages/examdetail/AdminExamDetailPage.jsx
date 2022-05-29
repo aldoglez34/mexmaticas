@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
 import { Alert, Col, Container, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchExam } from "../../services";
 import {
   DichotomousQuestion,
   DichotomousQuestionTable,
@@ -129,7 +129,7 @@ export const AdminExamDetailPage = React.memo((props) => {
   ];
 
   useEffect(() => {
-    TeacherAPI.t_fetchExam(examId)
+    fetchExam(examId)
       .then((res) => {
         setExamOnState(res.data);
 

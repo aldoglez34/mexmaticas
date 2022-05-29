@@ -1,51 +1,47 @@
 const router = require("express").Router();
 
 // ==============================================
-// STUDENT API
+// GUEST
 // ==============================================
-const guestRoutes = require("./api/guestRoutes");
-router.use("/api/guest", guestRoutes);
-
-const studentRoutes = require("./api/studentRoutes");
-router.use("/api/student", studentRoutes);
-
-const courseRoutes = require("./api/courseRoutes");
-router.use("/api/course", courseRoutes);
-
-const examRoutes = require("./api/examRoutes");
-router.use("/api/exam", examRoutes);
-
-const freestyleRoutes = require("./api/freestyleRoutes");
-router.use("/api/freestyle", freestyleRoutes);
+const guest = require("./guest/guest");
+router.use("/guestapi", guest);
 
 // ==============================================
-// TEACHER API
+// STUDENT
 // ==============================================
-const tInstitutionRoutes = require("./teacherAPI/tInstitutionRoutes");
-router.use("/teacherAPI/institutions", tInstitutionRoutes);
+const student = require("./student/student");
+router.use("/studentapi", student);
 
-const tClassroomRoutes = require("./teacherAPI/tClassroomRoutes");
-router.use("/teacherAPI/classrooms", tClassroomRoutes);
+// ==============================================
+// ADMIN
+// ==============================================
+const classroomRoutes = require("./admin/classroom");
+router.use("/adminapi/classrooms", classroomRoutes);
 
-const tCoursesRoutes = require("./teacherAPI/tCoursesRoutes");
-router.use("/teacherAPI/courses", tCoursesRoutes);
+const coursesRoutes = require("./admin/courses");
+router.use("/adminapi/courses", coursesRoutes);
 
-const tMessagesRoutes = require("./teacherAPI/tMessagesRoutes");
-router.use("/teacherAPI/messages", tMessagesRoutes);
+const examRoutes = require("./admin/exam");
+router.use("/adminapi/exam", examRoutes);
 
-const tTopicsRoutes = require("./teacherAPI/tTopicsRoutes");
-router.use("/teacherAPI/topics", tTopicsRoutes);
+const institutionsRoutes = require("./admin/institutions");
+router.use("/adminapi/institutions", institutionsRoutes);
 
-const tMaterialRoutes = require("./teacherAPI/tMaterialRoutes");
-router.use("/teacherAPI/material", tMaterialRoutes);
+const materialRoutes = require("./admin/material");
+router.use("/adminapi/material", materialRoutes);
 
-const tStudentRoutes = require("./teacherAPI/tStudentRoutes");
-router.use("/teacherAPI/students", tStudentRoutes);
+const messagesRoutes = require("./admin/messages");
+router.use("/adminapi/messages", messagesRoutes);
 
-const tExamRoutes = require("./teacherAPI/tExamRoutes");
-router.use("/teacherAPI/exam", tExamRoutes);
+const questionsRoutes = require("./admin/questions");
+router.use("/adminapi/questions", questionsRoutes);
 
-const tQuestionsRoutes = require("./teacherAPI/tQuestionsRoutes");
-router.use("/teacherAPI/questions", tQuestionsRoutes);
+const studentsRoutes = require("./admin/students");
+router.use("/adminapi/students", studentsRoutes);
+
+router.use("/adminapi/teachers", require("./admin/teachers"));
+
+const topicsRoutes = require("./admin/topics");
+router.use("/adminapi/topics", topicsRoutes);
 
 module.exports = router;

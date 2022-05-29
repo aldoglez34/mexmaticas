@@ -3,7 +3,7 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { AdminLayout } from "../components";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { newTopic } from "../../services";
 import { useDispatch, useSelector } from "react-redux";
 import * as adminActions from "../../redux/actions/admin";
 import { firebaseStorage } from "../../firebase/firebase";
@@ -67,7 +67,7 @@ export const AdminNewTopicPage = React.memo((props) => {
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);
 
-                TeacherAPI.t_newTopic({ ...values, courseId })
+                newTopic({ ...values, courseId })
                   .then((res) => {
                     const { topicId } = res.data;
 

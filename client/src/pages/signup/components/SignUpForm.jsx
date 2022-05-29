@@ -21,6 +21,8 @@ export const SignUpForm = () => {
         /^[a-zA-Z-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ ]+$/,
         "Sólo letras"
       )
+      .matches(/^(?!admin\b)/i, "Nombre inválido")
+      .matches(/^(?!teacher\b)/i, "Nombre inválido")
       .required("Requerido"),
     firstSurname: yup
       .string()
@@ -29,6 +31,8 @@ export const SignUpForm = () => {
         /^[a-zA-Z-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ ]+$/,
         "Sólo letras"
       )
+      .matches(/^(?!admin\b)/i, "Apellido inválido")
+      .matches(/^(?!teacher\b)/i, "Apellido inválido")
       .required("Requerido"),
     secondSurname: yup
       .string()

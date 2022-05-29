@@ -8,12 +8,10 @@ import { clearExam } from "../../redux/actions/exam";
 import { clearCourse } from "../../redux/actions/course";
 import { zenModeOff } from "../../redux/actions/zenMode";
 import {
-  WelcomeJumbotron,
-  ThreeColumns,
-  OurCourses,
-  TeacherJumbotron,
-  FacilitiesJumbotron,
   FAQJumbotron,
+  OurCourses,
+  ThreeColumns,
+  WelcomeJumbotron,
 } from "./sections";
 
 export const LandingPage = () => {
@@ -38,8 +36,8 @@ export const LandingPage = () => {
       <WelcomeJumbotron />
       <ThreeColumns />
       <OurCourses />
-      <TeacherJumbotron />
-      <FacilitiesJumbotron />
+      {/* <TeacherJumbotron /> */}
+      {/* <FacilitiesJumbotron /> */}
       <FAQJumbotron />
       <ScrollButton scrollStepInPx={150} delayInMs={16.66} />
     </Layout>

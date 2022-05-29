@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Spinner, Image } from "react-bootstrap";
 import { StudentLayout } from "../../components/Layout";
-import API from "../../utils/API";
+import { fetchMessages, markAllMessagesSeen } from "../../services";
 import { useSelector, useDispatch } from "react-redux";
 import { MyMessages } from "./components";
 import * as zenModeActions from "../../redux/actions/zenMode";
@@ -17,7 +17,7 @@ export const MessagesPage = () => {
   useEffect(() => {
     if (zenMode) dispatch(zenModeActions.zenModeOff());
 
-    API.fetchMessages(student?.username)
+    fetchMessages(student?.username)
       .then((res) => {
         setMessages(res.data);
         // console.log(res.data);
@@ -27,7 +27,7 @@ export const MessagesPage = () => {
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
 
-    API.markAllMessagesSeen(student?._id)
+    markAllMessagesSeen(student?._id)
       .then(() => {
         // console.log(res.data);
         console.log("Todos los mensajes han sido marcados como vistos");

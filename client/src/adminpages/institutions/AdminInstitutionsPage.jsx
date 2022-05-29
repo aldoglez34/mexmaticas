@@ -3,7 +3,7 @@ import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
 import { Button, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchInstitutions } from "../../services";
 import { InstitutionItem } from "./components/";
 
 const PAGE_SIZE = 15;
@@ -30,7 +30,7 @@ export const AdminInstitutionsPage = () => {
     dispatch(setTitle("Escuelas"));
     setSort(SORT_OPTIONS[0]);
     //
-    TeacherAPI.t_fetchInstitutions()
+    fetchInstitutions()
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
           a.createdAt > b.createdAt ? -1 : 1

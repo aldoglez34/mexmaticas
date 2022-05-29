@@ -3,7 +3,7 @@ import { Modal, Button, Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { string } from "prop-types";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { addMaterial } from "../../../services";
 
 export const AddVideo = React.memo(({ courseId, topicId }) => {
   const [show, setShow] = useState(false);
@@ -47,7 +47,7 @@ export const AddVideo = React.memo(({ courseId, topicId }) => {
                 values.type = "video";
                 values.courseId = courseId;
                 values.topicId = topicId;
-                TeacherAPI.t_addMaterial(values)
+                addMaterial(values)
                   .then(() => {
                     window.location.reload();
                   })

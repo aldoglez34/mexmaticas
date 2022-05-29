@@ -2,7 +2,7 @@ import { useState } from "react";
 import { firebaseAuth } from "../../../firebase/firebase";
 import { isEqual } from "lodash";
 import fbApp from "firebase/app";
-import { getForwardUrl } from "../../../utils/utils";
+import { getForwardUrl } from "../../../utils/helpers";
 
 export const useLoginUser = () => {
   const [isError, setIsError] = useState(false);

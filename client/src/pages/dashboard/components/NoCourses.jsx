@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Image, Button, Spinner } from "react-bootstrap";
-import API from "../../../utils/API";
+import { fetchSchoolDropdownItems } from "../../../services";
 
 export const NoCourses = () => {
   const [courses, setCourses] = useState();
 
   useEffect(() => {
-    API.fetchSchoolDropdownItems()
+    fetchSchoolDropdownItems()
       .then((res) => setCourses(res.data))
       .catch((err) => {
         console.log(err);

@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeachAPI from "../../../utils/TeacherAPI";
+import { respondMsg } from "../../../services";
 import { string } from "prop-types";
 
 export const ResponseForm = React.memo(({ msgId, email }) => {
@@ -22,7 +22,7 @@ export const ResponseForm = React.memo(({ msgId, email }) => {
           setSubmitting(true);
           values.msgId = msgId;
           values.email = email;
-          TeachAPI.t_respondMsg(values)
+          respondMsg(values)
             .then((res) => {
               console.log(res.data);
               window.location.reload();

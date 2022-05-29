@@ -3,7 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 import { StudentLayout } from "../../components/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import * as zenModeActions from "../../redux/actions/zenMode";
-import API from "../../utils/API";
+import { fetchFreestyle } from "../../services";
 import { QuestionsContainer } from "../../components";
 
 export const FreestylePage = () => {
@@ -16,7 +16,7 @@ export const FreestylePage = () => {
 
   useEffect(() => {
     try {
-      API.fetchFreestyle(course._id, exam.topicId).then((res) => {
+      fetchFreestyle(course._id, exam.topicId).then((res) => {
         if (!res.data.length) {
           alert(
             "Ocurrió un error con este examen. Ponte en contacto con tu maestro."

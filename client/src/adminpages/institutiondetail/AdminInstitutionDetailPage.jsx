@@ -8,7 +8,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { deleteInstitution, fetchOneInstitution } from "../../services";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
 import { InstitutionDescriptionForm, InstitutionNameForm } from "./components";
 import { useDispatch } from "react-redux";
@@ -26,7 +26,7 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
   const institutionId = props.routeProps.match.params.institutionId;
 
   useEffect(() => {
-    TeacherAPI.t_fetchOneInstitution(institutionId)
+    fetchOneInstitution(institutionId)
       .then((res) => {
         setInstitution(res.data);
         const { name } = res.data;
@@ -42,7 +42,7 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
     setIsDeleting(true);
     try {
       // delete classroom from database
-      const deleteRes = await TeacherAPI.t_deleteInstitution({ institutionId });
+      const deleteRes = await deleteInstitution({ institutionId });
       if (deleteRes.status === 200)
         return (window.location.href = "/admin/institutions");
     } catch (err) {

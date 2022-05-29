@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { newSimpleWithTwoAnswersQuestion } from "../../../../services";
 import { useSelector } from "react-redux";
 import { object } from "prop-types";
 
@@ -53,7 +53,7 @@ export const SimpleWithTwoAnswersForm = ({ question }) => {
 
         values.examId = examId;
 
-        TeacherAPI.t_newSimpleWithTwoAnswersQuestion(values)
+        newSimpleWithTwoAnswersQuestion(values)
           .then((res) => {
             console.log(res.data);
             window.location.reload();

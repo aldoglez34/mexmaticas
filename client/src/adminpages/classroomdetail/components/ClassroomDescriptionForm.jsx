@@ -3,7 +3,7 @@ import { Button, Col, Form } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { updateClassroomDescription } from "../../../services";
 
 export const ClassroomDescriptionForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -25,7 +25,7 @@ export const ClassroomDescriptionForm = React.memo(
 
           values.classroomId = classroomId;
 
-          TeacherAPI.t_updateClassroomDescription(values)
+          updateClassroomDescription(values)
             .then((res) => {
               console.log(res);
               window.location.reload();

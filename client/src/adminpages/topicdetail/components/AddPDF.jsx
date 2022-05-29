@@ -4,7 +4,7 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { string } from "prop-types";
 import { firebaseStorage } from "../../../firebase/firebase";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { addMaterial } from "../../../services";
 import { PDFS } from "../../../constants/constants";
 
 export const AddPDF = React.memo(({ courseId, topicId }) => {
@@ -70,7 +70,7 @@ export const AddPDF = React.memo(({ courseId, topicId }) => {
                     values.type = "pdf";
                     values.courseId = courseId;
                     values.topicId = topicId;
-                    TeacherAPI.t_addMaterial(values)
+                    addMaterial(values)
                       .then((res) => {
                         console.log(res.data);
                         window.location.reload();

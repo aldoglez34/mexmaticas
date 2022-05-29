@@ -80,19 +80,7 @@ export const CourseInfoCard = React.memo(
                 </div>
               );
             })}
-            <div className="text-center mt-auto">
-              <strong className={cn("mt-1", "lead", styles.priceLabel)}>
-                Pago único de:
-              </strong>
-            </div>
-            <Row>
-              <Col>
-                <h1 className={cn("mb-0", "text-center", styles.coursePrice)}>
-                  {`$ ${price} MXN`}
-                </h1>
-              </Col>
-            </Row>
-            <Row>
+            <Row className="mt-auto">
               <Col md={{ span: 6, offset: 3 }}>
                 <Button
                   disabled={isCoursePurchased}

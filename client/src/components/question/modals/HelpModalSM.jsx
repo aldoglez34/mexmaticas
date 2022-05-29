@@ -4,7 +4,7 @@ import { Button, Col, Form } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
-import API from "../../../utils/API";
+import { postMessage } from "../../../services";
 import { AlertModal } from "../../";
 
 export const HelpModalSM = React.memo(({ question }) => {
@@ -57,7 +57,7 @@ export const HelpModalSM = React.memo(({ question }) => {
               values.source = "Pregunta";
               values.username = student.username;
               values.name = student.name + " " + student.firstSurname;
-              API.postMessage(values)
+              postMessage(values)
                 .then(() => {
                   alert("Mensaje enviado.");
                   handleClose();

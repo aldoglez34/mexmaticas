@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { newDichotomousQuestionWithImage } from "../../../../services";
 import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { IMAGES } from "../../../../constants/constants";
@@ -34,8 +34,6 @@ export const DichotomousQuestionWithImage = ({ question }) => {
             ),
         }),
   });
-
-  console.log(question);
 
   const examId = useSelector((state) => state.admin.exam.examId);
   const topicId = useSelector((state) => state.admin.topic.topicId);
@@ -85,9 +83,9 @@ export const DichotomousQuestionWithImage = ({ question }) => {
           }
 
           // post question to mongodb
-          const questionId = await TeacherAPI.t_newDichotomousQuestionWithImage(
-            values
-          ).then((res) => res.data);
+          const questionId = await newDichotomousQuestionWithImage(values).then(
+            (res) => res.data
+          );
 
           // if this isn't an edition, upload image to firebase store
           // or if this is an edition and the image changed, upload new image with the same path

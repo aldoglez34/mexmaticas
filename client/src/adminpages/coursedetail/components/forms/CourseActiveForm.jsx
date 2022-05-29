@@ -3,7 +3,7 @@ import { Button, Col, Form } from "react-bootstrap";
 import { bool, oneOfType, string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { updateCourseStatus } from "../../../../services";
 import { useSelector } from "react-redux";
 
 export const CourseActiveForm = memo(({ formLabel, formInitialText }) => {
@@ -22,7 +22,7 @@ export const CourseActiveForm = memo(({ formLabel, formInitialText }) => {
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         values.courseId = courseId;
-        TeacherAPI.t_updateCourseStatus(values)
+        updateCourseStatus(values)
           .then((res) => {
             console.log(res);
             window.location.reload();

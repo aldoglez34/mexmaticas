@@ -5,4 +5,5 @@ module.exports = {
   Institution: require("./Institution"),
   Message: require("./Message"),
   Student: require("./Student"),
+  Teacher: require("./Teacher"),
 };

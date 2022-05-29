@@ -20,6 +20,7 @@ export const AdminLoginPage = () => {
         <Col md={{ span: 4, offset: 4 }}>
           <h1 className={cn("my-4", "py-3", "text-center", styles.logo)}>
             MexMáticas
+            <small className="d-block">[ admin ]</small>
           </h1>
           <Formik
             initialValues={{ email: "", password: "" }}

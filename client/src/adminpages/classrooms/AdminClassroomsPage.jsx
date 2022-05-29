@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
 import { ClassroomItem } from "./components";
 import { Button, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchClassrooms } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
@@ -30,7 +30,7 @@ export const AdminClassroomsPage = () => {
   useEffect(() => {
     dispatch(setTitle("Salones"));
     //
-    TeacherAPI.t_fetchClassrooms()
+    fetchClassrooms()
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
           a.createdAt > b.createdAt ? -1 : 1

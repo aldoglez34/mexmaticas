@@ -13,7 +13,7 @@ import {
   Timer,
 } from "../";
 import { ExitButton } from "../";
-import API from "../../utils/API";
+import { registerAttempt, registerFreestyleAttempt } from "../../services";
 import {
   CorrectModal,
   FreestyleQPoints,
@@ -147,7 +147,7 @@ export const QuestionsContainer = React.memo(
       // ignore the test user
       const isStudentTest = student.email === "lrlu.very@gmail.com";
       if (!isStudentTest) {
-        API.registerFreestyleAttempt({
+        registerFreestyleAttempt({
           courseId: course._id,
           score: score,
           studentId: student._id,
@@ -167,7 +167,7 @@ export const QuestionsContainer = React.memo(
     };
 
     const pushRegularAttempt = (corrects, incorrects, grade) => {
-      API.registerAttempt({
+      registerAttempt({
         courseId: course._id,
         examDifficulty: exam.difficulty,
         examId: exam._id,

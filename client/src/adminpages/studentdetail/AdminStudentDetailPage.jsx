@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchOneStudent } from "../../services";
 import { AdminLayout, AdminSpinner } from "../components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
@@ -21,7 +21,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
   const studentId = props.routeProps.match.params.studentId;
 
   useEffect(() => {
-    TeacherAPI.t_fetchOneStudent(studentId)
+    fetchOneStudent(studentId)
       .then((res) => {
         setStudent(res.data);
         const { name, firstSurname, secondSurname } = res.data;

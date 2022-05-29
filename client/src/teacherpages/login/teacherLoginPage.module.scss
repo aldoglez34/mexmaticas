@@ -1,0 +1,25 @@
+.container {
+  background-color: #0d2129;
+}
+
+.logo {
+  color: #48bf84;
+  font-family: "Noto Serif", serif !important;
+  font-size: 40px;
+  font-weight: 700 !important;
+}
+
+.button {
+  padding: 7px 25px !important;
+
+  background-color: #48bf84 !important;
+  border-color: #48bf84 !important;
+
+  color: white !important;
+  font-size: 16px !important;
+
+  &:hover {
+    background-color: #329c67 !important;
+    color: white !important;
+  }
+}

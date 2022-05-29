@@ -8,7 +8,11 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import {
+  deleteClassroom,
+  fetchClassroomHistory,
+  fetchOneClassroom,
+} from "../../services";
 import {
   AdminLayout,
   AdminModal,
@@ -41,7 +45,7 @@ export const AdminClassroomDetailPage = memo((props) => {
   const classroomId = props.routeProps.match.params.classroomId;
 
   useEffect(() => {
-    TeacherAPI.t_fetchOneClassroom(classroomId)
+    fetchOneClassroom(classroomId)
       .then((res) => {
         setClassroom(res.data);
         const { name } = res.data;
@@ -57,7 +61,7 @@ export const AdminClassroomDetailPage = memo((props) => {
     setIsDeleting(true);
     try {
       // delete classroom from database
-      const deleteRes = await TeacherAPI.t_deleteClassroom({ classroomId });
+      const deleteRes = await deleteClassroom({ classroomId });
       if (deleteRes.status === 200)
         return (window.location.href = "/admin/classrooms");
     } catch (err) {
@@ -79,9 +83,7 @@ export const AdminClassroomDetailPage = memo((props) => {
 
   useEffect(() => {
     try {
-      TeacherAPI.t_fetchClassroomHistory(classroomId).then((res) =>
-        setHistory(res.data)
-      );
+      fetchClassroomHistory(classroomId).then((res) => setHistory(res.data));
     } catch (err) {
       console.log(err);
     }

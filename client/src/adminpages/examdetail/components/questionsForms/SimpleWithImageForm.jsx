@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { newSimpleWithImageQuestion } from "../../../../services";
 import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { object } from "prop-types";
@@ -75,9 +75,9 @@ export const SimpleWithImageForm = ({ question }) => {
 
         try {
           // post question to mongodb
-          const questionId = await TeacherAPI.t_newSimpleWithImageQuestion(
-            values
-          ).then((res) => res.data);
+          const questionId = await newSimpleWithImageQuestion(values).then(
+            (res) => res.data
+          );
 
           // if this isn't an edition, upload image to firebase store
           // or if this is an edition and the image changed, upload new image with the same path

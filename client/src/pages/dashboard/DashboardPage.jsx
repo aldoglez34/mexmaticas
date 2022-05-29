@@ -3,7 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 import { StudentLayout } from "../../components/Layout";
 import { useSelector } from "react-redux";
 import { NoCourses, MyCourses } from "./components";
-import API from "../../utils/API";
+import { fetchDashboard } from "../../services";
 import { useDispatch } from "react-redux";
 import * as courseActions from "../../redux/actions/course";
 import * as examActions from "../../redux/actions/exam";
@@ -28,7 +28,7 @@ export const DashboardPage = () => {
 
     // fetch student's courses
     if (student) {
-      API.fetchDashboard(student._id)
+      fetchDashboard(student._id)
         .then((res) => {
           setMyCourses(res.data.courses);
         })

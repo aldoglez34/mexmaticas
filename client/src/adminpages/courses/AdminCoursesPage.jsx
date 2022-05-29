@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminSpinner } from "../components";
 import { CourseItem } from "./components";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchCourses } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
@@ -16,7 +16,7 @@ export const AdminCoursesPage = () => {
   useEffect(() => {
     dispatch(setTitle("Cursos"));
     //
-    TeacherAPI.t_fetchCourses()
+    fetchCourses()
       .then((res) => {
         const unsortedExams = res.data;
         const sortedCourses = unsortedExams

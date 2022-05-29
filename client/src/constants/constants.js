@@ -1,4 +1,4 @@
-export const APP_VERSION = "7.3";
+export const APP_VERSION = "8.0";
 
 export const IMAGES = {
   SIZE: 1000000,
@@ -8,4 +8,11 @@ export const IMAGES = {
 export const PDFS = {
   SIZE: 4000000,
   SUPPORTED_FORMATS: ["application/pdf"],
+};
+
+export const USERS = {
+  ADMIN: "Admin",
+  GUEST: "Guest",
+  STUDENT: "Student",
+  TEACHER: "Teacher",
 };

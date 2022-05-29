@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Image, Modal, Spinner, Table } from "react-bootstrap";
 import moment from "moment";
 import "moment/locale/es";
-import API from "../../../../utils/API";
+import { fetchTop10 } from "../../../../services";
 import { string } from "prop-types";
 import { useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ export const Leaderboards = ({ topicId }) => {
 
   useEffect(() => {
     if (show) {
-      API.fetchTop10(course._id, topicId)
+      fetchTop10(course._id, topicId)
         .then((res) => setTop10(res.data))
         .catch((err) => console.log(err));
     }

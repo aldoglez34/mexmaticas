@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import {
   AdminClassroomDetailPage,
   AdminClassroomsPage,
@@ -12,31 +12,44 @@ import {
   AdminNewClassroomPage,
   AdminNewCoursePage,
   AdminNewInstitutionPage,
+  AdminNewTeacher,
   AdminNewTopicPage,
   AdminStudentAssignPage,
   AdminStudentDetailPage,
   AdminStudentHistoryPage,
   AdminStudentsPage,
+  AdminTeachersPage,
   AdminTopicDetailPage,
 } from "../adminpages";
 
-export default () => {
-  return (
+export const AdminNavigation = () => (
+  <BrowserRouter>
     <Switch>
-      {/* ================= CLASSROOMS ================= */}
-      <Route exact path="/admin/classrooms" component={AdminClassroomsPage} />
+      {/* ================= students ================= */}
+      <Route exact path="/admin/students" component={AdminStudentsPage} />
       <Route
         exact
-        path="/admin/classrooms/edit/:classroomId"
-        render={(props) => <AdminClassroomDetailPage routeProps={props} />}
+        path="/admin/students/unpurchased/:studentId"
+        render={(props) => <AdminStudentAssignPage routeProps={props} />}
       />
       <Route
         exact
-        path="/admin/classrooms/new"
-        component={AdminNewClassroomPage}
+        path="/admin/students/history/:studentId"
+        render={(props) => <AdminStudentHistoryPage routeProps={props} />}
       />
-
-      {/* ================= INSTITUTIONS ================= */}
+      <Route
+        path="/admin/students/:studentId"
+        render={(props) => <AdminStudentDetailPage routeProps={props} />}
+      />
+      {/* ================= courses ================= */}
+      <Route exact path="/admin/courses" component={AdminCoursesPage} />
+      <Route
+        exact
+        path="/admin/courses/edit/:courseId"
+        render={(props) => <AdminCourseDetailPage routeProps={props} />}
+      />
+      <Route exact path="/admin/courses/new" component={AdminNewCoursePage} />
+      {/* ================= institutions ================= */}
       <Route
         exact
         path="/admin/institutions"
@@ -52,17 +65,24 @@ export default () => {
         path="/admin/institutions/new"
         component={AdminNewInstitutionPage}
       />
-
-      {/* ================= COURSES ================= */}
-      <Route exact path="/admin/courses" component={AdminCoursesPage} />
+      {/* ================= teachers ================= */}
+      <Route exact path="/admin/teachers" component={AdminTeachersPage} />
+      <Route exact path="/admin/teachers/new" component={AdminNewTeacher} />
+      {/* ================= messages ================= */}
+      <Route exact path="/admin/messages" component={AdminMessagesPage} />
+      {/* ================= classrooms ================= */}
+      <Route exact path="/admin/classrooms" component={AdminClassroomsPage} />
       <Route
         exact
-        path="/admin/courses/edit/:courseId"
-        render={(props) => <AdminCourseDetailPage routeProps={props} />}
+        path="/admin/classrooms/edit/:classroomId"
+        render={(props) => <AdminClassroomDetailPage routeProps={props} />}
       />
-      <Route exact path="/admin/courses/new" component={AdminNewCoursePage} />
-
-      {/* ================= TOPICS ================= */}
+      <Route
+        exact
+        path="/admin/classrooms/new"
+        component={AdminNewClassroomPage}
+      />
+      {/* ================= topics ================= */}
       <Route
         exact
         path="/admin/courses/edit/topics/:courseId/:topicId"
@@ -73,37 +93,16 @@ export default () => {
         path="/admin/courses/courses/newTopic/:courseId"
         render={(props) => <AdminNewTopicPage routeProps={props} />}
       />
-
-      {/* ================= EXAM ================= */}
+      {/* ================= exam ================= */}
       <Route
         exact
         path="/admin/courses/edit/exam/:courseId/:topicId/:examId"
         render={(props) => <AdminExamDetailPage routeProps={props} />}
       />
-
-      {/* ================= STUDENTS ================= */}
-      <Route exact path="/admin/students" component={AdminStudentsPage} />
-      <Route
-        exact
-        path="/admin/students/unpurchased/:studentId"
-        render={(props) => <AdminStudentAssignPage routeProps={props} />}
-      />
-      <Route
-        exact
-        path="/admin/students/history/:studentId"
-        render={(props) => <AdminStudentHistoryPage routeProps={props} />}
-      />
-      <Route
-        // exact
-        path="/admin/students/:studentId"
-        render={(props) => <AdminStudentDetailPage routeProps={props} />}
-      />
-
-      {/* ================= MESSAGES ================= */}
+      {/* ================= messages ================= */}
       <Route exact path="/admin/messages" component={AdminMessagesPage} />
-
-      {/* ================= REDIRECT ================= */}
+      {/* ================= redirect ================= */}
       <Redirect from="*" to="/admin/students" />
     </Switch>
-  );
-};
+  </BrowserRouter>
+);

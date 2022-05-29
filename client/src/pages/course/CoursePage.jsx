@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Spinner } from "react-bootstrap";
-import API from "../../utils/API";
+import { fetchCourseInfo } from "../../services";
 import { StudentLayout } from "../../components/Layout";
 import { CourseIntro, Topic } from "./components";
 import { useSelector, useDispatch } from "react-redux";
@@ -24,7 +24,7 @@ export const CoursePage = React.memo((props) => {
     if (zenMode) dispatch(zenModeActions.zenModeOff());
 
     if (reduxCourse && reduxStudent) {
-      API.fetchCourseInfo(reduxCourse._id, reduxStudent._id)
+      fetchCourseInfo(reduxCourse._id, reduxStudent._id)
         .then((res) => setCourse(res.data))
         .catch((err) => {
           console.log(err);

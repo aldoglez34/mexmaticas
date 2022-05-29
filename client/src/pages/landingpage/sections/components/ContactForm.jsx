@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Col, Button } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import API from "../../../../utils/API";
+import { postMessage } from "../../../../services";
 
 export const ContactForm = () => {
   const yupschema = yup.object({
@@ -24,7 +24,7 @@ export const ContactForm = () => {
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         values.source = "Inicio";
-        API.postMessage(values)
+        postMessage(values)
           .then((res) => {
             // console.log(res);
             alert(res.data);

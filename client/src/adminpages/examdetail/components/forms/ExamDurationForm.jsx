@@ -3,7 +3,7 @@ import { Button, Col, Form, InputGroup } from "react-bootstrap";
 import { number, string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { updateExamDuration } from "../../../../services";
 import { useSelector } from "react-redux";
 
 export const ExamDurationForm = React.memo(({ formInitialText, formLabel }) => {
@@ -25,7 +25,7 @@ export const ExamDurationForm = React.memo(({ formInitialText, formLabel }) => {
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         values.examId = examId;
-        TeacherAPI.t_updateExamDuration(values)
+        updateExamDuration(values)
           .then((res) => {
             console.log(res.data);
             window.location.reload();

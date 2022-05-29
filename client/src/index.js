@@ -8,10 +8,10 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
 import rootReducer from "./redux/reducers";
-
-// import firebase from "./firebase/firebase";
+import { APP_VERSION } from "./constants/constants";
+// import { firebaseAuth } from "./firebase/firebase";
 
 const persistConfig = {
   key: "primary",
@@ -27,10 +27,10 @@ const store = createStore(
 
 const persistor = persistStore(store);
 
-// firebase
-//   .signOut()
-//   .then(() => {})
-//   .catch((error) => console.log(error));
+/* ======= logout ======= */
+// firebaseAuth.signOut()
+
+console.log(`RELEASE v${APP_VERSION}`);
 
 ReactDOM.render(
   <Provider store={store}>
@@ -41,7 +41,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();

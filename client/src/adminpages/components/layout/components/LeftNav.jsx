@@ -1,10 +1,13 @@
 import React from "react";
 import { Button, Nav } from "react-bootstrap";
 import { firebaseAuth } from "../../../../firebase/firebase";
-import "./leftnav.scss";
+import { isEqual } from "lodash";
+import cn from "classnames";
+
+import styles from "./leftnav.module.scss";
 
 export const LeftNav = React.memo(({ leftBarActive }) => {
-  const logout = () => {
+  const handleLogout = () => {
     firebaseAuth
       .signOut()
       .then(() => {
@@ -13,74 +16,51 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
       .catch((error) => console.log(error));
   };
 
+  const navItems = [
+    { label: "Alumnos", link: "/admin/students", icon: "fas fa-user-graduate" },
+    { label: "Cursos", link: "/admin/courses", icon: "fa fa-terminal" },
+    { label: "Escuelas", link: "/admin/institutions", icon: "fas fa-school" },
+    {
+      label: "Maestros",
+      link: "/admin/teachers",
+      icon: "fas fa-graduation-cap",
+    },
+    { label: "Mensajes", link: "/admin/messages", icon: "fas fa-envelope" },
+    { label: "Salones", link: "/admin/classrooms", icon: "fas fa-chalkboard" },
+  ];
+
   return (
-    <Nav className="d-flex flex-column h-100" id="leftnavstyle">
-      {/* logo */}
-      <div className="d-flex flex-column text-center" id="adminlogoContainer">
-        <span id="adminlogo">MeXmáticas</span>
-        <span id="adminlogo2">[ admin ]</span>
+    <Nav className={cn("d-flex flex-column h-100", styles.leftnavstyle)}>
+      <div
+        className={cn(
+          "d-flex flex-column text-center",
+          styles.adminlogoContainer
+        )}
+      >
+        <span className={styles.adminlogo}>MeXmáticas</span>
+        <span className={styles.adminlogo2}>[ admin ]</span>
       </div>
-      {/* menu */}
-      <Nav.Link
-        className="navLinkStyle"
-        href="/admin/students"
-        active={leftBarActive === "Alumnos" ? true : false}
-      >
-        <i
-          className="fas fa-user-graduate"
-          style={{ width: "26px", textAlign: "center" }}
-        />
-        <span className="ml-1">Alumnos</span>
-      </Nav.Link>
-      <Nav.Link
-        className="navLinkStyle"
-        href="/admin/courses"
-        active={leftBarActive === "Cursos" ? true : false}
-      >
-        <i
-          className="fas fa-graduation-cap"
-          style={{ width: "26px", textAlign: "center" }}
-        />
-        <span className="ml-1">Cursos</span>
-      </Nav.Link>
-      <Nav.Link
-        className="navLinkStyle"
-        href="/admin/institutions"
-        active={leftBarActive === "Escuelas" ? true : false}
-      >
-        <i
-          className="fas fa-school"
-          style={{ width: "26px", textAlign: "center" }}
-        />
-        <span className="ml-1">Escuelas</span>
-      </Nav.Link>
-      <Nav.Link
-        className="navLinkStyle"
-        href="/admin/messages"
-        active={leftBarActive === "Mensajes" ? true : false}
-      >
-        <i
-          className="fas fa-envelope"
-          style={{ width: "26px", textAlign: "center" }}
-        />
-        <span className="ml-1">Mensajes</span>
-      </Nav.Link>
-      <Nav.Link
-        className="navLinkStyle"
-        href="/admin/classrooms"
-        active={leftBarActive === "Salones" ? true : false}
-      >
-        <i
-          className="fas fa-chalkboard"
-          style={{ width: "26px", textAlign: "center" }}
-        />
-        <span className="ml-1">Salones</span>
-      </Nav.Link>
+      {navItems.map(({ label, link, icon }) => {
+        const navLinkStyle = cn(
+          isEqual(leftBarActive, label)
+            ? styles.navLinkStyleActive
+            : styles.navLinkStyle
+        );
+        return (
+          <Nav.Link className={navLinkStyle} href={link} key={label}>
+            <i
+              className={icon}
+              style={{ width: "26px", textAlign: "center" }}
+            />
+            <span className="ml-1">{label}</span>
+          </Nav.Link>
+        );
+      })}
       <div className="mt-auto">
         <Button
           variant="transparent"
           className="mb-3 text-danger text-left"
-          onClick={logout}
+          onClick={handleLogout}
           style={{ boxShadow: "none" }}
         >
           <i

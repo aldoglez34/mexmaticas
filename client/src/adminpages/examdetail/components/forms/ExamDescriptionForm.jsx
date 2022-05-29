@@ -3,7 +3,7 @@ import { Button, Form, Col } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { updateExamDescription } from "../../../../services";
 import { useSelector } from "react-redux";
 
 export const ExamDescriptionForm = React.memo(
@@ -23,7 +23,7 @@ export const ExamDescriptionForm = React.memo(
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
           values.examId = examId;
-          TeacherAPI.t_updateExamDescription(values)
+          updateExamDescription(values)
             .then((res) => {
               console.log(res.data);
               window.location.reload();

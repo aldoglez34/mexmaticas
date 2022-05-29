@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { array, func, string } from "prop-types";
 import { ReactSortable } from "react-sortablejs";
 import { AdminDangerModal } from "../../components";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { updateMaterialOrder } from "../../../services";
 
 import styles from "./draggablematerial.module.scss";
 
@@ -27,7 +27,7 @@ export const DraggableMaterial = ({
     }, []);
 
     if (changes.length)
-      TeacherAPI.t_updateMaterialOrder({ courseId, newList: changes, topicId })
+      updateMaterialOrder({ courseId, newList: changes, topicId })
         .then(() => {
           console.log("OK");
         })

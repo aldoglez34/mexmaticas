@@ -3,7 +3,7 @@ import { Modal, ListGroup, Button, Form, Row, Col } from "react-bootstrap";
 import moment from "moment";
 import "moment/locale/es";
 import { object } from "prop-types";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { markSeen } from "../../../services";
 import { ResponseForm } from "./";
 import { ImageFromFirebase } from "../../components";
 
@@ -15,7 +15,7 @@ export const ItemModal = React.memo(({ message }) => {
     window.location.reload();
   };
   const handleShow = () => {
-    TeacherAPI.t_markSeen(message._id)
+    markSeen(message._id)
       .then(() => console.log("marked seen."))
       .catch((err) => {
         console.log(err.response);

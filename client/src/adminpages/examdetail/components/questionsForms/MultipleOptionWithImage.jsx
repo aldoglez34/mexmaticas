@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { newMultipleOptionWithImage } from "../../../../services";
 import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { IMAGES } from "../../../../constants/constants";
@@ -99,9 +99,9 @@ export const MultipleOptionWithImage = ({ question }) => {
           }
 
           // post question to mongodb
-          const questionId = await TeacherAPI.t_newMultipleOptionWithImage(
-            values
-          ).then((res) => res.data);
+          const questionId = await newMultipleOptionWithImage(values).then(
+            (res) => res.data
+          );
 
           // if this isn't an edition, upload image to firebase store
           // or if this is an edition and the image changed, upload new image with the same path

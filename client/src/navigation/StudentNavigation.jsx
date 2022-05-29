@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import {
   CourseInfoPage,
   CoursePage,
@@ -12,50 +12,34 @@ import {
   ResultsPage,
 } from "../pages";
 
-export default () => {
-  return (
+export const StudentNavigation = () => (
+  <BrowserRouter>
     <Switch>
-      {/* ================= PUBLIC ROUTES ================= */}
-      {/* student dashboard */}
+      {/* ================= public ================= */}
       <Route exact path="/dashboard" component={DashboardPage} />
-
-      {/* courses info */}
       <Route
         exact
         path="/courses/:school"
         render={(props) => <CourseInfoPage routeProps={props} />}
       />
-
-      {/* payment */}
       <Route
         exact
         path="/payment/:school/:courseId"
         render={(props) => <PaymentPage routeProps={props} />}
       />
-
-      {/* ================= STUDENT ROUTES ================= */}
-      {/* messages */}
+      {/* ================= student ================= */}
       <Route exact path="/messages" component={MessagesPage} />
-
-      {/* courses main */}
       <Route
         exact
         path="/course"
         render={(props) => <CoursePage routeProps={props} />}
       />
-
-      {/* exam */}
       <Route exact path="/course/exam" component={ExamPage} />
       <Route exact path="/course/exam/results" component={ResultsPage} />
-
-      {/* freestyle */}
       <Route exact path="/course/freestyle" component={FreestylePage} />
-
-      {/* <Redirect from="/signup" to="/dashboard" /> */}
       <Redirect from="/" to="/dashboard" />
-
-      {/* 404 not found */}
+      {/* ================= 404 ================= */}
       <Route component={NoMatchPage} />
     </Switch>
-  );
-};
+  </BrowserRouter>
+);

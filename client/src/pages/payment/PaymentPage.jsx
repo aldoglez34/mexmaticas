@@ -5,8 +5,8 @@ import { Col, Container, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { BackButton } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
-import TeacherAPI from "../../utils/TeacherAPI";
-import API from "../../utils/API";
+import { fetchOneCourse } from "../../services";
+import { buyCourse } from "../../services";
 import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
 import { useHistory } from "react-router-dom";
 import { AdminSpinner } from "../../adminpages/components";
@@ -33,7 +33,7 @@ export const PaymentPage = React.memo((props) => {
   useEffect(() => {
     if (purchase) dispatch(clearPurchase());
 
-    TeacherAPI.t_fetchOneCourse(courseId).then((res) => setCourse(res.data));
+    fetchOneCourse(courseId).then((res) => setCourse(res.data));
   }, [courseId, dispatch, purchase]);
 
   // take the user back if there's no course
@@ -62,7 +62,7 @@ export const PaymentPage = React.memo((props) => {
 
     // adding course to user if everything went well
     try {
-      await API.buyCourse({ courseId, studentId: student._id });
+      await buyCourse({ courseId, studentId: student._id });
       setTimeout(() => {
         setShowPaymentModal(false);
         return (window.location.href = "/");

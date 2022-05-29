@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Col, Container, ListGroup, Row, Spinner, Tab } from "react-bootstrap";
 import Fade from "react-reveal/Fade";
 import { SectionTitle, HomeCard } from "./components";
-import API from "../../../utils/API";
+import { fetchLandingPageCourses } from "../../../services";
 import "./ourcourses.scss";
 
 export const OurCourses = () => {
   const [courses, setCourses] = useState();
 
   useEffect(() => {
-    API.fetchLandingPageCourses()
+    fetchLandingPageCourses()
       .then((res) => {
         setCourses(res.data);
       })

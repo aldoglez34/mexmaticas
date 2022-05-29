@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { assignCourse, fetchStudentUnpurchased } from "../../services";
 import { AdminSpinner, AdminLayout } from "../components";
 
 export const AdminStudentAssignPage = React.memo((props) => {
@@ -9,7 +9,7 @@ export const AdminStudentAssignPage = React.memo((props) => {
   const studentId = props.routeProps.match.params.studentId;
 
   useEffect(() => {
-    TeacherAPI.t_fetchStudentUnpurchased(studentId)
+    fetchStudentUnpurchased(studentId)
       .then((res) => {
         console.log(res.data);
         setUnpurchased(res.data);
@@ -20,8 +20,8 @@ export const AdminStudentAssignPage = React.memo((props) => {
       });
   }, [studentId]);
 
-  const assignCourse = (courseId) => {
-    TeacherAPI.t_assignCourse({
+  const _assignCourse = (courseId) => {
+    assignCourse({
       courseId,
       studentId,
     })
@@ -56,7 +56,7 @@ export const AdminStudentAssignPage = React.memo((props) => {
                       size="sm"
                       variant="dark"
                       className="ml-auto"
-                      onClick={() => assignCourse(u._id)}
+                      onClick={() => _assignCourse(u._id)}
                     >
                       <i className="fas fa-shopping-cart mr-2" />
                       Asignar

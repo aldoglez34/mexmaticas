@@ -4,7 +4,7 @@ import "./studentdropdown.scss";
 import { useSelector, useDispatch } from "react-redux";
 import * as studentActions from "../../../redux/actions/student";
 import { firebaseAuth } from "../../../firebase/firebase";
-import API from "../../../utils/API";
+import { fetchUnseeenMessages } from "../../../services";
 
 export const StudentDropdown = () => {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export const StudentDropdown = () => {
   const [unseen, setUnseen] = useState();
 
   useEffect(() => {
-    API.fetchUnseeenMessages(student._id)
+    fetchUnseeenMessages(student._id)
       .then((res) => setUnseen(res.data))
       .catch((err) => {
         console.log(err);

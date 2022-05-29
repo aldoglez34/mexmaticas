@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchMessages } from "../../services";
 import { ItemModal } from "./components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
@@ -22,7 +22,7 @@ export const AdminMessagesPage = () => {
   useEffect(() => {
     dispatch(setTitle("Mensajes"));
     //
-    TeacherAPI.t_fetchMessages()
+    fetchMessages()
       .then((res) => {
         setMessages(res.data);
         setFiltered(res.data);

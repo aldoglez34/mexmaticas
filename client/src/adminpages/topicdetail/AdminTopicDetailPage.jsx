@@ -9,7 +9,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { deleteMaterial, deleteTopic, fetchTopic } from "../../services";
 import {
   AdminLayout,
   AdminModal,
@@ -46,7 +46,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
 
   useEffect(() => {
     if (!topic)
-      TeacherAPI.t_fetchTopic(courseId, topicId)
+      fetchTopic(courseId, topicId)
         .then((res) => {
           const response = res.data;
           const topicName = response.name;
@@ -89,7 +89,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
   }, [courseId, courseName, dispatch, topic, topicId]);
 
   const handleDeleteMaterialItem = (materialType, materialId, materialLink) => {
-    TeacherAPI.t_deleteMaterial({
+    deleteMaterial({
       courseId,
       materialId,
       topicId,
@@ -126,7 +126,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
     setIsDeleting(true);
     try {
       // delete topic from database
-      const deleteRes = await TeacherAPI.t_deleteTopic({ courseId, topicId });
+      const deleteRes = await deleteTopic({ courseId, topicId });
 
       if (deleteRes.status === 200)
         window.location.href = `/admin/courses/edit/${courseId}`;

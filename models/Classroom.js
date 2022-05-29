@@ -29,6 +29,10 @@ const schema = new Schema({
       ref: "Course",
     },
   ],
+  teacher: {
+    type: Schema.Types.ObjectId,
+    ref: "Teacher",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

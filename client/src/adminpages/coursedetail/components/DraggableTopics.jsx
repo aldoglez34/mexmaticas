@@ -3,7 +3,7 @@ import { array, string } from "prop-types";
 import { ReactSortable } from "react-sortablejs";
 import { AdminPrimaryButton } from "../../components";
 import cn from "classnames";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { updateTopicOrder } from "../../../services";
 
 import styles from "./draggabletopics.module.scss";
 
@@ -13,12 +13,17 @@ export const DraggableTopics = ({ courseId, topics }) => {
   useEffect(() => {
     const changes = state.reduce((acc, cv, idx) => {
       if (cv.id !== idx + 1)
-        acc.push({ _id: cv._id, name: cv.name, lastId: cv.id, newOrderNumber: idx + 1 });
+        acc.push({
+          _id: cv._id,
+          name: cv.name,
+          lastId: cv.id,
+          newOrderNumber: idx + 1,
+        });
       return acc;
     }, []);
 
     if (changes.length)
-      TeacherAPI.t_updateTopicOrder({ courseId, newList: changes })
+      updateTopicOrder({ courseId, newList: changes })
         .then(() => {
           console.log("OK");
         })

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { firebaseAuth } from "../../../firebase/firebase";
-import API from "../../../utils/API";
+import { registerNewStudent } from "../../../services";
 import { useSelector } from "react-redux";
 import { isEqual } from "lodash";
-import { getForwardUrl } from "../../../utils/utils";
+import { getForwardUrl } from "../../../utils/helpers";
 
 export const useSignUpUser = () => {
   const [isError, setIsError] = useState(false);
@@ -24,7 +24,7 @@ export const useSignUpUser = () => {
       });
 
       // push new user to database
-      await API.registerNewStudent({
+      await registerNewStudent({
         firebaseUID: fbRes.user.uid,
         name: values.name,
         firstSurname: values.firstSurname,

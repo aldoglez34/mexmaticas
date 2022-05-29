@@ -3,7 +3,7 @@ import { Layout } from "../../components/Layout";
 import { ScrollButton } from "../../components/scrollbutton/ScrollButton";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { CourseInfoCard } from "./components";
-import API from "../../utils/API";
+import { fetchCoursesBySchool } from "../../services";
 import { BackButton } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -21,7 +21,7 @@ export const CourseInfoPage = React.memo((props) => {
   const studentId = (student && student._id) || "Guest";
 
   useEffect(() => {
-    API.fetchCoursesBySchool(school, studentId)
+    fetchCoursesBySchool(school, studentId)
       .then((res) => setCourses(res.data))
       .catch((err) => {
         console.log(err);

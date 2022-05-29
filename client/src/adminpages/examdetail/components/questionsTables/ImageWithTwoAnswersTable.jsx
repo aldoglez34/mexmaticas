@@ -3,7 +3,7 @@ import { Table, Row, Col } from "react-bootstrap";
 import { array } from "prop-types";
 import { useSelector } from "react-redux";
 import { AdminDangerModal, ImageFromFirebase } from "../../../components";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { deleteQuestion } from "../../../../services";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { EditQuestionModal, ImageWithTwoAnswers } from "../";
 
@@ -12,7 +12,7 @@ export const ImageWithTwoAnswersTable = React.memo(({ questions }) => {
   const examId = useSelector((state) => state.admin.exam.examId);
 
   const handleDeleteQuestion = (questionId, path) => {
-    TeacherAPI.t_deleteQuestion({ courseId, examId, questionId })
+    deleteQuestion({ courseId, examId, questionId })
       .then(() => {
         const storageRef = firebaseStorage.ref();
         const fileRef = storageRef.child(path);

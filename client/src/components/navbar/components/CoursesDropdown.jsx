@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavDropdown, Spinner } from "react-bootstrap";
 import "./coursesdropdown.scss";
 import { useSelector } from "react-redux";
-import API from "../../../utils/API";
+import { fetchSchoolDropdownItems } from "../../../services";
 
 export const CoursesDropdown = () => {
   const zenMode = useSelector((state) => state.zenMode);
@@ -10,7 +10,7 @@ export const CoursesDropdown = () => {
   const [courses, setCourses] = useState();
 
   useEffect(() => {
-    API.fetchSchoolDropdownItems()
+    fetchSchoolDropdownItems()
       .then((res) => setCourses(res.data))
       .catch((err) => console.log(err));
   }, []);

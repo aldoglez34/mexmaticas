@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchStudentHistory } from "../../services";
 import {
   AdminLayout,
   AdminPagination,
@@ -32,7 +32,7 @@ export const AdminStudentHistoryPage = memo((props) => {
   useEffect(() => {
     setSort(SORT_OPTIONS[0]);
     //
-    TeacherAPI.t_fetchStudentHistory(studentId)
+    fetchStudentHistory(studentId)
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
           a.date > b.date ? -1 : 1

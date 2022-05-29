@@ -3,7 +3,7 @@ import { AdminLayout } from "../components";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { newInstitution } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
@@ -34,7 +34,7 @@ export const AdminNewInstitutionPage = () => {
               onSubmit={(values, { setSubmitting }) => {
                 // setSubmitting(true);
 
-                TeacherAPI.t_newInstitution(values)
+                newInstitution(values)
                   .then(() => (window.location.href = "/admin/institutions"))
                   .catch((err) => {
                     if (err.response && err.response.data) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Col, Container, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchOneCourse } from "../../services";
 import { useDispatch } from "react-redux";
 import * as adminActions from "../../redux/actions/admin";
 import { AdminLayout, AdminModal, AdminSpinner } from "../components";
@@ -26,7 +26,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
   const hasTopics = useMemo(() => Boolean(course?.topics?.length), [course]);
 
   useEffect(() => {
-    TeacherAPI.t_fetchOneCourse(courseId)
+    fetchOneCourse(courseId)
       .then((res) => {
         setCourse(res.data);
         dispatch(adminActions.setTitle(res.data.name));

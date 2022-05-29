@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StudentLayout } from "../../components/Layout";
 import { Container, Spinner } from "react-bootstrap";
-import API from "../../utils/API";
+import { fetchExamInfo } from "../../services";
 import * as zenModeActions from "../../redux/actions/zenMode";
 import { QuestionsContainer } from "../../components";
 import "./exampage.scss";
@@ -16,7 +16,7 @@ export const ExamPage = () => {
 
   useEffect(() => {
     try {
-      API.fetchExamInfo(reduxexam._id).then((res) => {
+      fetchExamInfo(reduxexam._id).then((res) => {
         const realQuestionsCounter = res.data.questions.length;
         if (realQuestionsCounter < reduxexam.qCounter) {
           alert(

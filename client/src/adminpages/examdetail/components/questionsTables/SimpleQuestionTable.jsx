@@ -3,7 +3,7 @@ import { Table, Row, Col } from "react-bootstrap";
 import { array } from "prop-types";
 import { useSelector } from "react-redux";
 import { AdminDangerModal } from "../../../components";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { deleteQuestion } from "../../../../services";
 import { EditQuestionModal, SimpleQuestionForm } from "../";
 
 export const SimpleQuestionTable = React.memo(({ questions }) => {
@@ -11,7 +11,7 @@ export const SimpleQuestionTable = React.memo(({ questions }) => {
   const examId = useSelector((state) => state.admin.exam.examId);
 
   const handleDeleteQuestion = (questionId) => {
-    TeacherAPI.t_deleteQuestion({ courseId, examId, questionId })
+    deleteQuestion({ courseId, examId, questionId })
       .then(() => {
         window.location.reload();
       })

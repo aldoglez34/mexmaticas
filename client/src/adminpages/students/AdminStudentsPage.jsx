@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AdminLayout, AdminPagination, AdminSpinner } from "../components";
 import { Button, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import { StudentItem } from "./components";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchStudents } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
@@ -32,7 +32,7 @@ export const AdminStudentsPage = () => {
     dispatch(setTitle("Alumnos"));
     setSort(SORT_OPTIONS[0]);
     //
-    TeacherAPI.t_fetchStudents()
+    fetchStudents()
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
           a.registeredAt > b.registeredAt ? -1 : 1

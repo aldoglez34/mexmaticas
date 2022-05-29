@@ -3,7 +3,7 @@ import { AdminLayout, AdminSpinner } from "../components";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { fetchInstitutions, newClassroom } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
@@ -22,7 +22,7 @@ export const AdminNewClassroomPage = () => {
   useEffect(() => {
     dispatch(setTitle("Nuevo Salón"));
 
-    TeacherAPI.t_fetchInstitutions()
+    fetchInstitutions()
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
           String(a.name).toUpperCase().trim() <
@@ -56,7 +56,7 @@ export const AdminNewClassroomPage = () => {
                 onSubmit={(values, { setSubmitting }) => {
                   setSubmitting(true);
 
-                  TeacherAPI.t_newClassroom(values)
+                  newClassroom(values)
                     .then(() => (window.location.href = "/admin/classrooms"))
                     .catch((err) => {
                       if (err.response && err.response.data) {

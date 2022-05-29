@@ -3,7 +3,7 @@ import { AdminLayout } from "../components";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import TeacherAPI from "../../utils/TeacherAPI";
+import { newCourse } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
 
@@ -46,7 +46,7 @@ export const AdminNewCoursePage = () => {
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);
 
-                TeacherAPI.t_newCourse(values)
+                newCourse(values)
                   .then((res) => {
                     const { courseId } = res.data;
                     const newRoute = `/admin/courses/edit/${courseId}`;

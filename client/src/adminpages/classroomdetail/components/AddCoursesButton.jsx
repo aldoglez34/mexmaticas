@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import TeacherAPI from "../../../utils/TeacherAPI";
+import { fetchCourses, updateClassroomCourses } from "../../../services";
 import { AdminSpinner } from "../../components";
 import { array } from "prop-types";
 import cn from "classnames";
@@ -21,7 +21,7 @@ export const AddCoursesButton = React.memo(({ defaultCourses }) => {
 
   useEffect(() => {
     if (show) {
-      TeacherAPI.t_fetchCourses()
+      fetchCourses()
         .then((res) => {
           const rawCourses = res.data
             .map(({ _id, name, school }) => ({
@@ -56,7 +56,7 @@ export const AddCoursesButton = React.memo(({ defaultCourses }) => {
   const handleSaveChanges = async () => {
     setIsLoading(true);
     const onlyIds = classroomCourses.map(({ courseId }) => courseId);
-    TeacherAPI.t_updateClassroomCourses({ classroomId, courses: onlyIds })
+    updateClassroomCourses({ classroomId, courses: onlyIds })
       .then((res) => {
         console.log(res);
         window.location.reload();

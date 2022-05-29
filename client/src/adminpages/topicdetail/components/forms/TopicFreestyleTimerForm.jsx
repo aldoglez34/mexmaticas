@@ -3,7 +3,7 @@ import { Button, Form, Col, InputGroup } from "react-bootstrap";
 import { number, string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import TeacherAPI from "../../../../utils/TeacherAPI";
+import { updateTopicFreestyleTimer } from "../../../../services";
 import { useSelector } from "react-redux";
 
 export const TopicFreestyleTimerForm = React.memo(
@@ -28,7 +28,7 @@ export const TopicFreestyleTimerForm = React.memo(
           setSubmitting(true);
           values.courseId = courseId;
           values.topicId = topicId;
-          TeacherAPI.t_updateTopicFreestyleTimer(values)
+          updateTopicFreestyleTimer(values)
             .then((res) => {
               console.log(res.data);
               window.location.reload();

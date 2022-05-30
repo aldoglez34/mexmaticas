@@ -26,7 +26,7 @@ export const LeftNav = React.memo(({ leftBarActive }) => {
       icon: "fas fa-graduation-cap",
     },
     { label: "Mensajes", link: "/admin/messages", icon: "fas fa-envelope" },
-    { label: "Salones", link: "/admin/classrooms", icon: "fas fa-chalkboard" },
+    { label: "Salones", link: "/admin/classrooms", icon: "fas fa-users" },
   ];
 
   return (

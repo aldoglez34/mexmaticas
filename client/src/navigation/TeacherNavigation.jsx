@@ -1,11 +1,18 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { TeacherLoginPage } from "../teacherpages";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { TeacherClassroomsPage } from "../teacherpages";
 
 export const TeacherNavigation = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/teacher" component={TeacherLoginPage} />
+      {/* ================= redirect ================= */}
+      <Route
+        exact
+        path="/teacher/classrooms"
+        component={TeacherClassroomsPage}
+      />
+      {/* ================= redirect to teacher navigation ================= */}
+      <Redirect from="*" to="/teacher/classrooms" />
     </Switch>
   </BrowserRouter>
 );

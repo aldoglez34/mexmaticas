@@ -11,6 +11,7 @@ export const NewTeacherForm = () => {
     email: yup
       .string()
       .email("Formato de email incorrecto")
+      .matches(/^(?!admin@mexmaticas\b)/i, "Email inválido")
       .required("Requerido"),
     name: yup
       .string()

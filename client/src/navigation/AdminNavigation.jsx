@@ -101,7 +101,7 @@ export const AdminNavigation = () => (
       />
       {/* ================= messages ================= */}
       <Route exact path="/admin/messages" component={AdminMessagesPage} />
-      {/* ================= redirect ================= */}
+      {/* ================= redirect to admin navigation ================= */}
       <Redirect from="*" to="/admin/students" />
     </Switch>
   </BrowserRouter>

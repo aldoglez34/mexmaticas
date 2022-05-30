@@ -13,6 +13,7 @@ export const SignUpForm = () => {
     email: yup
       .string()
       .email("Formato de email incorrecto")
+      .matches(/^(?!@mexmaticas\b)/i, "Email inválido")
       .required("Requerido"),
     name: yup
       .string()

@@ -76,14 +76,13 @@ const App = () => {
       // the purpose of this is customizing the emails with their full names
       const isStudent = (displayName && !isTeacher && !isAdmin) || false;
 
-      console.log({
-        fullUser: user,
-        user: { displayName, uid, emailVerified },
-        isGuest,
-        isStudent,
-        isTeacher,
-        isAdmin,
-      });
+      // console.log({
+      //   _userrrrrrrrrrr: { email: user?.email, displayName, uid, emailVerified },
+      //   isGuest,
+      //   isStudent,
+      //   isTeacher,
+      //   isAdmin,
+      // });
 
       switch (true) {
         case isGuest:
@@ -112,7 +111,7 @@ const App = () => {
     if (isEqual(navigation, USERS.ADMIN)) return <AdminNavigation />;
   };
 
-  console.log({ navigation });
+  // console.log({ navigation });
 
   return navigation ? getNavigation() : <AdminSpinner />;
 };

@@ -19,7 +19,7 @@ export const TeacherLoginPage = () => {
       <Row>
         <Col md={{ span: 4, offset: 4 }}>
           <h1 className={cn("my-4", "py-3", "text-center", styles.logo)}>
-            MexMáticas
+            MeXmáticas
             <small className="d-block">[ maestro ]</small>
           </h1>
           <Formik

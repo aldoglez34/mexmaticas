@@ -28,7 +28,7 @@ const store = createStore(
 const persistor = persistStore(store);
 
 /* ======= logout ======= */
-// firebaseAuth.signOut()
+// firebaseAuth.signOut();
 
 console.log(`RELEASE v${APP_VERSION}`);
 

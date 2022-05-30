@@ -23,10 +23,10 @@ export const GuestNavigation = () => (
       />
       <Redirect from="/dashboard" to="/" />
       <Redirect from="/course" to="/" />
-      {/* ================= admin ================= */}
+      {/* ================= admin login only ================= */}
       <Route exact path="/admin" component={AdminLoginPage} />
       <Redirect from="/admin/*" to="/admin" />
-      {/* ================= teacher ================= */}
+      {/* ================= teacher login only ================= */}
       <Route exact path="/teacher" component={TeacherLoginPage} />
       <Redirect from="/teacher/*" to="/teacher" />
       {/* ================= 404 ================= */}

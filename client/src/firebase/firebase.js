@@ -1,8 +1,9 @@
 import fbApp from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
+import { isEqual } from "lodash";
 
-const configDev = {
+export const firebaseDevConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_DATABASE_URL,
@@ -13,7 +14,7 @@ const configDev = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
-const firebaseProd = {
+export const firebaseProdConfig = {
   apiKey: process.env.REACT_APP_API_KEY_PROD,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN_PROD,
   projectId: process.env.REACT_APP_PROJECT_ID_PROD,
@@ -22,10 +23,10 @@ const firebaseProd = {
   appId: process.env.REACT_APP_APP_ID_PROD,
 };
 
-if (process.env.NODE_ENV === "production") {
-  fbApp.initializeApp(firebaseProd);
+if (isEqual(process.env.NODE_ENV, "production")) {
+  fbApp.initializeApp(firebaseProdConfig);
 } else {
-  fbApp.initializeApp(configDev);
+  fbApp.initializeApp(firebaseDevConfig);
 }
 
 export const firebaseStorage = fbApp.storage();

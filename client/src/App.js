@@ -7,7 +7,7 @@ import {
   StudentNavigation,
   TeacherNavigation,
 } from "./navigation";
-import { AdminSpinner } from "./adminpages/components";
+import { AdminSpinner } from "./components";
 import { fetchStudentByUID } from "./services";
 import { firebaseAuth } from "./firebase/firebase";
 import { loginStudent, logoutStudent } from "./redux/actions/student";

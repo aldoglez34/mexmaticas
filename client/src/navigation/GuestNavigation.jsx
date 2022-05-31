@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { AdminLoginPage } from "../adminpages";
-import { TeacherLoginPage } from "../teacherpages";
+import { AdminLoginPage } from "../admin-pages";
+import { TeacherLoginPage } from "../teacher-pages";
 import {
   CourseInfoPage,
   LandingPage,
   LoginPage,
   NoMatchPage,
   SignUpPage,
-} from "../pages";
+} from "../guest-pages";
 
 export const GuestNavigation = () => (
   <BrowserRouter>

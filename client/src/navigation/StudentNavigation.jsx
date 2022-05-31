@@ -1,16 +1,15 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import {
-  CourseInfoPage,
   CoursePage,
   DashboardPage,
   ExamPage,
   FreestylePage,
   MessagesPage,
-  NoMatchPage,
   PaymentPage,
   ResultsPage,
-} from "../pages";
+} from "../student-pages";
+import { CourseInfoPage, NoMatchPage } from "../guest-pages";
 
 export const StudentNavigation = () => (
   <BrowserRouter>

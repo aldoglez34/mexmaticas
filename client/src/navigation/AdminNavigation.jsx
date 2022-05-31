@@ -20,7 +20,7 @@ import {
   AdminStudentsPage,
   AdminTeachersPage,
   AdminTopicDetailPage,
-} from "../adminpages";
+} from "../admin-pages";
 
 export const AdminNavigation = () => (
   <BrowserRouter>

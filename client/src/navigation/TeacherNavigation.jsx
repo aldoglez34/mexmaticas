@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { TeacherClassroomsPage } from "../teacherpages";
+import { TeacherClassroomsPage } from "../teacher-pages";
 
 export const TeacherNavigation = () => (
   <BrowserRouter>

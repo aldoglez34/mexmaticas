@@ -19,7 +19,7 @@ import {
   FreestyleQPoints,
   IncorrectModal,
   ScoreModal,
-} from "../../pages/freestyle/components";
+} from "../../student-pages/freestyle/components";
 
 export const QuestionsContainer = React.memo(
   ({ questions, isFreestyle = false }) => {

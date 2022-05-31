@@ -1,6 +1,6 @@
 import React from "react";
 import { oneOf, string } from "prop-types";
-import { ImageFromFirebase } from "../../../adminpages/components";
+import { ImageFromFirebase } from "../../../components";
 
 export const QTechnicalInstruction = React.memo(({ type, text, imageLink }) => {
   return type === "text" ? (

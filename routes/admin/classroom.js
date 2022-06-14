@@ -11,6 +11,7 @@ router.get("/all", (req, res) => {
   model.Classroom.find({})
     .lean()
     .populate("institution", "name")
+    .populate("teacher", "name firstSurname secondSurname")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);
@@ -27,6 +28,7 @@ router.get("/:classroomId", (req, res) => {
     .populate("institution", "name")
     .populate("members", "name email firstSurname secondSurname")
     .populate("courses", "name school")
+    .populate("teacher", "name firstSurname secondSurname _id")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminPagination, AdminSpinner } from "../../components";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Button, ListGroup } from "react-bootstrap";
 import { fetchMessages } from "../../services";
 import { ItemModal } from "./components";
 import { useDispatch } from "react-redux";
@@ -107,35 +107,29 @@ export const AdminMessagesPage = () => {
 
   return filtered ? (
     <AdminLayout leftBarActive="Mensajes" buttons={filters}>
-      <Container fluid>
-        <Row>
-          <Col md={{ offset: 2, span: 8 }}>
-            {filtered.length ? (
-              <>
-                <h3 className="mb-3" style={{ color: "#0f5257" }}>
-                  Selecciona un mensaje para ver su contenido...
-                </h3>
-                <ListGroup>
-                  {filtered.slice(offset, limit).map((m) => (
-                    <ItemModal key={m._id} message={m} />
-                  ))}
-                </ListGroup>
-                {filtered.length > PAGE_SIZE && (
-                  <div className="mt-3">
-                    <AdminPagination
-                      activePage={activePage}
-                      handleChangePage={(p) => handleChangePage(p)}
-                      pageCount={pages}
-                    />
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-center mt-4">No hay mensajes.</div>
-            )}
-          </Col>
-        </Row>
-      </Container>
+      {filtered.length ? (
+        <>
+          <h3 className="mb-3" style={{ color: "#0f5257" }}>
+            Selecciona un mensaje para ver su contenido...
+          </h3>
+          <ListGroup>
+            {filtered.slice(offset, limit).map((m) => (
+              <ItemModal key={m._id} message={m} />
+            ))}
+          </ListGroup>
+          {filtered.length > PAGE_SIZE && (
+            <div className="mt-3">
+              <AdminPagination
+                activePage={activePage}
+                handleChangePage={(p) => handleChangePage(p)}
+                pageCount={pages}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="text-center mt-4">No hay mensajes.</div>
+      )}
     </AdminLayout>
   ) : (
     <AdminSpinner />

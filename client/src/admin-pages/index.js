@@ -16,5 +16,6 @@ export * from "./students/pages/AdminStudentDetailPage";
 export * from "./students/pages/AdminStudentHistoryPage";
 export * from "./teachers/AdminTeachersPage";
 export * from "./teachers/pages/AdminNewTeacher";
+export * from "./teachers/pages/AdminTeacherDetailPage";
 export * from "./topics/AdminTopicDetailPage";
 export * from "./topics/pages/AdminNewTopicPage";

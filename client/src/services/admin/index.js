@@ -65,7 +65,13 @@ import {
   fetchStudentUnpurchased,
 } from "./students";
 
-import { fetchTeachers, registerNewTeacher } from "./teachers";
+import {
+  assignTeacher,
+  fetchAvailableTeachers,
+  fetchOneTeacher,
+  fetchTeachers,
+  registerNewTeacher,
+} from "./teachers";
 
 import {
   deleteTopic,
@@ -82,12 +88,14 @@ import {
 export {
   addMaterial,
   assignCourse,
+  assignTeacher,
   deleteClassroom,
   deleteInstitution,
   deleteMaterial,
   deleteQuestion,
   deleteTopic,
   fetchAvailableDifficulties,
+  fetchAvailableTeachers,
   fetchClassroomHistory,
   fetchClassrooms,
   fetchCourses,
@@ -98,6 +106,7 @@ export {
   fetchOneCourse,
   fetchOneInstitution,
   fetchOneStudent,
+  fetchOneTeacher,
   fetchStudentHistory,
   fetchStudents,
   fetchStudentUnpurchased,

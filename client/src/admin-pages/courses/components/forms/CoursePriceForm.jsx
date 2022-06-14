@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 export const CoursePriceForm = React.memo(({ formLabel, formInitialText }) => {
   const courseId = useSelector((state) => state.admin.course.courseId);
 
+  console.log({ formLabel, formInitialText });
+
   const yupschema = yup.object({
     newPrice: yup.number().positive("¿Por qué negativo?").required("Requerido"),
   });

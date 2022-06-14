@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AdminLayout, AdminSpinner } from "../../components";
-import { CourseItem } from "./components";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { AdminLayout, AdminSpinner, ListGroupItem } from "../../components";
+import { Badge, Button, ListGroup } from "react-bootstrap";
 import { fetchCourses } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
@@ -115,32 +114,28 @@ export const AdminCoursesPage = () => {
       leftBarActive="Cursos"
       optionsDropdown={optionsDropdown}
     >
-      <Container fluid>
-        <Row>
-          <Col md={{ offset: 2, span: 8 }}>
-            {filtered.length ? (
-              <>
-                <h3 className="mb-3" style={{ color: "#0f5257" }}>
-                  Selecciona un curso...
-                </h3>
-                <ListGroup>
-                  {filtered.map((c) => (
-                    <CourseItem
-                      key={c._id}
-                      name={c.name}
-                      school={c.school}
-                      _id={c._id}
-                      isActive={c.isActive}
-                    />
-                  ))}
-                </ListGroup>
-              </>
-            ) : (
-              <div className="text-center mt-4">No hay cursos.</div>
-            )}
-          </Col>
-        </Row>
-      </Container>
+      {filtered.length ? (
+        <>
+          <h3 className="mb-3" style={{ color: "#0f5257" }}>
+            Selecciona un curso...
+          </h3>
+          <ListGroup>
+            {filtered.map((c) => (
+              <ListGroupItem key={c._id} link={`/admin/courses/edit/${c._id}`}>
+                <h4>{c.name}</h4>
+                <span>{c.school}</span>
+                <div>
+                  <Badge variant={c.isActive ? "success" : "danger"}>
+                    {c.isActive ? "Activo" : "No activo"}
+                  </Badge>
+                </div>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        </>
+      ) : (
+        <div className="text-center mt-4">No hay cursos.</div>
+      )}
     </AdminLayout>
   ) : (
     <AdminSpinner />

@@ -1,9 +1,17 @@
 import React from "react";
-import { array, node, string } from "prop-types";
+import { array, bool, node, string } from "prop-types";
 import { LeftNav, ScrollButton, TopNav } from "../components";
+import { Container, Row, Col } from "react-bootstrap";
 
 export const AdminLayout = React.memo(
-  ({ backBttn, buttons, children, leftBarActive, optionsDropdown }) => {
+  ({
+    backBttn,
+    buttons,
+    children,
+    expanded = false,
+    leftBarActive,
+    optionsDropdown,
+  }) => {
     const navItems = [
       {
         label: "Alumnos",
@@ -30,7 +38,17 @@ export const AdminLayout = React.memo(
             buttons={buttons}
             optionsDropdown={optionsDropdown}
           />
-          <div style={{ padding: "35px 28px" }}>{children}</div>
+          <div style={{ padding: "35px 28px" }}>
+            <Container fluid>
+              {expanded ? (
+                children
+              ) : (
+                <Row>
+                  <Col md={{ offset: 2, span: 8 }}>{children}</Col>
+                </Row>
+              )}
+            </Container>
+          </div>
         </div>
         <ScrollButton scrollStepInPx={150} delayInMs={16.66} />
       </div>
@@ -42,6 +60,7 @@ AdminLayout.propTypes = {
   backBttn: string,
   buttons: node,
   children: node.isRequired,
+  expanded: bool,
   leftBarActive: string.isRequired,
   optionsDropdown: array,
 };

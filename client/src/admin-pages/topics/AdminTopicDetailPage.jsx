@@ -3,7 +3,6 @@ import {
   Badge,
   Button,
   Col,
-  Container,
   Image,
   Modal,
   Row,
@@ -146,146 +145,145 @@ export const AdminTopicDetailPage = React.memo((props) => {
       leftBarActive="Cursos"
       backBttn={`/admin/courses/edit/${courseId}`}
       optionsDropdown={optionsDropdown}
+      expanded
     >
-      <Container fluid>
-        {/* topic name */}
-        <Row>
-          <Col>
-            <span className="text-muted">Nombre</span>
-            <h1>
-              {topic.name}
-              <AdminModal
-                Form={TopicNameForm}
-                formInitialText={topic.name}
-                formLabel="Nombre"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h1>
-          </Col>
-        </Row>
-        {/* subject */}
-        <Row>
-          <Col>
-            <span className="text-muted">Materia</span>
-            <h2>
-              {topic.subject}
-              <AdminModal
-                Form={TopicSubjectForm}
-                formInitialText={topic.subject}
-                formLabel="Materia"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h2>
-          </Col>
-        </Row>
-        {/* description */}
-        <Row>
-          <Col>
-            <span className="text-muted">Descripción</span>
+      {/* topic name */}
+      <Row>
+        <Col>
+          <span className="text-muted">Nombre</span>
+          <h1>
+            {topic.name}
+            <AdminModal
+              Form={TopicNameForm}
+              formInitialText={topic.name}
+              formLabel="Nombre"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h1>
+        </Col>
+      </Row>
+      {/* subject */}
+      <Row>
+        <Col>
+          <span className="text-muted">Materia</span>
+          <h2>
+            {topic.subject}
+            <AdminModal
+              Form={TopicSubjectForm}
+              formInitialText={topic.subject}
+              formLabel="Materia"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h2>
+        </Col>
+      </Row>
+      {/* description */}
+      <Row>
+        <Col>
+          <span className="text-muted">Descripción</span>
+          <h5>
+            {topic.description}
+            <AdminModal
+              Form={TopicDescriptionForm}
+              formInitialText={topic.description}
+              formLabel="Descripción (Utiliza el símbolo \n para saltos de línea)"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h5>
+        </Col>
+      </Row>
+      {/* freestyle */}
+      <Row>
+        <Col>
+          <span className="text-muted">Modo rápido</span>
+          <h5>
+            {topic.freestyle.timer}{" "}
+            {topic.freestyle.timer === 1 ? " minuto" : " minutos"}
+            <AdminModal
+              Form={TopicFreestyleTimerForm}
+              formInitialText={topic.freestyle.timer}
+              formLabel="Modo rápido"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h5>
+        </Col>
+      </Row>
+      {/* reward */}
+      <Row>
+        <Col>
+          <span className="text-muted">Recompensa</span>
+          <div className="d-flex">
             <h5>
-              {topic.description}
+              {`Medalla de ${topic.name}`}
               <AdminModal
-                Form={TopicDescriptionForm}
-                formInitialText={topic.description}
-                formLabel="Descripción (Utiliza el símbolo \n para saltos de línea)"
+                Form={TopicRewardForm}
+                formLabel="Medalla"
                 icon={<i className="fas fa-pen-alt" />}
               />
             </h5>
-          </Col>
-        </Row>
-        {/* freestyle */}
-        <Row>
-          <Col>
-            <span className="text-muted">Modo rápido</span>
-            <h5>
-              {topic.freestyle.timer}{" "}
-              {topic.freestyle.timer === 1 ? " minuto" : " minutos"}
-              <AdminModal
-                Form={TopicFreestyleTimerForm}
-                formInitialText={topic.freestyle.timer}
-                formLabel="Modo rápido"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h5>
-          </Col>
-        </Row>
-        {/* reward */}
-        <Row>
-          <Col>
-            <span className="text-muted">Recompensa</span>
-            <div className="d-flex">
-              <h5>
-                {`Medalla de ${topic.name}`}
-                <AdminModal
-                  Form={TopicRewardForm}
-                  formLabel="Medalla"
-                  icon={<i className="fas fa-pen-alt" />}
-                />
-              </h5>
-            </div>
-            <ImageFromFirebase
-              className="mb-3"
-              height="100"
-              path={topic.reward.link}
-              width="70"
-            />
-          </Col>
-        </Row>
-        {/* material */}
-        <Row>
-          <Col>
-            <span className="text-muted">
-              Material <small>(lista reordenable)</small>
-            </span>
-            <DraggableMaterial
-              {...{ courseId, handleDeleteMaterialItem, topicId }}
-              material={topic.material
-                .sort((a, b) => a.materialOrderNumber - b.materialOrderNumber)
-                .map((m) => ({
-                  _id: m._id,
-                  id: m.materialOrderNumber,
-                  link: m.link,
-                  name: m.name,
-                  type: m.type,
-                }))}
-            />
-            <div className="mb-3">
-              <AddVideo {...{ courseId, topicId }} />
-              <AddPDF {...{ courseId, topicId }} />
-            </div>
-          </Col>
-        </Row>
-        {/* exams */}
-        <Row>
-          <Col>
-            <span className="text-muted">Exámenes</span>
-            <div className="d-flex flex-column mb-1">
-              {topic.exams
-                .sort((a, b) => a.orderNumber - b.orderNumber)
-                .map((e) => {
-                  const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${e._id}`;
-                  const badgeText = `${e.actualQCounter}/${e.qCounter}`;
-                  const variant =
-                    e.actualQCounter >= e.qCounter ? "success" : "warning";
-                  return (
-                    <span key={e._id}>
-                      <strong style={{ color: "#0f5257" }}>
-                        <Badge pill variant={variant} className="mr-1">
-                          {badgeText}
-                        </Badge>
-                        {e.name}
-                        <AdminPrimaryButton
-                          href={path}
-                          icon={<i className="fas fa-arrow-alt-circle-right" />}
-                        />
-                      </strong>
-                    </span>
-                  );
-                })}
-            </div>
-          </Col>
-        </Row>
-      </Container>
+          </div>
+          <ImageFromFirebase
+            className="mb-3"
+            height="100"
+            path={topic.reward.link}
+            width="70"
+          />
+        </Col>
+      </Row>
+      {/* material */}
+      <Row>
+        <Col>
+          <span className="text-muted">
+            Material <small>(lista reordenable)</small>
+          </span>
+          <DraggableMaterial
+            {...{ courseId, handleDeleteMaterialItem, topicId }}
+            material={topic.material
+              .sort((a, b) => a.materialOrderNumber - b.materialOrderNumber)
+              .map((m) => ({
+                _id: m._id,
+                id: m.materialOrderNumber,
+                link: m.link,
+                name: m.name,
+                type: m.type,
+              }))}
+          />
+          <div className="mb-3">
+            <AddVideo {...{ courseId, topicId }} />
+            <AddPDF {...{ courseId, topicId }} />
+          </div>
+        </Col>
+      </Row>
+      {/* exams */}
+      <Row>
+        <Col>
+          <span className="text-muted">Exámenes</span>
+          <div className="d-flex flex-column mb-1">
+            {topic.exams
+              .sort((a, b) => a.orderNumber - b.orderNumber)
+              .map((e) => {
+                const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${e._id}`;
+                const badgeText = `${e.actualQCounter}/${e.qCounter}`;
+                const variant =
+                  e.actualQCounter >= e.qCounter ? "success" : "warning";
+                return (
+                  <span key={e._id}>
+                    <strong style={{ color: "#0f5257" }}>
+                      <Badge pill variant={variant} className="mr-1">
+                        {badgeText}
+                      </Badge>
+                      {e.name}
+                      <AdminPrimaryButton
+                        href={path}
+                        icon={<i className="fas fa-arrow-alt-circle-right" />}
+                      />
+                    </strong>
+                  </span>
+                );
+              })}
+          </div>
+        </Col>
+      </Row>
       {/* delete topic modal */}
       <Modal centered onHide={handleCloseModal} show={showModal}>
         <Modal.Body className="bg-light rounded shadow text-center py-4">

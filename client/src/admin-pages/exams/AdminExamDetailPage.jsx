@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminModal, AdminSpinner } from "../../components";
-import { Alert, Col, Container, Row } from "react-bootstrap";
+import { Alert, Col, Row } from "react-bootstrap";
 import { fetchExam } from "../../services";
 import {
   DichotomousQuestion,
@@ -180,139 +180,138 @@ export const AdminExamDetailPage = React.memo((props) => {
 
   return exam ? (
     <AdminLayout
-      leftBarActive="Cursos"
       backBttn={`/admin/courses/edit/topics/${courseId}/${topicId}`}
+      expanded
+      leftBarActive="Cursos"
     >
-      <Container fluid>
-        {exam.qCounter > exam.questions.length && (
-          <Alert variant="danger">
-            Este examen no satisface el número mínimo de preguntas.
-          </Alert>
-        )}
-        {/* name */}
-        <Row>
-          <Col>
-            <span className="text-muted">Nombre</span>
-            <h1>
-              {exam.name}
-              <AdminModal
-                Form={ExamNameForm}
-                formInitialText={exam.name}
-                formLabel="Nombre"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h1>
-          </Col>
-        </Row>
-        {/* difficulty */}
-        <Row>
-          <Col>
-            <span className="text-muted">Dificultad</span>
-            <h2>{exam.difficulty}</h2>
-          </Col>
-        </Row>
-        {/* duration */}
-        <Row>
-          <Col>
-            <span className="text-muted">Duración</span>
-            <h2>
-              {exam.duration} {exam.duration === 1 ? "minuto" : "minutos"}
-              <AdminModal
-                Form={ExamDurationForm}
-                formInitialText={exam.duration}
-                formLabel="Duración"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h2>
-          </Col>
-        </Row>
-        {/* question counter */}
-        <Row>
-          <Col>
-            <span className="text-muted">Preguntas por examen</span>
-            <h2
-              className={
-                exam.qCounter > exam.questions.length ? "text-danger" : null
-              }
-            >
-              {`${exam.qCounter} preguntas`}
-              <AdminModal
-                Form={ExamQCounterForm}
-                formInitialText={exam.qCounter}
-                formLabel="Preguntas por examen"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h2>
-          </Col>
-        </Row>
-        {/* actual number of questions on this exam */}
-        <Row>
-          <Col>
-            <span className="text-muted">Total de preguntas</span>
-            <h3>{`${exam.questions.length} preguntas`}</h3>
-          </Col>
-        </Row>
-        {/* description */}
-        <Row>
-          <Col>
-            <span className="text-muted">Descripción</span>
-            <h5 className="mb-0">
-              {exam.description}
-              <AdminModal
-                Form={ExamDescriptionForm}
-                formInitialText={exam.description}
-                formLabel="Descripción"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h5>
-          </Col>
-        </Row>
-        {/* new questions menu */}
-        <Row>
-          <Col>
-            <span className="text-muted">Nuevas preguntas</span>
-            {examsList.map((e) => {
-              const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${examId}/#${e.name}`;
-              return (
-                <h5 key={e.name} className="m-0">
-                  <Link
-                    className={cn(styles.sendIcon, "rounded", "mr-1")}
-                    smooth
-                    title={`Ir a: ${e.tableHeader}`}
-                    to={path}
-                  >
-                    <i className="fas fa-paper-plane" />
-                  </Link>
-                  {e.name}
-                  {` (${e.data.length})`}
-                  <NewQuestionModal Form={e.form} text={e.name} />
-                </h5>
-              );
-            })}
-          </Col>
-        </Row>
-        <hr />
-        {/* questions tables */}
-        {examsList.map((e) => {
-          return (
-            <Row key={e.name} id={e.name}>
-              <Col>
-                <span className="text-muted">
-                  {e.tableHeader}
-                  {` (${e.data.length})`}
-                </span>
-                {e.hasQuestions ? (
-                  React.createElement(e.table, { questions: e.data }, null)
-                ) : (
-                  <h5>-</h5>
-                )}
-              </Col>
-            </Row>
-          );
-        })}
-        <br />
-        <br />
-      </Container>
+      {exam.qCounter > exam.questions.length && (
+        <Alert variant="danger">
+          Este examen no satisface el número mínimo de preguntas.
+        </Alert>
+      )}
+      {/* name */}
+      <Row>
+        <Col>
+          <span className="text-muted">Nombre</span>
+          <h1>
+            {exam.name}
+            <AdminModal
+              Form={ExamNameForm}
+              formInitialText={exam.name}
+              formLabel="Nombre"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h1>
+        </Col>
+      </Row>
+      {/* difficulty */}
+      <Row>
+        <Col>
+          <span className="text-muted">Dificultad</span>
+          <h2>{exam.difficulty}</h2>
+        </Col>
+      </Row>
+      {/* duration */}
+      <Row>
+        <Col>
+          <span className="text-muted">Duración</span>
+          <h2>
+            {exam.duration} {exam.duration === 1 ? "minuto" : "minutos"}
+            <AdminModal
+              Form={ExamDurationForm}
+              formInitialText={exam.duration}
+              formLabel="Duración"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h2>
+        </Col>
+      </Row>
+      {/* question counter */}
+      <Row>
+        <Col>
+          <span className="text-muted">Preguntas por examen</span>
+          <h2
+            className={
+              exam.qCounter > exam.questions.length ? "text-danger" : null
+            }
+          >
+            {`${exam.qCounter} preguntas`}
+            <AdminModal
+              Form={ExamQCounterForm}
+              formInitialText={exam.qCounter}
+              formLabel="Preguntas por examen"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h2>
+        </Col>
+      </Row>
+      {/* actual number of questions on this exam */}
+      <Row>
+        <Col>
+          <span className="text-muted">Total de preguntas</span>
+          <h3>{`${exam.questions.length} preguntas`}</h3>
+        </Col>
+      </Row>
+      {/* description */}
+      <Row>
+        <Col>
+          <span className="text-muted">Descripción</span>
+          <h5 className="mb-0">
+            {exam.description}
+            <AdminModal
+              Form={ExamDescriptionForm}
+              formInitialText={exam.description}
+              formLabel="Descripción"
+              icon={<i className="fas fa-pen-alt" />}
+            />
+          </h5>
+        </Col>
+      </Row>
+      {/* new questions menu */}
+      <Row>
+        <Col>
+          <span className="text-muted">Nuevas preguntas</span>
+          {examsList.map((e) => {
+            const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${examId}/#${e.name}`;
+            return (
+              <h5 key={e.name} className="m-0">
+                <Link
+                  className={cn(styles.sendIcon, "rounded", "mr-1")}
+                  smooth
+                  title={`Ir a: ${e.tableHeader}`}
+                  to={path}
+                >
+                  <i className="fas fa-paper-plane" />
+                </Link>
+                {e.name}
+                {` (${e.data.length})`}
+                <NewQuestionModal Form={e.form} text={e.name} />
+              </h5>
+            );
+          })}
+        </Col>
+      </Row>
+      <hr />
+      {/* questions tables */}
+      {examsList.map((e) => {
+        return (
+          <Row key={e.name} id={e.name}>
+            <Col>
+              <span className="text-muted">
+                {e.tableHeader}
+                {` (${e.data.length})`}
+              </span>
+              {e.hasQuestions ? (
+                React.createElement(e.table, { questions: e.data }, null)
+              ) : (
+                <h5>-</h5>
+              )}
+            </Col>
+          </Row>
+        );
+      })}
+      <br />
+      <br />
     </AdminLayout>
   ) : (
     <AdminSpinner />

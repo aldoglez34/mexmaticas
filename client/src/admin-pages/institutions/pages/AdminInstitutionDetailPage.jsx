@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Image,
-  Modal,
-  Row,
-  Spinner,
-} from "react-bootstrap";
+import { Button, Col, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { deleteInstitution, fetchOneInstitution } from "../../../services";
-import { AdminLayout, AdminModal, AdminSpinner } from "../../../components";
+import {
+  AdminLayout,
+  AdminModal,
+  AdminSpinner,
+  EditableRow,
+  ReadOnlyRow,
+} from "../../../components";
 import { InstitutionDescriptionForm, InstitutionNameForm } from "../components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../../redux/actions/admin";
@@ -29,14 +27,13 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
     fetchOneInstitution(institutionId)
       .then((res) => {
         setInstitution(res.data);
-        const { name } = res.data;
-        dispatch(setTitle(name));
+        dispatch(setTitle(res.data.name));
       })
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [institutionId, dispatch]);
+  }, [dispatch, institutionId]);
 
   const handleDeleteInstitution = async () => {
     setIsDeleting(true);
@@ -59,52 +56,33 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
   return institution ? (
     <AdminLayout
       backBttn="/admin/institutions"
+      expanded
       leftBarActive="Escuelas"
       optionsDropdown={optionsDropdown}
     >
-      <Container fluid>
-        {/* name */}
-        <Row>
-          <Col>
-            <span className="text-muted">Nombre</span>
-            <h1>
-              {institution.name}
-              <AdminModal
-                Form={InstitutionNameForm}
-                formInitialText={institution.name}
-                formLabel="Nombre"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h1>
-          </Col>
-        </Row>
-        {/* description */}
-        <Row>
-          <Col>
-            <span className="text-muted">Descripción</span>
-            <h4>
-              {institution.description || "-"}
-              <AdminModal
-                Form={InstitutionDescriptionForm}
-                formInitialText={institution.description}
-                formLabel="Descripción"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h4>
-            <span className="text-muted"></span>
-          </Col>
-        </Row>
-        {/* created at */}
-        <Row>
-          <Col>
-            <span className="text-muted">Fecha de creación</span>
-            <h5>
-              <i className="far fa-calendar-alt mr-2" />
-              {moment(institution.createdAt).format("LL")}
-            </h5>
-          </Col>
-        </Row>
-      </Container>
+      <EditableRow
+        {...{
+          formInitialText: institution.name,
+          ModalFormComponent: InstitutionNameForm,
+          modalLabel: "Nombre",
+          rowTitle: "Nombre",
+          value: institution.name,
+        }}
+      />
+      <EditableRow
+        {...{
+          formInitialText: institution.description,
+          ModalFormComponent: InstitutionDescriptionForm,
+          modalLabel: "Descripción",
+          rowTitle: "Descripción",
+          value: institution.description || "-",
+        }}
+      />
+      <ReadOnlyRow
+        icon={<i className="far fa-calendar-alt mr-2" />}
+        rowTitle="Fecha de creación"
+        value={moment(institution.createdAt).format("LL")}
+      />
       {/* delete institution modal */}
       <Modal centered onHide={handleCloseModal} show={showModal}>
         <Modal.Body className="bg-light rounded shadow text-center py-4">

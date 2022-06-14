@@ -1,10 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { AdminLayout, AdminPagination, AdminSpinner } from "../../components";
-import { ClassroomItem } from "./components";
-import { Button, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  AdminLayout,
+  AdminPagination,
+  AdminSpinner,
+  ListGroupItem,
+  SearchForm,
+} from "../../components";
+import { Button, ListGroup } from "react-bootstrap";
 import { fetchClassrooms } from "../../services";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../redux/actions/admin";
+import { useDataUtils } from "../../hooks/useDataUtils";
+import { isEmpty, isEqual } from "lodash";
+import cn from "classnames";
 
 const PAGE_SIZE = 15;
 const SORT_OPTIONS = [
@@ -13,169 +21,65 @@ const SORT_OPTIONS = [
   "Por Nombre Asc",
   "Por Nombre Desc",
 ];
+const FILTER_BUTTONS = [
+  "Primaria",
+  "Secundaria",
+  "Preparatoria",
+  "Universidad",
+];
 
 export const AdminClassroomsPage = () => {
-  const [pages, setPages] = useState();
-  const [activePage, setActivePage] = useState(1);
-  const [limit, setLimit] = useState(PAGE_SIZE);
-  const [offset, setOffset] = useState(0);
-  const [sort, setSort] = useState();
-  const [classrooms, setClassrooms] = useState();
-  const [filtered, setFiltered] = useState();
-  const [filter, setFilter] = useState();
-
   const dispatch = useDispatch();
-  const searchRef = useRef(null);
+
+  const [classrooms, setClassrooms] = useState();
+  const [activeFilter, setActiveFilter] = useState(undefined);
 
   useEffect(() => {
     dispatch(setTitle("Salones"));
-    //
     fetchClassrooms()
-      .then((res) => {
-        const defaultSorting = res?.data?.sort((a, b) =>
-          a.createdAt > b.createdAt ? -1 : 1
-        );
-        setClassrooms(defaultSorting);
-        setFiltered(defaultSorting);
-        setPages(Math.round(defaultSorting.length / PAGE_SIZE));
-      })
+      .then((res) =>
+        setClassrooms(
+          (res.data || []).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+        )
+      )
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
   }, [dispatch]);
 
-  const handleSortClassrooms = (criteria) => {
-    setSort(criteria);
-    if (activePage !== 1) {
-      setActivePage(1);
-      setOffset(0);
-      setLimit(PAGE_SIZE);
-    }
-    if (criteria === SORT_OPTIONS[0])
-      setFiltered((classrooms) =>
-        classrooms.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
-      );
-    if (criteria === SORT_OPTIONS[1])
-      setFiltered((classrooms) =>
-        classrooms.sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1))
-      );
-    if (criteria === SORT_OPTIONS[2])
-      setFiltered((classrooms) =>
-        classrooms.sort((a, b) =>
-          String(`${a.name}`).toUpperCase().trim() <
-          String(`${b.name}`).toUpperCase().trim()
-            ? -1
-            : 1
-        )
-      );
-    if (criteria === SORT_OPTIONS[3])
-      setFiltered((classrooms) =>
-        classrooms.sort((a, b) =>
-          String(`${a.name}`).toUpperCase().trim() >
-          String(`${b.name}`).toUpperCase().trim()
-            ? -1
-            : 1
-        )
-      );
-  };
+  const {
+    data: { activePage, filtered, limit, offset, pages, searchRef, sort },
+    functions: {
+      clearFilters,
+      handleChangePage,
+      handleFilterData,
+      handleSortData,
+    },
+  } = useDataUtils({
+    data: classrooms,
+    filterButtons: { accessor: "school", activeFilter, setActiveFilter },
+    pageSize: PAGE_SIZE,
+    searchBarAccessor: "name",
+    sortOptions: SORT_OPTIONS,
+  });
 
-  const handleFilterClassrooms = (criteria) => {
-    setSort(SORT_OPTIONS[0]);
-    if (activePage !== 1) {
-      setActivePage(1);
-      setOffset(0);
-      setLimit(PAGE_SIZE);
-    }
-    if (criteria.length < 3) {
-      setFiltered(
-        classrooms.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
-      );
-    }
-    if (criteria.length >= 3) {
-      const nameMatches = classrooms.filter((s) =>
-        String(`${s.name}`)
-          .toUpperCase()
-          .trim()
-          .includes(criteria.toUpperCase())
-      );
-      setFiltered(nameMatches);
-    }
-  };
-
-  const clearFilters = () => {
-    setSort(SORT_OPTIONS[0]);
-    setFiltered(
-      classrooms.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
-    );
-    searchRef.current.value = "";
-    if (activePage !== 1) {
-      setActivePage(1);
-      setOffset(0);
-      setLimit(PAGE_SIZE);
-    }
-  };
-
-  const handleChangePage = (p) => {
-    setActivePage(p);
-    if (p === 1) {
-      setOffset(0);
-      setLimit(PAGE_SIZE);
-    }
-    if (p > 1) {
-      const _offset = (p - 1) * PAGE_SIZE;
-      setOffset(_offset);
-      setLimit(_offset + PAGE_SIZE);
-    }
-  };
-
-  const filterClassrooms = (criteria) => {
-    setFilter(criteria === filter ? null : criteria);
-    setFiltered(
-      criteria === filter
-        ? classrooms
-        : classrooms.filter((c) => c.school === criteria)
-    );
-  };
-
-  const filters = (
+  const filterButtons = (
     <div className="d-flex">
-      <Button
-        disabled={classrooms ? false : true}
-        active={filter === "Primaria" ? true : false}
-        variant="outline-light"
-        className="shadow-sm"
-        onClick={() => filterClassrooms("Primaria")}
-      >
-        Primaria
-      </Button>
-      <Button
-        disabled={classrooms ? false : true}
-        active={filter === "Secundaria" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterClassrooms("Secundaria")}
-      >
-        Secundaria
-      </Button>
-      <Button
-        disabled={classrooms ? false : true}
-        active={filter === "Preparatoria" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterClassrooms("Preparatoria")}
-      >
-        Preparatoria
-      </Button>
-      <Button
-        disabled={classrooms ? false : true}
-        active={filter === "Universidad" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterClassrooms("Universidad")}
-      >
-        Universidad
-      </Button>
+      {FILTER_BUTTONS.map((opt, idx) => (
+        <Button
+          active={isEqual(activeFilter, opt)}
+          className={cn("shadow-sm", !isEqual(idx, 0) && "ml-2")}
+          disabled={isEmpty(classrooms)}
+          key={idx}
+          onClick={() =>
+            setActiveFilter(isEqual(opt, activeFilter) ? null : opt)
+          }
+          variant="outline-light"
+        >
+          {opt}
+        </Button>
+      ))}
     </div>
   );
 
@@ -188,85 +92,64 @@ export const AdminClassroomsPage = () => {
 
   return filtered ? (
     <AdminLayout
-      buttons={filters}
+      buttons={filterButtons}
       leftBarActive="Salones"
       optionsDropdown={optionsDropdown}
     >
-      <Container fluid>
-        <Row>
-          <Col md={{ offset: 2, span: 8 }}>
-            <Form className="mb-3">
-              <Form.Row>
-                <Col md="4" className="d-flex">
-                  <div className="d-flex align-items-center mr-2">
-                    <i className="fas fa-sort" style={{ fontSize: "19px" }} />
-                  </div>
-                  <Form.Control
-                    as="select"
-                    value={sort}
-                    onChange={(opt) => handleSortClassrooms(opt.target.value)}
-                  >
-                    {SORT_OPTIONS.map((so) => (
-                      <option key={so} value={so}>
-                        {so}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Col>
-                <Col md="8" className="d-flex">
-                  <div className="d-flex align-items-center mr-2">
-                    <i className="fas fa-search" style={{ fontSize: "19px" }} />
-                  </div>
-                  <Form.Control
-                    onChange={(str) =>
-                      handleFilterClassrooms(String(str.target.value))
-                    }
-                    placeholder="Buscar..."
-                    type="text"
-                    ref={searchRef}
-                  />
-                  <Button
-                    size="sm"
-                    variant="dark"
-                    className="ml-2"
-                    onClick={clearFilters}
-                  >
-                    <i className="fas fa-sync-alt px-1" />
-                  </Button>
-                </Col>
-              </Form.Row>
-            </Form>
-            {filtered.length ? (
-              <>
-                <ListGroup>
-                  {filtered.slice(offset, limit).map((c) => (
-                    <ClassroomItem
-                      _id={c._id}
-                      description={c.description}
-                      institution={c.institution?.name}
-                      key={c._id}
-                      membersCounter={c.members.length}
-                      name={c.name}
-                      school={c.school}
-                    />
-                  ))}
-                </ListGroup>
-                {filtered.length > PAGE_SIZE && (
-                  <div className="mt-3">
-                    <AdminPagination
-                      activePage={activePage}
-                      handleChangePage={(p) => handleChangePage(p)}
-                      pageCount={pages}
-                    />
-                  </div>
+      <SearchForm
+        activeSort={sort}
+        clearFilters={clearFilters}
+        handleFilter={handleFilterData}
+        handleSort={handleSortData}
+        ref={searchRef}
+        searchBarPlaceholder="Buscar por nombre de salón..."
+        sortOptions={SORT_OPTIONS}
+      />
+      {filtered.length ? (
+        <>
+          <ListGroup>
+            {filtered.slice(offset, limit).map((c) => (
+              <ListGroupItem
+                key={c._id}
+                link={`/admin/classrooms/edit/${c._id}`}
+              >
+                <h4>{c.name}</h4>
+                {(c.teacher || []) && (
+                  <span className="mb-1">
+                    <i className="fas fa-graduation-cap mr-2" />
+                    {String(
+                      `${c.teacher?.name} ${c.teacher?.firstSurname} ${c.teacher?.secondSurname}`
+                    ).trim()}
+                  </span>
                 )}
-              </>
-            ) : (
-              <div className="text-center mt-4">No hay salones.</div>
-            )}
-          </Col>
-        </Row>
-      </Container>
+                <div>
+                  <span className="mr-2">
+                    <i className="fas fa-school mr-2" />
+                    {c.institution?.name ?? "Sin escuela"}
+                    {c.school && ` - ${c.school}`}
+                  </span>
+                  <span>
+                    |
+                    <i className="fas fa-user-graduate mr-2 ml-2" />
+                    {(c.members || []).length}
+                  </span>
+                </div>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+          {filtered.length > PAGE_SIZE && (
+            <div className="mt-3">
+              <AdminPagination
+                activePage={activePage}
+                handleChangePage={(p) => handleChangePage(p)}
+                pageCount={pages}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="text-center mt-4">No hay salones.</div>
+      )}
     </AdminLayout>
   ) : (
     <AdminSpinner />

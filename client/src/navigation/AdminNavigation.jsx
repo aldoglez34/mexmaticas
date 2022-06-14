@@ -18,6 +18,7 @@ import {
   AdminStudentDetailPage,
   AdminStudentHistoryPage,
   AdminStudentsPage,
+  AdminTeacherDetailPage,
   AdminTeachersPage,
   AdminTopicDetailPage,
 } from "../admin-pages";
@@ -68,6 +69,11 @@ export const AdminNavigation = () => (
       {/* ================= teachers ================= */}
       <Route exact path="/admin/teachers" component={AdminTeachersPage} />
       <Route exact path="/admin/teachers/new" component={AdminNewTeacher} />
+      <Route
+        exact
+        path="/admin/teachers/edit/:teacherId"
+        render={(props) => <AdminTeacherDetailPage routeProps={props} />}
+      />
       {/* ================= messages ================= */}
       <Route exact path="/admin/messages" component={AdminMessagesPage} />
       {/* ================= classrooms ================= */}

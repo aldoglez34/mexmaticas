@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from "react";
-import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Form, Table } from "react-bootstrap";
 import { fetchStudentHistory } from "../../../services";
 import {
   AdminLayout,
@@ -140,132 +140,120 @@ export const AdminStudentHistoryPage = memo((props) => {
           show={showExportToExcel}
         />
       )}
-      <Container>
-        <Row>
-          <Col md={{ offset: 2, span: 8 }}>
-            <Form className="mb-3">
-              <Form.Row>
-                <Col md="4" className="d-flex">
-                  <div className="d-flex align-items-center mr-2">
-                    <i className="fas fa-sort" style={{ fontSize: "19px" }} />
-                  </div>
-                  <Form.Control
-                    as="select"
-                    value={sort}
-                    onChange={(opt) => handleSortHistory(opt.target.value)}
-                  >
-                    {SORT_OPTIONS.map((so) => (
-                      <option key={so} value={so}>
-                        {so}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Col>
-                <Col md="8" className="d-flex">
-                  <div className="d-flex align-items-center mr-2">
-                    <i className="fas fa-search" style={{ fontSize: "19px" }} />
-                  </div>
-                  <Form.Control
-                    onChange={(str) =>
-                      handleFilterHistory(String(str.target.value))
-                    }
-                    placeholder="Buscar exámenes..."
-                    type="text"
-                    ref={searchRef}
-                  />
-                  <Button
-                    size="sm"
-                    variant="dark"
-                    className="ml-2"
-                    onClick={clearFilters}
-                  >
-                    <i className="fas fa-sync-alt px-1" />
-                  </Button>
-                </Col>
-              </Form.Row>
-            </Form>
-            {filtered ? (
-              filtered.length ? (
-                <>
-                  <Table bordered size="sm">
-                    <thead>
-                      <tr>
-                        <th
-                          className="py-3 text-center"
-                          style={{ backgroundColor: "#f4fbf8" }}
-                        >
-                          <h5 className="mb-0">Fecha</h5>
-                        </th>
-                        <th
-                          className="py-3 text-center"
-                          style={{ backgroundColor: "#f4fbf8" }}
-                        >
-                          <h5 className="mb-0">Curso</h5>
-                        </th>
-                        <th
-                          className="py-3 text-center"
-                          style={{ backgroundColor: "#f4fbf8" }}
-                        >
-                          <h5 className="mb-0">Tema</h5>
-                        </th>
-                        <th
-                          className="py-3 text-center"
-                          style={{ backgroundColor: "#f4fbf8" }}
-                        >
-                          <h5 className="mb-0">Examen</h5>
-                        </th>
-                        <th
-                          className="py-3 text-center"
-                          style={{ backgroundColor: "#f4fbf8" }}
-                        >
-                          <h5 className="mb-0">Calificación</h5>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filtered.slice(offset, limit).map((h) => {
-                        return (
-                          <tr key={h._id}>
-                            <td className="align-middle">
-                              <span className="d-block">
-                                {moment(h.date).format("L")}
-                              </span>
-                              <span className="d-block">
-                                {moment(h.date).format("h:mm:ss a")}
-                              </span>
-                            </td>
-                            <td className="align-middle">{h.courseName}</td>
-                            <td className="align-middle">{h.topicName}</td>
-                            <td className="align-middle">{h.exam}</td>
-                            <td className="align-middle text-center">
-                              {h.grade}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                  {filtered.length > PAGE_SIZE && (
-                    <div className="mt-3">
-                      <AdminPagination
-                        activePage={activePage}
-                        handleChangePage={(p) => handleChangePage(p)}
-                        pageCount={pages}
-                      />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="text-center mt-4">
-                  No hay registros de exámenes.
-                </div>
-              )
-            ) : (
-              <AdminSpinner />
-            )}
+      <Form className="mb-3">
+        <Form.Row>
+          <Col md="4" className="d-flex">
+            <div className="d-flex align-items-center mr-2">
+              <i className="fas fa-sort" style={{ fontSize: "19px" }} />
+            </div>
+            <Form.Control
+              as="select"
+              value={sort}
+              onChange={(opt) => handleSortHistory(opt.target.value)}
+            >
+              {SORT_OPTIONS.map((so) => (
+                <option key={so} value={so}>
+                  {so}
+                </option>
+              ))}
+            </Form.Control>
           </Col>
-        </Row>
-      </Container>
+          <Col md="8" className="d-flex">
+            <div className="d-flex align-items-center mr-2">
+              <i className="fas fa-search" style={{ fontSize: "19px" }} />
+            </div>
+            <Form.Control
+              onChange={(str) => handleFilterHistory(String(str.target.value))}
+              placeholder="Buscar exámenes..."
+              type="text"
+              ref={searchRef}
+            />
+            <Button
+              size="sm"
+              variant="dark"
+              className="ml-2"
+              onClick={clearFilters}
+            >
+              <i className="fas fa-sync-alt px-1" />
+            </Button>
+          </Col>
+        </Form.Row>
+      </Form>
+      {filtered ? (
+        filtered.length ? (
+          <>
+            <Table bordered size="sm">
+              <thead>
+                <tr>
+                  <th
+                    className="py-3 text-center"
+                    style={{ backgroundColor: "#f4fbf8" }}
+                  >
+                    <h5 className="mb-0">Fecha</h5>
+                  </th>
+                  <th
+                    className="py-3 text-center"
+                    style={{ backgroundColor: "#f4fbf8" }}
+                  >
+                    <h5 className="mb-0">Curso</h5>
+                  </th>
+                  <th
+                    className="py-3 text-center"
+                    style={{ backgroundColor: "#f4fbf8" }}
+                  >
+                    <h5 className="mb-0">Tema</h5>
+                  </th>
+                  <th
+                    className="py-3 text-center"
+                    style={{ backgroundColor: "#f4fbf8" }}
+                  >
+                    <h5 className="mb-0">Examen</h5>
+                  </th>
+                  <th
+                    className="py-3 text-center"
+                    style={{ backgroundColor: "#f4fbf8" }}
+                  >
+                    <h5 className="mb-0">Calificación</h5>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.slice(offset, limit).map((h) => {
+                  return (
+                    <tr key={h._id}>
+                      <td className="align-middle">
+                        <span className="d-block">
+                          {moment(h.date).format("L")}
+                        </span>
+                        <span className="d-block">
+                          {moment(h.date).format("h:mm:ss a")}
+                        </span>
+                      </td>
+                      <td className="align-middle">{h.courseName}</td>
+                      <td className="align-middle">{h.topicName}</td>
+                      <td className="align-middle">{h.exam}</td>
+                      <td className="align-middle text-center">{h.grade}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            {filtered.length > PAGE_SIZE && (
+              <div className="mt-3">
+                <AdminPagination
+                  activePage={activePage}
+                  handleChangePage={(p) => handleChangePage(p)}
+                  pageCount={pages}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center mt-4">No hay registros de exámenes.</div>
+        )
+      ) : (
+        <AdminSpinner />
+      )}
     </AdminLayout>
   );
 });

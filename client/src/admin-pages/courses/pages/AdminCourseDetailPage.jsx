@@ -8,6 +8,7 @@ import {
   AdminModal,
   AdminSpinner,
   EditableRow,
+  ReadOnlyRow,
 } from "../../../components";
 import {
   CourseActiveForm,
@@ -18,8 +19,7 @@ import {
   CourseSummaryForm,
   DraggableTopics,
 } from "../components";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 export const AdminCourseDetailPage = React.memo((props) => {
   const [course, setCourse] = useState();
@@ -93,9 +93,11 @@ export const AdminCourseDetailPage = React.memo((props) => {
             )}
           </span>
           <h4 className="mb-3">
-            <Badge variant={course.isActive ? "success" : "danger"}>
-              {course.isActive ? "Activo" : "No activo"}
-            </Badge>
+            <small>
+              <Badge variant={course.isActive ? "success" : "danger"}>
+                {course.isActive ? "Activo" : "No activo"}
+              </Badge>
+            </small>
             {hasTopics && (
               <AdminModal
                 Form={CourseActiveForm}
@@ -145,7 +147,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
         </Col>
       </Row>
       {/* topics */}
-      <Row>
+      <Row className="mb-2">
         <Col>
           <span className="text-muted">
             Temas <small>(lista reordenable)</small>
@@ -170,16 +172,11 @@ export const AdminCourseDetailPage = React.memo((props) => {
           </Button>
         </Col>
       </Row>
-      {/* created at */}
-      <Row className="mt-2">
-        <Col>
-          <span className="text-muted">Fecha de creación</span>
-          <h5>
-            <i className="far fa-calendar-alt mr-2" />
-            {moment(course.createdAt).format("LL")}
-          </h5>
-        </Col>
-      </Row>
+      <ReadOnlyRow
+        icon={<i className="far fa-calendar-alt mr-2" />}
+        rowTitle="Fecha de creación"
+        value={formatDate(course.createdAt, "LL")}
+      />
     </AdminLayout>
   ) : (
     <AdminSpinner />

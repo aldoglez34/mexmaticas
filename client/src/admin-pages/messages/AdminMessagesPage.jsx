@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminPagination, AdminSpinner } from "../../components";
-import { Button, ListGroup } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import { fetchMessages } from "../../services";
 import { ItemModal } from "./components";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,6 @@ export const AdminMessagesPage = () => {
 
   useEffect(() => {
     dispatch(setTitle("Mensajes"));
-    //
     fetchMessages()
       .then((res) => {
         setMessages(res.data);
@@ -64,54 +63,10 @@ export const AdminMessagesPage = () => {
     }
   };
 
-  const filters = (
-    <div className="d-flex">
-      <Button
-        disabled={messages ? false : true}
-        active={filter === "New" ? true : false}
-        variant="outline-light"
-        className="shadow-sm"
-        onClick={() => filterMessages("New")}
-      >
-        Nuevos
-      </Button>
-      <Button
-        disabled={messages ? false : true}
-        active={filter === "Inicio" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterMessages("Inicio")}
-      >
-        Inicio
-      </Button>
-      <Button
-        disabled={messages ? false : true}
-        active={filter === "Tema" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterMessages("Tema")}
-      >
-        Tema
-      </Button>
-      <Button
-        disabled={messages ? false : true}
-        active={filter === "Pregunta" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterMessages("Pregunta")}
-      >
-        Pregunta
-      </Button>
-    </div>
-  );
-
   return filtered ? (
-    <AdminLayout leftBarActive="Mensajes" buttons={filters}>
+    <AdminLayout leftBarActive="Mensajes" expanded>
       {filtered.length ? (
         <>
-          <h3 className="mb-3" style={{ color: "#0f5257" }}>
-            Selecciona un mensaje para ver su contenido...
-          </h3>
           <ListGroup>
             {filtered.slice(offset, limit).map((m) => (
               <ItemModal key={m._id} message={m} />

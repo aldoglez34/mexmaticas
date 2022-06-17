@@ -81,12 +81,21 @@ export const AdminTeachersPage = () => {
           <>
             <ListGroup>
               {filtered.slice(offset, limit).map((s) => (
-                <ListGroupItem key={s._id} link={`/admin/teachers/edit/${s._id}`}>
+                <ListGroupItem
+                  key={s._id}
+                  link={`/admin/teachers/edit/${s._id}`}
+                >
                   <h4>{String(`${s.name} ${s.firstSurname}`).trim()}</h4>
                   <span>
                     <i className="fas fa-graduation-cap mr-2" />
                     {s.email}
                   </span>
+                  {s.classroom?.name && (
+                    <span>
+                      <i className="fas fa-users mr-2" />
+                      {s.classroom.name}
+                    </span>
+                  )}
                 </ListGroupItem>
               ))}
             </ListGroup>

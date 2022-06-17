@@ -1,4 +1,6 @@
 import { isEqual } from "lodash";
+import moment from "moment";
+import "moment/locale/es";
 
 export const getForwardUrl = (purchase) => {
   const isDev = isEqual(process.env.NODE_ENV, "development");
@@ -17,3 +19,5 @@ export const getForwardUrl = (purchase) => {
 
   return url;
 };
+
+export const formatDate = (str, format) => moment(str).format(format);

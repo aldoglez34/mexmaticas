@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Image, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Image, Modal, Spinner } from "react-bootstrap";
 import { deleteInstitution, fetchOneInstitution } from "../../../services";
 import {
   AdminLayout,
-  AdminModal,
   AdminSpinner,
   EditableRow,
   ReadOnlyRow,
@@ -11,8 +10,7 @@ import {
 import { InstitutionDescriptionForm, InstitutionNameForm } from "../components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../../redux/actions/admin";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 export const AdminInstitutionDetailPage = React.memo((props) => {
   const dispatch = useDispatch();
@@ -81,7 +79,7 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
       <ReadOnlyRow
         icon={<i className="far fa-calendar-alt mr-2" />}
         rowTitle="Fecha de creación"
-        value={moment(institution.createdAt).format("LL")}
+        value={formatDate(institution.createdAt, "LL")}
       />
       {/* delete institution modal */}
       <Modal centered onHide={handleCloseModal} show={showModal}>

@@ -12,6 +12,7 @@ import {
   ExportHistoryToExcel,
   ListGroupItem,
   ReadOnlyRow,
+  RowWithButton,
 } from "../../../components";
 import {
   AddCoursesButton,
@@ -24,8 +25,7 @@ import {
 } from "../components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../../redux/actions/admin";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 export const AdminClassroomDetailPage = memo((props) => {
   const [showExportToExcel, setShowExportToExcel] = useState(false);
@@ -83,6 +83,71 @@ export const AdminClassroomDetailPage = memo((props) => {
     }
   }, [classroomId]);
 
+  const getCoursesList = (courses = []) =>
+    courses.length ? (
+      <ul>
+        {classroom.courses.map((c) => (
+          <li key={c._id}>
+            <h5 className="mb-0">{c.name}</h5>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <h5 className="mb-0">-</h5>
+    );
+
+  const getDefaultCourses = (courses = []) =>
+    courses
+      .map(({ _id, name, school }) => ({
+        courseId: _id,
+        courseName: `${school.trim()} / ${name.trim()}`,
+      }))
+      .sort((a, b) => {
+        const courseA = a.courseName.toUpperCase().trim();
+        const courseB = b.courseName.toUpperCase().trim();
+        return courseA < courseB ? -1 : 1;
+      });
+
+  const getCourseMembers = (members = []) =>
+    members.length ? (
+      <Row className="mb-2 mt-1">
+        <Col md={{ offset: 0, span: 8 }}>
+          {classroom.members
+            .sort((a, b) => {
+              const memberA = `${a.name} ${a.firstSurname}`
+                .toUpperCase()
+                .trim();
+              const memberB = `${b.name} ${b.firstSurname}`
+                .toUpperCase()
+                .trim();
+              return memberA < memberB ? -1 : 1;
+            })
+            .map((s) => (
+              <ListGroupItem
+                key={s._id}
+                link={`/admin/students/${
+                  s._id
+                }${`/comesFrom=/admin/classrooms/edit/${s._id}`}`}
+              >
+                <h4>{`${s.name} ${s.firstSurname}`.trim()}</h4>
+                <span>
+                  <i className="fas fa-user-graduate mr-2" />
+                  {s.email}
+                </span>
+              </ListGroupItem>
+            ))}
+        </Col>
+      </Row>
+    ) : (
+      <h5>-</h5>
+    );
+
+  const getDefaultMembers = (members = []) =>
+    members.map((s) => ({
+      studentId: s._id,
+      studentName: `${s.name} ${s.firstSurname} ${s.secondName} - ${s.email}`,
+    }));
+
   return classroom && history ? (
     <AdminLayout
       backBttn="/admin/classrooms"
@@ -94,8 +159,8 @@ export const AdminClassroomDetailPage = memo((props) => {
         {...{
           formInitialText: classroom.name,
           ModalFormComponent: ClassroomNameForm,
-          modalLabel: "Nombre",
-          rowTitle: "Nombre",
+          modalLabel: "Nombre del Salón",
+          rowTitle: "Nombre del Salón",
           value: classroom.name,
         }}
       />
@@ -103,8 +168,8 @@ export const AdminClassroomDetailPage = memo((props) => {
         {...{
           formInitialText: classroom.teacher?._id,
           ModalFormComponent: ClassroomTeachersForm,
-          modalLabel: "Maestro",
-          rowTitle: "Maestro",
+          modalLabel: "Maestro Asignado",
+          rowTitle: "Maestro Asignado",
           value: String(
             `${classroom.teacher?.name ?? ""} ${
               classroom.teacher?.firstSurname ?? ""
@@ -116,8 +181,8 @@ export const AdminClassroomDetailPage = memo((props) => {
         {...{
           formInitialText: classroom.school || "Elige...",
           ModalFormComponent: ClassroomSchoolForm,
-          modalLabel: "Nivel educativo",
-          rowTitle: "Nivel educativo",
+          modalLabel: "Nivel Educativo",
+          rowTitle: "Nivel Educativo",
           value: classroom.school || "-",
         }}
       />
@@ -141,88 +206,27 @@ export const AdminClassroomDetailPage = memo((props) => {
       />
       <ReadOnlyRow
         icon={<i className="far fa-calendar-alt mr-2" />}
-        rowTitle="Fecha de creación"
-        value={moment(classroom.createdAt).format("LL")}
+        rowTitle="Fecha de Creación"
+        value={formatDate(classroom.createdAt, "LL")}
       />
-      <Row className="mb-2">
-        <Col>
-          <span className="text-muted">Cursos</span>
-          {classroom.courses.length ? (
-            <ul className="mb-2">
-              {classroom.courses.map((c) => (
-                <li key={c._id}>
-                  <h5 className="mb-0">{c.name}</h5>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <h5 className="mb-0">-</h5>
-          )}
+      <RowWithButton
+        rowTitle="Cursos Asignados"
+        value={getCoursesList(classroom.courses)}
+        button={
           <AddCoursesButton
-            defaultCourses={classroom.courses
-              .map(({ _id, name, school }) => ({
-                courseId: _id,
-                courseName: `${school.trim()} / ${name.trim()}`,
-              }))
-              .sort((a, b) =>
-                String(`${a.courseName}`).toUpperCase().trim() <
-                String(`${b.courseName}`).toUpperCase().trim()
-                  ? -1
-                  : 1
-              )}
+            defaultCourses={getDefaultCourses(classroom.courses)}
           />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <span className="text-muted d-block">{`Miembros (${classroom.members.length})`}</span>
-          <div>
-            {classroom.members.length ? (
-              <div className="my-2">
-                <Row>
-                  <Col md={{ offset: 0, span: 8 }}>
-                    {classroom.members
-                      .sort((a, b) =>
-                        String(`${a.name} ${a.firstSurname}`)
-                          .toUpperCase()
-                          .trim() <
-                        String(`${b.name} ${b.firstSurname}`)
-                          .toUpperCase()
-                          .trim()
-                          ? -1
-                          : 1
-                      )
-                      .map((s) => (
-                        <ListGroupItem
-                          key={s._id}
-                          link={`/admin/students/${
-                            s._id
-                          }${`/comesFrom=/admin/classrooms/edit/${s._id}`}`}
-                        >
-                          <h4>
-                            {String(`${s.name} ${s.firstSurname}`).trim()}
-                          </h4>
-                          <span>
-                            <i className="fas fa-user-graduate mr-2" />
-                            {s.email}
-                          </span>
-                        </ListGroupItem>
-                      ))}
-                  </Col>
-                </Row>
-              </div>
-            ) : (
-              <h5>-</h5>
-            )}
-          </div>
+        }
+      />
+      <RowWithButton
+        rowTitle={`Miembros del Salón: ${(classroom.members || []).length}`}
+        value={getCourseMembers(classroom.members)}
+        button={
           <AddStudentsButton
-            defaultMembers={classroom.members.map((s) => ({
-              studentId: s._id,
-              studentName: `${s.name} ${s.firstSurname} ${s.secondName} - ${s.email}`,
-            }))}
+            defaultMembers={getDefaultMembers(classroom.members)}
           />
-        </Col>
-      </Row>
+        }
+      />
       {/* delete classroom modal */}
       <Modal centered onHide={handleCloseModal} show={showModal}>
         <Modal.Body className="bg-light rounded shadow text-center py-4">

@@ -5,6 +5,7 @@ const model = require("../../models");
 // matches with /adminapi/teachers/all
 router.get("/all", (req, res) => {
   model.Teacher.find({})
+    .populate("classroom", "name")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);
@@ -123,9 +124,15 @@ router.get("/:teacherId", function (req, res) {
   const { teacherId } = req.params;
 
   model.Teacher.findById(teacherId)
-    .select("name firstSurname secondSurname email createdAt")
-    .lean() // necessary
-    .populate("classroom")
+    .select("name firstSurname secondSurname email createdAt classroom")
+    .populate({
+      path: "classroom",
+      select: "name school description courses members",
+      populate: {
+        path: "courses members",
+        select: "name firstSurname secondSurname email",
+      },
+    })
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);

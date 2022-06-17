@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Image, Modal, Spinner, Table } from "react-bootstrap";
-import moment from "moment";
-import "moment/locale/es";
 import { fetchTop10 } from "../../../../services";
 import { string } from "prop-types";
 import { useSelector } from "react-redux";
+import { formatDate } from "../../../../utils/helpers";
 
 export const Leaderboards = ({ topicId }) => {
   const [show, setShow] = useState(false);
@@ -13,7 +12,7 @@ export const Leaderboards = ({ topicId }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const formattedDate = (date) => moment(date).format("LL");
+  const formattedDate = (date) => formatDate(date, "LL");
 
   const course = useSelector((state) => state.course);
 

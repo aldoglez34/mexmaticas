@@ -1,10 +1,9 @@
 import React from "react";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 export const LastVisited = React.memo(({ date }) => {
   const formattedDate = date
-    ? moment(date).format("LLLL")
+    ? formatDate(date, "LLLL")
     : "No has presentado este examen";
 
   return (

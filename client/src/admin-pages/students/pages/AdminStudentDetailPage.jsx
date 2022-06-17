@@ -4,8 +4,7 @@ import { fetchOneStudent } from "../../../services";
 import { AdminLayout, AdminSpinner, ReadOnlyRow } from "../../../components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../../redux/actions/admin";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 export const AdminStudentDetailPage = React.memo((props) => {
   const url = new URL(window.location.href);
@@ -48,7 +47,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
       <ReadOnlyRow
         icon={<i className="far fa-calendar-alt mr-2" />}
         rowTitle="Fecha de registro"
-        value={moment(student.registeredAt).format("LL")}
+        value={formatDate(student.registeredAt, "LL")}
       />
       {/* courses */}
       <Row>

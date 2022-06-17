@@ -1,8 +1,16 @@
 import React, { memo, useEffect, useState } from "react";
-import { AdminLayout, AdminSpinner } from "../../../components";
+import {
+  AdminLayout,
+  AdminSpinner,
+  DivisionRow,
+  ReadOnlyRow,
+} from "../../../components";
 import { useDispatch } from "react-redux";
 import { setTitle } from "../../../redux/actions/admin";
 import { fetchOneTeacher } from "../../../services";
+import { Col, Row } from "react-bootstrap";
+import { isEmpty } from "lodash";
+import { formatDate } from "../../../utils/helpers";
 
 export const AdminTeacherDetailPage = memo((props) => {
   const dispatch = useDispatch();
@@ -10,8 +18,6 @@ export const AdminTeacherDetailPage = memo((props) => {
   const [teacher, setTeacher] = useState();
 
   const teacherId = props.routeProps.match.params.teacherId;
-
-  console.log({ teacher });
 
   useEffect(() => {
     fetchOneTeacher(teacherId)
@@ -26,18 +32,79 @@ export const AdminTeacherDetailPage = memo((props) => {
       });
   }, [dispatch, teacherId]);
 
+  const getCoursesList = (courses) => {
+    if (!courses) return;
+    return !isEmpty(courses) ? (
+      <ul>
+        {courses.map((c) => (
+          <li key={c._id}>{c.name}</li>
+        ))}
+      </ul>
+    ) : (
+      "Sin Cursos"
+    );
+  };
+
+  const getMembersList = (members) => {
+    if (!members) return;
+    return !isEmpty(members) ? (
+      <ul>
+        {members.map((m) => (
+          <li
+            key={m._id}
+          >{`${m.name} ${m.firstSurname} ${m.secondSurname} (${m.email})`}</li>
+        ))}
+      </ul>
+    ) : (
+      "Sin Alumnos"
+    );
+  };
+
+  const renderClassroom = () => (
+    <>
+      <DivisionRow text="Datos del Salón" />
+      <ReadOnlyRow rowTitle="Nombre" value={teacher.classroom?.name} />
+      <ReadOnlyRow
+        rowTitle="Nivel Educativo"
+        value={teacher.classroom?.school}
+      />
+      <ReadOnlyRow
+        rowTitle="Descripción"
+        value={teacher.classroom?.description}
+      />
+      <ReadOnlyRow
+        rowTitle="Cursos"
+        value={getCoursesList(teacher.classroom?.courses)}
+      />
+      <ReadOnlyRow
+        rowTitle="Alumnos"
+        value={getMembersList(teacher.classroom?.members)}
+      />
+    </>
+  );
+
+  const renderNoClassroom = () => (
+    <Row className="mb-2">
+      <Col>
+        <span className="text-muted">Sin salón.</span>
+      </Col>
+    </Row>
+  );
+
   return teacher ? (
     <AdminLayout leftBarActive="Maestros" backBttn="/admin/teachers" expanded>
-      <span>asdasd</span>
-      {/* <EditableRow
-        {...{
-          formInitialText: teacher.name,
-          ModalFormComponent: ClassroomNameForm,
-          modalLabel: "Nombre",
-          rowTitle: "Nombre",
-          value: teacher.name,
-        }}
-      /> */}
+      <DivisionRow text="Datos del Maestro" isTitle />
+      <ReadOnlyRow
+        rowTitle="Nombre Completo"
+        value={`${teacher.name} ${teacher.firstSurname} ${teacher.secondSurname}`}
+      />
+      <ReadOnlyRow rowTitle="Cuenta" value={teacher.email} />
+      <ReadOnlyRow
+        icon={<i className="far fa-calendar-alt mr-2" />}
+        rowTitle="Fecha de Registro"
+        value={formatDate(teacher.createdAt, "LL")}
+      />
+      {!!teacher.classroom?._id ? renderClassroom() : renderNoClassroom()}
     </AdminLayout>
   ) : (
     <AdminSpinner />

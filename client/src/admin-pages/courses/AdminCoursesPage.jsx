@@ -14,7 +14,6 @@ export const AdminCoursesPage = () => {
 
   useEffect(() => {
     dispatch(setTitle("Cursos"));
-    //
     fetchCourses()
       .then((res) => {
         const unsortedExams = res.data;

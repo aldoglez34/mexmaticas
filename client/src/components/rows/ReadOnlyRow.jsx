@@ -1,15 +1,15 @@
 import React, { memo } from "react";
-import { object, string } from "prop-types";
+import { any, object, string } from "prop-types";
 import { Col, Row } from "react-bootstrap";
 
 export const ReadOnlyRow = memo(({ icon, rowTitle, value }) => (
   <Row className="mb-2">
     <Col>
       {rowTitle && <span className="text-muted">{rowTitle}</span>}
-      <h4>
+      <h5>
         {icon}
         {value}
-      </h4>
+      </h5>
     </Col>
   </Row>
 ));
@@ -17,7 +17,7 @@ export const ReadOnlyRow = memo(({ icon, rowTitle, value }) => (
 ReadOnlyRow.propTypes = {
   icon: object,
   rowTitle: string,
-  value: string,
+  value: any,
 };
 
 ReadOnlyRow.displayName = "ReadOnlyRow";

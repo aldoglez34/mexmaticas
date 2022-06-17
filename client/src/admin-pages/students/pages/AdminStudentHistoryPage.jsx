@@ -8,8 +8,7 @@ import {
   ExportHistoryToExcel,
 } from "../../../components";
 import { useSelector } from "react-redux";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 const PAGE_SIZE = 25;
 const SORT_OPTIONS = ["Más Recientes", "Más Antiguos"];
@@ -223,10 +222,10 @@ export const AdminStudentHistoryPage = memo((props) => {
                     <tr key={h._id}>
                       <td className="align-middle">
                         <span className="d-block">
-                          {moment(h.date).format("L")}
+                          {formatDate(h.date, "L")}
                         </span>
                         <span className="d-block">
-                          {moment(h.date).format("h:mm:ss a")}
+                          {formatDate(h.date, "h:mm:ss a")}
                         </span>
                       </td>
                       <td className="align-middle">{h.courseName}</td>

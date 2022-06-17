@@ -62,7 +62,9 @@ export const TopNav = React.memo(({ backBttn, buttons, optionsDropdown }) => {
         >
           {/* title */}
           <div>
-            <h2 className="mb-0 text-light">{title}</h2>
+            <h2 className="mb-0 text-light">
+              {String(title).toLocaleUpperCase()}
+            </h2>
           </div>
         </div>
         {buttons ? (

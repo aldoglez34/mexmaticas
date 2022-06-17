@@ -2,8 +2,7 @@ import React from "react";
 import { ListGroup, Form } from "react-bootstrap";
 import { array } from "prop-types";
 import "./mymessages.scss";
-import moment from "moment";
-import "moment/locale/es";
+import { formatDate } from "../../../utils/helpers";
 
 export const MyMessages = React.memo(({ messages }) => {
   return (
@@ -34,7 +33,7 @@ export const MyMessages = React.memo(({ messages }) => {
           </div>
           {/* date */}
           <span className="text-muted">Enviado</span>
-          <h5>{moment(m.sentAt).format("LLLL")}</h5>
+          <h5>{formatDate(m.sentAt, "LLLL")}</h5>
           {/* body */}
           <span className="text-muted mb-2">Mensaje</span>
           <Form>
@@ -62,7 +61,7 @@ export const MyMessages = React.memo(({ messages }) => {
                 </Form.Group>
               </Form>
               <div className="text-right">
-                <em>Respondido el {moment(m.respondedAt).format("LLLL")}</em>
+                <em>Respondido el {formatDate(m.respondedAt, "LLLL")}</em>
               </div>
             </>
           ) : (

@@ -2,18 +2,13 @@ import React, { useState, useEffect } from "react";
 import { AdminLayout, AdminSpinner, ListGroupItem } from "../../components";
 import { Badge, Button, ListGroup } from "react-bootstrap";
 import { fetchCourses } from "../../services";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../redux/actions/admin";
 
 export const AdminCoursesPage = () => {
-  const dispatch = useDispatch();
-
   const [courses, setCourses] = useState();
   const [filtered, setFiltered] = useState();
   const [filter, setFilter] = useState();
 
   useEffect(() => {
-    dispatch(setTitle("Cursos"));
     fetchCourses()
       .then((res) => {
         const unsortedExams = res.data;
@@ -48,7 +43,7 @@ export const AdminCoursesPage = () => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
   const filterCourses = (criteria) => {
     setFilter(criteria === filter ? null : criteria);
@@ -112,6 +107,7 @@ export const AdminCoursesPage = () => {
       buttons={filters}
       leftBarActive="Cursos"
       optionsDropdown={optionsDropdown}
+      topNavTitle="Cursos"
     >
       {filtered.length ? (
         <>

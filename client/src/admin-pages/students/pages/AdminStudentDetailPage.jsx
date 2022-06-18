@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { fetchOneStudent } from "../../../services";
 import { AdminLayout, AdminSpinner, ReadOnlyRow } from "../../../components";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 import { formatDate } from "../../../utils/helpers";
 
 export const AdminStudentDetailPage = React.memo((props) => {
@@ -13,30 +11,27 @@ export const AdminStudentDetailPage = React.memo((props) => {
       ? url.href.split("comesFrom=").pop()
       : undefined;
 
-  const dispatch = useDispatch();
-
   const [student, setStudent] = useState();
 
   const studentId = props.routeProps.match.params.studentId;
 
   useEffect(() => {
     fetchOneStudent(studentId)
-      .then((res) => {
-        setStudent(res.data);
-        const { name, firstSurname, secondSurname } = res.data;
-        dispatch(setTitle(`${name} ${firstSurname} ${secondSurname}`));
-      })
+      .then((res) => setStudent(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [studentId, dispatch]);
+  }, [studentId]);
 
   return student ? (
     <AdminLayout
       backBttn={comesFrom || "/admin/students"}
       expanded
       leftBarActive="Alumnos"
+      topNavTitle={`${student?.name ?? ""} ${student?.firstSurname ?? ""} ${
+        student?.secondSurname ?? ""
+      }`.trim()}
     >
       <ReadOnlyRow rowTitle="Usuario" value={student.email.split("@", 1)[0]} />
       <ReadOnlyRow rowTitle="Correo electrónico" value={student.email} />

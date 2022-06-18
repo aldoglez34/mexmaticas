@@ -1,17 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Form, InputGroup } from "react-bootstrap";
 import { AdminLayout } from "../../../components";
 import { newTopic } from "../../../services";
-import { useDispatch, useSelector } from "react-redux";
-import * as adminActions from "../../../redux/actions/admin";
+import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../firebase/firebase";
-import { IMAGES } from "../../../constants/constants";
+import { IMAGES } from "../../../utils/constants";
 
 export const AdminNewTopicPage = React.memo((props) => {
-  const dispatch = useDispatch();
-
   const courseName = useSelector((state) => state.admin.course.courseName);
   const courseId = props.routeProps.match.params.courseId;
 
@@ -29,11 +26,6 @@ export const AdminNewTopicPage = React.memo((props) => {
     file: yup
       .mixed()
       .required("Requerido")
-      // .test(
-      //   "fileSize",
-      //   "Imagen muy pesada",
-      //   (value) => value && value.size <= IMAGES.SIZE
-      // )
       .test(
         "fileFormat",
         "Formato no soportado",
@@ -41,14 +33,11 @@ export const AdminNewTopicPage = React.memo((props) => {
       ),
   });
 
-  useEffect(() => {
-    dispatch(adminActions.setTitle(courseName));
-  }, [dispatch, courseName]);
-
   return (
     <AdminLayout
+      backBttn={`/admin/courses/edit/${courseId}`}
       leftBarActive="Cursos"
-      backBttn={"/admin/courses/edit/" + courseId}
+      topNavTitle={courseName}
     >
       <h3 className="mb-3">Ingresa los datos del tema.</h3>
       <Formik

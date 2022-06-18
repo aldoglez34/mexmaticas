@@ -4,8 +4,8 @@ import { fetchOneCourse } from "../../../services";
 import { useDispatch } from "react-redux";
 import * as adminActions from "../../../redux/actions/admin";
 import {
+  AdminEditModal,
   AdminLayout,
-  AdminModal,
   AdminSpinner,
   EditableRow,
   ReadOnlyRow,
@@ -22,19 +22,16 @@ import {
 import { formatDate } from "../../../utils/helpers";
 
 export const AdminCourseDetailPage = React.memo((props) => {
-  const [course, setCourse] = useState();
-
   const dispatch = useDispatch();
 
+  const [course, setCourse] = useState();
   const courseId = props.routeProps.match.params.courseId;
-
   const hasTopics = useMemo(() => Boolean(course?.topics?.length), [course]);
 
   useEffect(() => {
     fetchOneCourse(courseId)
       .then((res) => {
         setCourse(res.data);
-        dispatch(adminActions.setTitle(res.data.name));
         dispatch(
           adminActions.setCourse({
             courseId: res.data._id,
@@ -50,7 +47,12 @@ export const AdminCourseDetailPage = React.memo((props) => {
   }, [courseId, dispatch]);
 
   return course ? (
-    <AdminLayout leftBarActive="Cursos" backBttn="/admin/courses" expanded>
+    <AdminLayout
+      backBttn="/admin/courses"
+      expanded
+      leftBarActive="Cursos"
+      topNavTitle={course?.name}
+    >
       <EditableRow
         {...{
           formInitialText: course.name,
@@ -99,7 +101,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
               </Badge>
             </small>
             {hasTopics && (
-              <AdminModal
+              <AdminEditModal
                 Form={CourseActiveForm}
                 formInitialText={course.isActive}
                 formLabel="Estatus"
@@ -132,7 +134,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
                   <h5>
                     {t}
                     {idx === course.topicsSummary.length - 1 ? (
-                      <AdminModal
+                      <AdminEditModal
                         Form={CourseSummaryForm}
                         formInitialText={course.topicsSummary.toString()}
                         formLabel="Resumen"

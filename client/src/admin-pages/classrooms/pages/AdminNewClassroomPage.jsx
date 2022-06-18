@@ -4,12 +4,8 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Form } from "react-bootstrap";
 import { fetchInstitutions, newClassroom } from "../../../services";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 
 export const AdminNewClassroomPage = () => {
-  const dispatch = useDispatch();
-
   const [institutions, setInstitutions] = useState();
 
   const yupschema = yup.object({
@@ -20,8 +16,6 @@ export const AdminNewClassroomPage = () => {
   });
 
   useEffect(() => {
-    dispatch(setTitle("Nuevo Salón"));
-
     fetchInstitutions()
       .then((res) => {
         const defaultSorting = res?.data?.sort((a, b) =>
@@ -36,10 +30,14 @@ export const AdminNewClassroomPage = () => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
   return (
-    <AdminLayout leftBarActive="Salones" backBttn="/admin/classrooms">
+    <AdminLayout
+      backBttn="/admin/classrooms"
+      leftBarActive="Salones"
+      topNavTitle="Nuevo Salón"
+    >
       <h3 className="mb-3">Ingresa los datos del salón.</h3>
       {institutions ? (
         <Formik

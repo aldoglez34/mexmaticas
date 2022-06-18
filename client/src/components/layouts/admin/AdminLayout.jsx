@@ -11,6 +11,7 @@ export const AdminLayout = React.memo(
     expanded = false,
     leftBarActive,
     optionsDropdown,
+    topNavTitle,
   }) => {
     const navItems = [
       {
@@ -37,6 +38,7 @@ export const AdminLayout = React.memo(
             backBttn={backBttn}
             buttons={buttons}
             optionsDropdown={optionsDropdown}
+            topNavTitle={topNavTitle ?? ""}
           />
           <div style={{ padding: "35px 28px" }}>
             <Container fluid>
@@ -63,6 +65,7 @@ AdminLayout.propTypes = {
   expanded: bool,
   leftBarActive: string.isRequired,
   optionsDropdown: array,
+  topNavTitle: string,
 };
 
 AdminLayout.displayName = "AdminLayout";

@@ -1,26 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AdminLayout } from "../../../components";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Form } from "react-bootstrap";
 import { newInstitution } from "../../../services";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 
 export const AdminNewInstitutionPage = () => {
-  const dispatch = useDispatch();
-
   const yupschema = yup.object({
     description: yup.string(),
     name: yup.string().min(3, "Nombre demasiado corto").required("Requerido"),
   });
 
-  useEffect(() => {
-    dispatch(setTitle("Nueva Escuela"));
-  }, [dispatch]);
-
   return (
-    <AdminLayout leftBarActive="Escuelas" backBttn="/admin/institutions">
+    <AdminLayout
+      backBttn="/admin/institutions"
+      leftBarActive="Escuelas"
+      topNavTitle="Nueva Escuela"
+    >
       <h3 className="mb-3">Ingresa los datos de la escuela.</h3>
       <Formik
         initialValues={{

@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { string } from "prop-types";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { addMaterial } from "../../../../services";
-import { PDFS } from "../../../../constants/constants";
+import { PDFS } from "../../../../utils/constants";
 
 export const AddPDF = React.memo(({ courseId, topicId }) => {
   const [show, setShow] = useState(false);

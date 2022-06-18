@@ -8,13 +8,9 @@ import {
   ReadOnlyRow,
 } from "../../../components";
 import { InstitutionDescriptionForm, InstitutionNameForm } from "../components";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 import { formatDate } from "../../../utils/helpers";
 
 export const AdminInstitutionDetailPage = React.memo((props) => {
-  const dispatch = useDispatch();
-
   const [institution, setInstitution] = useState();
   const [showModal, setShowModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -23,15 +19,12 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
 
   useEffect(() => {
     fetchOneInstitution(institutionId)
-      .then((res) => {
-        setInstitution(res.data);
-        dispatch(setTitle(res.data.name));
-      })
+      .then((res) => setInstitution(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch, institutionId]);
+  }, [institutionId]);
 
   const handleDeleteInstitution = async () => {
     setIsDeleting(true);
@@ -57,6 +50,7 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
       expanded
       leftBarActive="Escuelas"
       optionsDropdown={optionsDropdown}
+      topNavTitle={institution?.name}
     >
       <EditableRow
         {...{

@@ -8,34 +8,20 @@ import {
 } from "../../components";
 import { Button, ListGroup } from "react-bootstrap";
 import { fetchClassrooms } from "../../services";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../redux/actions/admin";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { isEmpty, isEqual } from "lodash";
 import cn from "classnames";
-
-const PAGE_SIZE = 15;
-const SORT_OPTIONS = [
-  "Más Recientes",
-  "Más Antiguos",
-  "Por Nombre Asc",
-  "Por Nombre Desc",
-];
-const FILTER_BUTTONS = [
-  "Primaria",
-  "Secundaria",
-  "Preparatoria",
-  "Universidad",
-];
+import { ADMIN_PAGES } from "../../utils/constants";
 
 export const AdminClassroomsPage = () => {
-  const dispatch = useDispatch();
-
   const [classrooms, setClassrooms] = useState();
   const [activeFilter, setActiveFilter] = useState(undefined);
 
+  const {
+    CLASSROOMS: { PAGE_SIZE, SORT_OPTIONS, FILTER_BUTTONS },
+  } = ADMIN_PAGES;
+
   useEffect(() => {
-    dispatch(setTitle("Salones"));
     fetchClassrooms()
       .then((res) =>
         setClassrooms(
@@ -46,7 +32,7 @@ export const AdminClassroomsPage = () => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
   const {
     data: { activePage, filtered, limit, offset, pages, searchRef, sort },
@@ -95,6 +81,7 @@ export const AdminClassroomsPage = () => {
       buttons={filterButtons}
       leftBarActive="Salones"
       optionsDropdown={optionsDropdown}
+      topNavTitle="Salones"
     >
       <SearchForm
         activeSort={sort}

@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { useSelector } from "react-redux";
-import { IMAGES } from "../../../../constants/constants";
+import { IMAGES } from "../../../../utils/constants";
 
 export const TopicRewardForm = React.memo(({ formLabel }) => {
   const courseId = useSelector((state) => state.admin.course.courseId);

@@ -2,8 +2,6 @@ const admin = (state = null, action) => {
   switch (action.type) {
     case "admin/clear":
       return null;
-    case "admin/setTitle":
-      return { ...state, title: action.data };
     case "admin/setCourse":
       return {
         ...state,

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { any, object, string } from "prop-types";
 import { Col, Row } from "react-bootstrap";
-import { AdminModal } from "../";
+import { AdminEditModal } from "../";
 
 export const EditableRow = memo(
   ({ formInitialText, ModalFormComponent, modalLabel, rowTitle, value }) => (
@@ -10,7 +10,7 @@ export const EditableRow = memo(
         {rowTitle && <span className="text-muted">{rowTitle}</span>}
         <div className="d-flex align-items-center">
           <h4 className="d-inline mb-0">{value || "-"}</h4>
-          <AdminModal
+          <AdminEditModal
             Form={ModalFormComponent}
             formInitialText={formInitialText || ""}
             formLabel={modalLabel || ""}

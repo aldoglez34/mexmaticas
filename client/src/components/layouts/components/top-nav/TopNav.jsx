@@ -1,15 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import { array, node, string } from "prop-types";
-import { useSelector } from "react-redux";
 import cn from "classnames";
 
 import styles from "./topnav.module.scss";
 
-export const TopNav = React.memo(({ backBttn, buttons, optionsDropdown }) => {
-  const title = useSelector((state) => state.admin?.title);
-
-  return (
+export const TopNav = memo(
+  ({ backBttn, buttons, optionsDropdown, topNavTitle }) => (
     <div style={{ backgroundColor: "#0f5257" }}>
       <div style={{ padding: "0px 39px" }}>
         <div className="d-flex align-items-center" style={{ height: "63px" }}>
@@ -63,7 +60,7 @@ export const TopNav = React.memo(({ backBttn, buttons, optionsDropdown }) => {
           {/* title */}
           <div>
             <h2 className="mb-0 text-light">
-              {String(title).toLocaleUpperCase()}
+              {(topNavTitle ?? "").toLocaleUpperCase()}
             </h2>
           </div>
         </div>
@@ -79,13 +76,14 @@ export const TopNav = React.memo(({ backBttn, buttons, optionsDropdown }) => {
         ) : null}
       </div>
     </div>
-  );
-});
+  )
+);
 
 TopNav.propTypes = {
   backBttn: string,
   buttons: node,
   optionsDropdown: array,
+  topNavTitle: string,
 };
 
 TopNav.displayName = "TopNav";

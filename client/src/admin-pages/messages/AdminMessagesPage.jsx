@@ -1,75 +1,99 @@
 import React, { useState, useEffect } from "react";
-import { AdminLayout, AdminPagination, AdminSpinner } from "../../components";
+import {
+  AdminLayout,
+  AdminModal,
+  AdminPagination,
+  AdminSpinner,
+} from "../../components";
 import { ListGroup } from "react-bootstrap";
 import { fetchMessages } from "../../services";
-import { ItemModal } from "./components";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../redux/actions/admin";
-
-const PAGE_SIZE = 15;
+import { useDataUtils } from "../../hooks/useDataUtils";
+import { ADMIN_PAGES } from "../../utils/constants";
+import { formatDate } from "../../utils/helpers";
+import { markSeen } from "../../services";
 
 export const AdminMessagesPage = () => {
-  const dispatch = useDispatch();
-
-  const [pages, setPages] = useState();
-  const [activePage, setActivePage] = useState(1);
-  const [limit, setLimit] = useState(PAGE_SIZE);
-  const [offset, setOffset] = useState(0);
   const [messages, setMessages] = useState();
-  const [filtered, setFiltered] = useState();
-  const [filter, setFilter] = useState();
+  const [activeMessage, setActiveMessage] = useState(null);
+  // this state forces the effect to trigger and refetch the messages again
+  const [readCount, setReadCount] = useState(0);
+
+  const {
+    MESSAGES: { PAGE_SIZE },
+  } = ADMIN_PAGES;
 
   useEffect(() => {
-    dispatch(setTitle("Mensajes"));
     fetchMessages()
-      .then((res) => {
-        setMessages(res.data);
-        setFiltered(res.data);
-        setPages(Math.round(res.data.length / PAGE_SIZE));
-      })
+      .then((res) => setMessages(res.data))
       .catch((err) => {
         console.log(err);
+        alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, [readCount]);
 
-  const filterMessages = (criteria) => {
-    switch (criteria) {
-      case "New":
-        setFilter(criteria === filter ? null : criteria);
-        setFiltered(
-          criteria === filter ? messages : messages.filter((msg) => !msg.seen)
-        );
-        break;
-      default:
-        setFilter(criteria === filter ? null : criteria);
-        setFiltered(
-          criteria === filter
-            ? messages
-            : messages.filter((msg) => msg.source === criteria)
-        );
-    }
+  const {
+    data: { activePage, filtered, limit, offset, pages },
+    functions: { handleChangePage },
+  } = useDataUtils({
+    data: messages,
+    pageSize: PAGE_SIZE,
+  });
+
+  const handleClose = () => {
+    setActiveMessage(null);
+    // this state change will trigger the effect
+    setReadCount((prevState) => prevState + 1);
   };
 
-  const handleChangePage = (p) => {
-    setActivePage(p);
-    if (p === 1) {
-      setOffset(0);
-      setLimit(PAGE_SIZE);
-    }
-    if (p > 1) {
-      const _offset = (p - 1) * PAGE_SIZE;
-      setOffset(_offset);
-      setLimit(_offset + PAGE_SIZE);
-    }
+  const handleShow = (message) => {
+    markSeen(message._id).catch((err) => {
+      console.log(err.response);
+      err.response.data.msg
+        ? alert(err.response.data.msg)
+        : alert("Ocurrió un error al marcar mensaje como leído.");
+    });
+    setActiveMessage(message);
   };
+
+  const ModalRow = ({ title, text }) => (
+    <div className="mb-2">
+      <h5 className="text-dark">{title}</h5>
+      <span>{text}</span>
+    </div>
+  );
+
+  const MessageItem = ({ message }) => (
+    <ListGroup.Item
+      className="d-flex py-4 courseitemstyle"
+      action
+      onClick={() => handleShow(message)}
+    >
+      <div className="d-flex flex-column ml-3">
+        <strong>Remitente</strong>
+        <p className="m-0">{message.email}</p>
+        <small>{formatDate(message.sentAt, "L")}</small>
+      </div>
+      <div className="d-flex flex-column ml-3">
+        <strong>Mensaje</strong>
+        {message.body}
+      </div>
+      {!message.seen && (
+        <i
+          className="fas fa-certificate text-warning ml-auto"
+          style={{ fontSize: "22px" }}
+          title="Nuevo"
+        />
+      )}
+    </ListGroup.Item>
+  );
 
   return filtered ? (
-    <AdminLayout leftBarActive="Mensajes" expanded>
+    <AdminLayout expanded leftBarActive="Mensajes" topNavTitle="Mensajes">
       {filtered.length ? (
         <>
           <ListGroup>
             {filtered.slice(offset, limit).map((m) => (
-              <ItemModal key={m._id} message={m} />
+              <MessageItem key={m._id} message={m} />
             ))}
           </ListGroup>
           {filtered.length > PAGE_SIZE && (
@@ -85,6 +109,21 @@ export const AdminMessagesPage = () => {
       ) : (
         <div className="text-center mt-4">No hay mensajes.</div>
       )}
+      {/* show modal if there's an active message */}
+      <AdminModal
+        handleClose={handleClose}
+        show={!!activeMessage}
+        title="Mensaje"
+      >
+        <ModalRow
+          title="Remitente"
+          text={activeMessage?.username || activeMessage?.name}
+        />
+        <ModalRow title="Fecha" text={formatDate(activeMessage?.sentAt, "L")} />
+        <ModalRow title="Tema" text={activeMessage?.subject} />
+        <ModalRow title="Correo" text={activeMessage?.email} />
+        <ModalRow title="Mensaje" text={activeMessage?.body} />
+      </AdminModal>
     </AdminLayout>
   ) : (
     <AdminSpinner />

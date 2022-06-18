@@ -7,26 +7,18 @@ import {
   SearchForm,
 } from "../../components";
 import { ListGroup } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../redux/actions/admin";
 import { fetchInstitutions } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
-
-const PAGE_SIZE = 15;
-const SORT_OPTIONS = [
-  "Más Recientes",
-  "Más Antiguos",
-  "Por Nombre Asc",
-  "Por Nombre Desc",
-];
+import { ADMIN_PAGES } from "../../utils/constants";
 
 export const AdminInstitutionsPage = () => {
-  const dispatch = useDispatch();
-
   const [institutions, setInstitutions] = useState();
 
+  const {
+    INSTITUTIONS: { PAGE_SIZE, SORT_OPTIONS },
+  } = ADMIN_PAGES;
+
   useEffect(() => {
-    dispatch(setTitle("Escuelas"));
     fetchInstitutions()
       .then((res) =>
         setInstitutions(
@@ -37,7 +29,7 @@ export const AdminInstitutionsPage = () => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
   const {
     data: { activePage, filtered, limit, offset, pages, searchRef, sort },
@@ -62,7 +54,11 @@ export const AdminInstitutionsPage = () => {
   ];
 
   return (
-    <AdminLayout leftBarActive="Escuelas" optionsDropdown={optionsDropdown}>
+    <AdminLayout
+      leftBarActive="Escuelas"
+      optionsDropdown={optionsDropdown}
+      topNavTitle="Escuelas"
+    >
       <SearchForm
         activeSort={sort}
         clearFilters={clearFilters}

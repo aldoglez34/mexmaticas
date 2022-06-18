@@ -10,7 +10,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import storage from "redux-persist/lib/storage";
 import rootReducer from "./redux/reducers";
-import { APP_VERSION } from "./constants/constants";
+import { APP_VERSION } from "./utils/constants";
 // import { firebaseAuth } from "./firebase/firebase";
 
 const persistConfig = {

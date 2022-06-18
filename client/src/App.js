@@ -11,7 +11,7 @@ import { AdminSpinner } from "./components";
 import { fetchStudentByUID } from "./services";
 import { firebaseAuth } from "./firebase/firebase";
 import { loginStudent, logoutStudent } from "./redux/actions/student";
-import { USERS } from "./constants/constants";
+import { USERS } from "./utils/constants";
 
 const App = () => {
   const [navigation, setNavigation] = useState();

@@ -10,8 +10,8 @@ import {
 } from "react-bootstrap";
 import { deleteMaterial, deleteTopic, fetchTopic } from "../../services";
 import {
+  AdminEditModal,
   AdminLayout,
-  AdminModal,
   AdminPrimaryButton,
   AdminSpinner,
   ImageFromFirebase,
@@ -78,7 +78,6 @@ export const AdminTopicDetailPage = React.memo((props) => {
             .sort((a, b) => a.orderNumber - b.orderNumber);
           //
           dispatch(adminActions.setTopic({ topicId, topicName }));
-          dispatch(adminActions.setTitle(`${courseName} | ${topicName}`));
           setTopic({ ...response, exams: sortedExams });
         })
         .catch((err) => {
@@ -142,10 +141,11 @@ export const AdminTopicDetailPage = React.memo((props) => {
 
   return topic ? (
     <AdminLayout
-      leftBarActive="Cursos"
       backBttn={`/admin/courses/edit/${courseId}`}
-      optionsDropdown={optionsDropdown}
       expanded
+      leftBarActive="Cursos"
+      optionsDropdown={optionsDropdown}
+      topNavTitle={`${courseName} | ${topic?.topicName ?? ""}`.trim()}
     >
       {/* topic name */}
       <Row>
@@ -153,7 +153,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
           <span className="text-muted">Nombre</span>
           <h1>
             {topic.name}
-            <AdminModal
+            <AdminEditModal
               Form={TopicNameForm}
               formInitialText={topic.name}
               formLabel="Nombre"
@@ -168,7 +168,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
           <span className="text-muted">Materia</span>
           <h2>
             {topic.subject}
-            <AdminModal
+            <AdminEditModal
               Form={TopicSubjectForm}
               formInitialText={topic.subject}
               formLabel="Materia"
@@ -183,7 +183,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
           <span className="text-muted">Descripción</span>
           <h5>
             {topic.description}
-            <AdminModal
+            <AdminEditModal
               Form={TopicDescriptionForm}
               formInitialText={topic.description}
               formLabel="Descripción (Utiliza el símbolo \n para saltos de línea)"
@@ -199,7 +199,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
           <h5>
             {topic.freestyle.timer}{" "}
             {topic.freestyle.timer === 1 ? " minuto" : " minutos"}
-            <AdminModal
+            <AdminEditModal
               Form={TopicFreestyleTimerForm}
               formInitialText={topic.freestyle.timer}
               formLabel="Modo rápido"
@@ -215,7 +215,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
           <div className="d-flex">
             <h5>
               {`Medalla de ${topic.name}`}
-              <AdminModal
+              <AdminEditModal
                 Form={TopicRewardForm}
                 formLabel="Medalla"
                 icon={<i className="fas fa-pen-alt" />}

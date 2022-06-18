@@ -23,8 +23,6 @@ import {
   ClassroomSchoolForm,
   ClassroomTeachersForm,
 } from "../components";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 import { formatDate } from "../../../utils/helpers";
 
 export const AdminClassroomDetailPage = memo((props) => {
@@ -34,22 +32,16 @@ export const AdminClassroomDetailPage = memo((props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [history, setHistory] = useState();
 
-  const dispatch = useDispatch();
-
   const classroomId = props.routeProps.match.params.classroomId;
 
   useEffect(() => {
     fetchOneClassroom(classroomId)
-      .then((res) => {
-        setClassroom(res.data);
-        const { name } = res.data;
-        dispatch(setTitle(name));
-      })
+      .then((res) => setClassroom(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [classroomId, dispatch]);
+  }, [classroomId]);
 
   const handleDeleteClassroom = async () => {
     setIsDeleting(true);
@@ -154,6 +146,7 @@ export const AdminClassroomDetailPage = memo((props) => {
       expanded
       leftBarActive="Salones"
       optionsDropdown={optionsDropdown}
+      topNavTitle={classroom?.name}
     >
       <EditableRow
         {...{

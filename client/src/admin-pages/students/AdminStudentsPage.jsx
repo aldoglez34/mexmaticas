@@ -8,27 +8,17 @@ import {
 } from "../../components";
 import { ListGroup } from "react-bootstrap";
 import { fetchStudents } from "../../services";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../redux/actions/admin";
 import { useDataUtils } from "../../hooks/useDataUtils";
-
-const PAGE_SIZE = 15;
-const SORT_OPTIONS = [
-  "Más Recientes",
-  "Más Antiguos",
-  "Por Nombre Asc",
-  "Por Nombre Desc",
-  "Por Email Asc",
-  "Por Email Desc",
-];
+import { ADMIN_PAGES } from "../../utils/constants";
 
 export const AdminStudentsPage = () => {
-  const dispatch = useDispatch();
-
   const [students, setStudents] = useState();
 
+  const {
+    CLASSROOMS: { PAGE_SIZE, SORT_OPTIONS },
+  } = ADMIN_PAGES;
+
   useEffect(() => {
-    dispatch(setTitle("Alumnos"));
     fetchStudents()
       .then((res) =>
         setStudents(
@@ -41,7 +31,7 @@ export const AdminStudentsPage = () => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
   const {
     data: { activePage, filtered, limit, offset, pages, searchRef, sort },
@@ -59,7 +49,7 @@ export const AdminStudentsPage = () => {
   });
 
   return (
-    <AdminLayout leftBarActive="Alumnos">
+    <AdminLayout leftBarActive="Alumnos" topNavTitle="Alumnos">
       <SearchForm
         activeSort={sort}
         clearFilters={clearFilters}

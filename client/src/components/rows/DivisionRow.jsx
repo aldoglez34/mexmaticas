@@ -7,7 +7,7 @@ export const DivisionRow = memo(({ isTitle = false, text }) => (
   <Row className="mb-2">
     <Col>
       <hr className={cn(isTitle && "mt-0")} />
-      <span className="text-muted">{text}</span>
+      <span className="text-muted">{text.toUpperCase()}</span>
       <hr />
     </Col>
   </Row>

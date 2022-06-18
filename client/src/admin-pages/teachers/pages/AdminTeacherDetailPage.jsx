@@ -5,32 +5,24 @@ import {
   DivisionRow,
   ReadOnlyRow,
 } from "../../../components";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 import { fetchOneTeacher } from "../../../services";
 import { Col, Row } from "react-bootstrap";
 import { isEmpty } from "lodash";
 import { formatDate } from "../../../utils/helpers";
 
 export const AdminTeacherDetailPage = memo((props) => {
-  const dispatch = useDispatch();
-
   const [teacher, setTeacher] = useState();
 
   const teacherId = props.routeProps.match.params.teacherId;
 
   useEffect(() => {
     fetchOneTeacher(teacherId)
-      .then((res) => {
-        setTeacher(res.data);
-        const { name, firstSurname, secondSurname } = res.data;
-        dispatch(setTitle(`${name} ${firstSurname} ${secondSurname}`));
-      })
+      .then((res) => setTeacher(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch, teacherId]);
+  }, [teacherId]);
 
   const getCoursesList = (courses) => {
     if (!courses) return;
@@ -92,7 +84,14 @@ export const AdminTeacherDetailPage = memo((props) => {
   );
 
   return teacher ? (
-    <AdminLayout leftBarActive="Maestros" backBttn="/admin/teachers" expanded>
+    <AdminLayout
+      backBttn="/admin/teachers"
+      expanded
+      leftBarActive="Maestros"
+      topNavTitle={`${teacher?.name ?? ""} ${teacher?.firstSurname ?? ""} ${
+        teacher?.secondSurname ?? ""
+      }`.trim()}
+    >
       <DivisionRow text="Datos del Maestro" isTitle />
       <ReadOnlyRow
         rowTitle="Nombre Completo"

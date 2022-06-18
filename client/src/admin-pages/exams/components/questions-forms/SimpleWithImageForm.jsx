@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { object } from "prop-types";
 import { ImageFromFirebase } from "../../../../components";
-import { IMAGES } from "../../../../constants/constants";
+import { IMAGES } from "../../../../utils/constants";
 
 export const SimpleWithImageForm = ({ question }) => {
   const yupschema = yup.object({

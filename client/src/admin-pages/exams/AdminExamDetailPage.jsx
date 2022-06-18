@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AdminLayout, AdminModal, AdminSpinner } from "../../components";
+import { AdminEditModal, AdminLayout, AdminSpinner } from "../../components";
 import { Alert, Col, Row } from "react-bootstrap";
 import { fetchExam } from "../../services";
 import {
@@ -26,7 +26,7 @@ import {
   SimpleWithTwoAnswersTable,
 } from "./components";
 import { useDispatch, useSelector } from "react-redux";
-import { setExam, setTitle } from "../../redux/actions/admin";
+import { setExam } from "../../redux/actions/admin";
 import { HashLink as Link } from "react-router-hash-link";
 import cn from "classnames";
 
@@ -137,9 +137,6 @@ export const AdminExamDetailPage = React.memo((props) => {
         const { _id: examId, name: examName } = res.data;
         dispatch(setExam({ examId, examName }));
 
-        // set title
-        dispatch(setTitle(`${courseName} | ${topicName} | ${examName}`));
-
         // set questions
         setSimpleQuestions(
           res.data.questions.filter(({ qType }) => qType === "simple")
@@ -183,6 +180,7 @@ export const AdminExamDetailPage = React.memo((props) => {
       backBttn={`/admin/courses/edit/topics/${courseId}/${topicId}`}
       expanded
       leftBarActive="Cursos"
+      topNavTitle={`${courseName} | ${topicName} | ${exam?.name ?? ""}`.trim()}
     >
       {exam.qCounter > exam.questions.length && (
         <Alert variant="danger">
@@ -195,7 +193,7 @@ export const AdminExamDetailPage = React.memo((props) => {
           <span className="text-muted">Nombre</span>
           <h1>
             {exam.name}
-            <AdminModal
+            <AdminEditModal
               Form={ExamNameForm}
               formInitialText={exam.name}
               formLabel="Nombre"
@@ -217,7 +215,7 @@ export const AdminExamDetailPage = React.memo((props) => {
           <span className="text-muted">Duración</span>
           <h2>
             {exam.duration} {exam.duration === 1 ? "minuto" : "minutos"}
-            <AdminModal
+            <AdminEditModal
               Form={ExamDurationForm}
               formInitialText={exam.duration}
               formLabel="Duración"
@@ -236,7 +234,7 @@ export const AdminExamDetailPage = React.memo((props) => {
             }
           >
             {`${exam.qCounter} preguntas`}
-            <AdminModal
+            <AdminEditModal
               Form={ExamQCounterForm}
               formInitialText={exam.qCounter}
               formLabel="Preguntas por examen"
@@ -258,7 +256,7 @@ export const AdminExamDetailPage = React.memo((props) => {
           <span className="text-muted">Descripción</span>
           <h5 className="mb-0">
             {exam.description}
-            <AdminModal
+            <AdminEditModal
               Form={ExamDescriptionForm}
               formInitialText={exam.description}
               formLabel="Descripción"

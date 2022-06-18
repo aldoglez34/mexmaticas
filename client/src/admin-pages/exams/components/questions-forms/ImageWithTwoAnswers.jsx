@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { newImageWithTwoAnswersQuestion } from "../../../../services";
 import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../../firebase/firebase";
-import { IMAGES } from "../../../../constants/constants";
+import { IMAGES } from "../../../../utils/constants";
 import { object } from "prop-types";
 import { ImageFromFirebase } from "../../../../components";
 

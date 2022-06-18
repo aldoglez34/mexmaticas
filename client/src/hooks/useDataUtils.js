@@ -14,12 +14,12 @@ export const useDataUtils = ({
   filterButtons,
   pageSize,
   searchBarAccessor,
-  sortOptions,
+  sortOptions = [],
 }) => {
   const [activePage, setActivePage] = useState(1);
   const [limit, setLimit] = useState(pageSize);
   const [offset, setOffset] = useState(0);
-  const [sort, setSort] = useState(sortOptions[0].value);
+  const [sort, setSort] = useState(sortOptions[0]);
   const [filtered, setFiltered] = useState();
   const [pages, setPages] = useState();
 

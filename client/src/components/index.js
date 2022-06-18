@@ -4,6 +4,7 @@ export * from "./buttons/BackButton";
 export * from "./images/ImageFromFirebase";
 export * from "./items/ListGroupItem";
 export * from "./layouts";
+export * from "./modals/AdminEditModal";
 export * from "./modals/AdminModal";
 export * from "./modals/AlertModal";
 export * from "./modals/ExportHistoryToExcel";

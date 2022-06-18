@@ -9,26 +9,19 @@ import {
 import { ListGroup } from "react-bootstrap";
 import { fetchTeachers } from "../../services";
 import { useDispatch } from "react-redux";
-import { setTitle } from "../../redux/actions/admin";
 import { useDataUtils } from "../../hooks/useDataUtils";
-
-const PAGE_SIZE = 15;
-const SORT_OPTIONS = [
-  "Más Recientes",
-  "Más Antiguos",
-  "Por Nombre Asc",
-  "Por Nombre Desc",
-  "Por Email Asc",
-  "Por Email Desc",
-];
+import { ADMIN_PAGES } from "../../utils/constants";
 
 export const AdminTeachersPage = () => {
   const dispatch = useDispatch();
 
   const [teachers, setTeachers] = useState();
 
+  const {
+    TEACHERS: { PAGE_SIZE, SORT_OPTIONS },
+  } = ADMIN_PAGES;
+
   useEffect(() => {
-    dispatch(setTitle("Maestros"));
     fetchTeachers()
       .then((res) =>
         setTeachers(
@@ -66,7 +59,11 @@ export const AdminTeachersPage = () => {
   ];
 
   return (
-    <AdminLayout leftBarActive="Maestros" optionsDropdown={optionsDropdown}>
+    <AdminLayout
+      leftBarActive="Maestros"
+      optionsDropdown={optionsDropdown}
+      topNavTitle="Maestros"
+    >
       <SearchForm
         activeSort={sort}
         clearFilters={clearFilters}

@@ -4,13 +4,6 @@ export const clearAdminData = () => {
   };
 };
 
-export const setTitle = (data) => {
-  return {
-    type: "admin/setTitle",
-    data,
-  };
-};
-
 export const setCourse = (data) => {
   return {
     type: "admin/setCourse",

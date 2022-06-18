@@ -1,15 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AdminLayout } from "../../../components";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Button, Col, Form, InputGroup } from "react-bootstrap";
 import { newCourse } from "../../../services";
-import { useDispatch } from "react-redux";
-import { setTitle } from "../../../redux/actions/admin";
 
 export const AdminNewCoursePage = () => {
-  const dispatch = useDispatch();
-
   const yupschema = yup.object({
     name: yup.string().min(3, "Nombre demasiado corto").required("Requerido"),
     school: yup
@@ -24,12 +20,12 @@ export const AdminNewCoursePage = () => {
       .required("Requerido"),
   });
 
-  useEffect(() => {
-    dispatch(setTitle("Nuevo Curso"));
-  }, [dispatch]);
-
   return (
-    <AdminLayout leftBarActive="Cursos" backBttn="/admin/courses">
+    <AdminLayout
+      backBttn="/admin/courses"
+      leftBarActive="Cursos"
+      topNavTitle="Nuevo Curso"
+    >
       <h3 className="mb-3">Ingresa los datos del curso.</h3>
       <Formik
         initialValues={{

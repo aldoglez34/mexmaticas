@@ -7,3 +7,6 @@ export const markSeen = (msgId) =>
 
 export const respondMsg = (data) =>
   axios.put("/adminapi/messages/respond", data);
+
+export const deleteMessage = (messageId) =>
+  axios.put(`/adminapi/messages/delete/${messageId}`);

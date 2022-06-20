@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Col, Form } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { useSelector } from "react-redux";
 import { IMAGES } from "../../../../utils/constants";
+import { AdminSubmitButton } from "../../../../components";
 
 export const TopicRewardForm = React.memo(({ formLabel }) => {
   const courseId = useSelector((state) => state.admin.course.courseId);
@@ -15,11 +16,6 @@ export const TopicRewardForm = React.memo(({ formLabel }) => {
     file: yup
       .mixed()
       .required("Requerido")
-      // .test(
-      //   "fileSize",
-      //   "Imagen muy pesada",
-      //   (value) => value && value.size <= IMAGES.PHOTO_SIZE
-      // )
       .test(
         "fileFormat",
         "Formato no soportado",
@@ -100,16 +96,8 @@ export const TopicRewardForm = React.memo(({ formLabel }) => {
             </Form.Group>
           </Form.Row>
           {/* buttons */}
-          <Form.Group className="mt-1">
-            <Button
-              block
-              disabled={isSubmitting}
-              size="lg"
-              type="submit"
-              variant="dark"
-            >
-              Guardar
-            </Button>
+          <Form.Group>
+            <AdminSubmitButton {...{ isSubmitting }} />
           </Form.Group>
         </Form>
       )}

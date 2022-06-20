@@ -4,7 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { SignUpForm } from "./components";
 import cn from "classnames";
 
-import styles from "./signuppage.scss";
+import styles from "./signuppage.module.scss";
 
 export const SignUpPage = () => (
   <GuestLayout>

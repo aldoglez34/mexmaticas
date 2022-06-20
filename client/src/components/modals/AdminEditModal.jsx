@@ -23,7 +23,7 @@ export const AdminEditModal = React.memo(
           {icon}
         </Button>
 
-        <AdminModal show={show} handleClose={handleClose} title="Editar">
+        <AdminModal handleClose={handleClose} show={show} title="Editar">
           <Form formLabel={formLabel} formInitialText={formInitialText} />
         </AdminModal>
       </>

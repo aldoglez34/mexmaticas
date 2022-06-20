@@ -101,6 +101,38 @@ const utils = {
       });
     });
   },
+  sortCoursesByLevel: (courses) => {
+    const sortedCourses = (courses || [])
+      .reduce((acc, cv) => {
+        let orderNumber;
+        switch (cv.school) {
+          case "Primaria":
+            orderNumber = 1;
+            break;
+          case "Secundaria":
+            orderNumber = 2;
+            break;
+          case "Preparatoria":
+            orderNumber = 3;
+            break;
+          case "Universidad":
+            orderNumber = 4;
+            break;
+          default:
+            break;
+        }
+        acc.push({
+          isActive: cv.isActive,
+          _id: cv._id,
+          name: cv.name,
+          school: cv.school,
+          orderNumber,
+        });
+        return acc;
+      }, [])
+      .sort((a, b) => a.orderNumber - b.orderNumber);
+    return sortedCourses;
+  },
 };
 
 module.exports = utils;

@@ -18,6 +18,16 @@ export const USERS = {
 };
 
 export const ADMIN_PAGES = {
+  COURSES: {
+    PAGE_SIZE: 15,
+    SORT_OPTIONS: [
+      "Más Recientes",
+      "Más Antiguos",
+      "Por Nombre Asc",
+      "Por Nombre Desc",
+    ],
+    FILTER_BUTTONS: ["Primaria", "Secundaria", "Preparatoria", "Universidad"],
+  },
   CLASSROOMS: {
     PAGE_SIZE: 15,
     SORT_OPTIONS: [

@@ -27,10 +27,12 @@ const schema = new Schema({
     unique: true,
     required: true,
   },
-  classroom: {
-    type: Schema.Types.ObjectId,
-    ref: "Classroom",
-  },
+  classrooms: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Classroom",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

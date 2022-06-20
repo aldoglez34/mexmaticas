@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Badge,
-  Button,
-  Col,
-  Image,
-  Modal,
-  Row,
-  Spinner,
-} from "react-bootstrap";
+import { Badge, Button, Col, Image, Row, Spinner } from "react-bootstrap";
 import { deleteMaterial, deleteTopic, fetchTopic } from "../../services";
 import {
-  AdminEditModal,
+  AdminButton,
   AdminLayout,
-  AdminPrimaryButton,
-  AdminSpinner,
+  AdminModal,
+  EditableRow,
   ImageFromFirebase,
 } from "../../components";
 import {
@@ -44,47 +36,16 @@ export const AdminTopicDetailPage = React.memo((props) => {
   const topicId = props.routeProps.match.params.topicId;
 
   useEffect(() => {
-    if (!topic)
-      fetchTopic(courseId, topicId)
-        .then((res) => {
-          const response = res.data;
-          const topicName = response.name;
-          const unsortedExams = response.exams;
-          const sortedExams = unsortedExams
-            .reduce((acc, cv) => {
-              let orderNumber;
-              switch (cv.difficulty) {
-                case "Basic":
-                  orderNumber = 1;
-                  break;
-                case "Basic-Intermediate":
-                  orderNumber = 2;
-                  break;
-                case "Intermediate":
-                  orderNumber = 3;
-                  break;
-                case "Intermediate-Advanced":
-                  orderNumber = 4;
-                  break;
-                case "Advanced":
-                  orderNumber = 5;
-                  break;
-                default:
-                  break;
-              }
-              acc.push({ ...cv, orderNumber });
-              return acc;
-            }, [])
-            .sort((a, b) => a.orderNumber - b.orderNumber);
-          //
-          dispatch(adminActions.setTopic({ topicId, topicName }));
-          setTopic({ ...response, exams: sortedExams });
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Ocurrió un error, vuelve a intentarlo.");
-        });
-  }, [courseId, courseName, dispatch, topic, topicId]);
+    fetchTopic(courseId, topicId)
+      .then((res) => {
+        setTopic(res.data);
+        dispatch(adminActions.setTopic({ topicId, topicName: res.data.name }));
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Ocurrió un error, vuelve a intentarlo.");
+      });
+  }, [courseId, dispatch, topicId]);
 
   const handleDeleteMaterialItem = (materialType, materialId, materialLink) => {
     deleteMaterial({
@@ -139,97 +100,65 @@ export const AdminTopicDetailPage = React.memo((props) => {
 
   const optionsDropdown = [{ text: "Borrar Tema", fn: handleShowModal }];
 
-  return topic ? (
+  return (
     <AdminLayout
       backBttn={`/admin/courses/edit/${courseId}`}
       expanded
       leftBarActive="Cursos"
       optionsDropdown={optionsDropdown}
-      topNavTitle={`${courseName} | ${topic?.topicName ?? ""}`.trim()}
+      topNavTitle={`${courseName} | ${topic?.name ?? ""}`.trim()}
     >
-      {/* topic name */}
-      <Row>
-        <Col>
-          <span className="text-muted">Nombre</span>
-          <h1>
-            {topic.name}
-            <AdminEditModal
-              Form={TopicNameForm}
-              formInitialText={topic.name}
-              formLabel="Nombre"
-              icon={<i className="fas fa-pen-alt" />}
-            />
-          </h1>
-        </Col>
-      </Row>
-      {/* subject */}
-      <Row>
-        <Col>
-          <span className="text-muted">Materia</span>
-          <h2>
-            {topic.subject}
-            <AdminEditModal
-              Form={TopicSubjectForm}
-              formInitialText={topic.subject}
-              formLabel="Materia"
-              icon={<i className="fas fa-pen-alt" />}
-            />
-          </h2>
-        </Col>
-      </Row>
-      {/* description */}
-      <Row>
-        <Col>
-          <span className="text-muted">Descripción</span>
-          <h5>
-            {topic.description}
-            <AdminEditModal
-              Form={TopicDescriptionForm}
-              formInitialText={topic.description}
-              formLabel="Descripción (Utiliza el símbolo \n para saltos de línea)"
-              icon={<i className="fas fa-pen-alt" />}
-            />
-          </h5>
-        </Col>
-      </Row>
-      {/* freestyle */}
-      <Row>
-        <Col>
-          <span className="text-muted">Modo rápido</span>
-          <h5>
-            {topic.freestyle.timer}{" "}
-            {topic.freestyle.timer === 1 ? " minuto" : " minutos"}
-            <AdminEditModal
-              Form={TopicFreestyleTimerForm}
-              formInitialText={topic.freestyle.timer}
-              formLabel="Modo rápido"
-              icon={<i className="fas fa-pen-alt" />}
-            />
-          </h5>
-        </Col>
-      </Row>
-      {/* reward */}
-      <Row>
-        <Col>
-          <span className="text-muted">Recompensa</span>
-          <div className="d-flex">
-            <h5>
-              {`Medalla de ${topic.name}`}
-              <AdminEditModal
-                Form={TopicRewardForm}
-                formLabel="Medalla"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            </h5>
-          </div>
-          <ImageFromFirebase
-            className="mb-3"
-            height="100"
-            path={topic.reward.link}
-            width="70"
-          />
-        </Col>
-      </Row>
+      <EditableRow
+        {...{
+          formInitialText: topic?.name,
+          ModalFormComponent: TopicNameForm,
+          modalLabel: "Nombre",
+          rowTitle: "Nombre",
+          value: topic?.name,
+        }}
+      />
+      <EditableRow
+        {...{
+          formInitialText: topic?.subject,
+          ModalFormComponent: TopicSubjectForm,
+          modalLabel: "Materia",
+          rowTitle: "Materia",
+          value: topic?.subject,
+        }}
+      />
+      <EditableRow
+        {...{
+          formInitialText: topic?.description,
+          ModalFormComponent: TopicDescriptionForm,
+          modalLabel: "Descripción",
+          rowTitle: "Descripción",
+          value: topic?.description,
+        }}
+      />
+      <EditableRow
+        {...{
+          formInitialText: topic?.freestyle?.timer || 0,
+          ModalFormComponent: TopicFreestyleTimerForm,
+          modalLabel: "Modo Rápido",
+          rowTitle: "Modo Rápido",
+          value: `${topic?.freestyle?.timer} minutos`,
+        }}
+      />
+      <EditableRow
+        {...{
+          formInitialText: topic?.name,
+          ModalFormComponent: TopicRewardForm,
+          modalLabel: "Recompensa",
+          rowTitle: "Recompensa",
+          value: `Medalla de ${topic?.name}`,
+        }}
+      />
+      <ImageFromFirebase
+        className="mb-3"
+        height="100"
+        path={topic?.reward?.link}
+        width="70"
+      />
       {/* material */}
       <Row>
         <Col>
@@ -238,7 +167,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
           </span>
           <DraggableMaterial
             {...{ courseId, handleDeleteMaterialItem, topicId }}
-            material={topic.material
+            material={(topic?.material || [])
               .sort((a, b) => a.materialOrderNumber - b.materialOrderNumber)
               .map((m) => ({
                 _id: m._id,
@@ -259,7 +188,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
         <Col>
           <span className="text-muted">Exámenes</span>
           <div className="d-flex flex-column mb-1">
-            {topic.exams
+            {(topic?.exams || [])
               .sort((a, b) => a.orderNumber - b.orderNumber)
               .map((e) => {
                 const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${e._id}`;
@@ -273,7 +202,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
                         {badgeText}
                       </Badge>
                       {e.name}
-                      <AdminPrimaryButton
+                      <AdminButton
                         href={path}
                         icon={<i className="fas fa-arrow-alt-circle-right" />}
                       />
@@ -285,46 +214,39 @@ export const AdminTopicDetailPage = React.memo((props) => {
         </Col>
       </Row>
       {/* delete topic modal */}
-      <Modal centered onHide={handleCloseModal} show={showModal}>
-        <Modal.Body className="bg-light rounded shadow text-center py-4">
-          {isDeleting ? (
-            <div className="py-4">
-              <strong className="mb-2">Borrando...</strong>
-              <br />
-              <br />
-              <Spinner variant="danger" animation="border" role="status">
-                <span className="sr-only">Borrando...</span>
-              </Spinner>
+      <AdminModal
+        handleClose={handleCloseModal}
+        show={showModal}
+        title="Borrar"
+      >
+        {isDeleting ? (
+          <div className="text-center py-4">
+            <p className="lead">Borrando...</p>
+            <Spinner variant="danger" animation="border" role="status">
+              <span className="sr-only">Borrando...</span>
+            </Spinner>
+          </div>
+        ) : (
+          <div className="text-center">
+            <Image height="130" src="/images/trash.png" width="130" />
+            <div className="lead text-center mt-2">{`¿Estás seguro que deseas borrar el tema: ${reduxTopic?.topicName}?`}</div>
+            <div className="d-flex flex-row justify-content-center mt-4">
+              <Button variant="dark" onClick={handleCloseModal}>
+                Cancelar
+              </Button>
+              <Button
+                variant="danger"
+                className="ml-2"
+                onClick={handleDeleteTopic}
+              >
+                Borrar
+                <i className="fas fa-trash-alt ml-2" />
+              </Button>
             </div>
-          ) : (
-            <>
-              <Image
-                className="mb-3"
-                height="130"
-                src="/images/trash.png"
-                width="130"
-              />
-              <div className="lead text-center mt-2">{`¿Estás seguro que deseas borrar el tema: ${reduxTopic.topicName}?`}</div>
-              <div className="d-flex flex-row justify-content-center mt-4">
-                <Button variant="dark" onClick={handleCloseModal}>
-                  Cancelar
-                </Button>
-                <Button
-                  variant="danger"
-                  className="ml-2"
-                  onClick={handleDeleteTopic}
-                >
-                  Borrar
-                  <i className="fas fa-trash-alt ml-2" />
-                </Button>
-              </div>
-            </>
-          )}
-        </Modal.Body>
-      </Modal>
+          </div>
+        )}
+      </AdminModal>
     </AdminLayout>
-  ) : (
-    <AdminSpinner />
   );
 });
 

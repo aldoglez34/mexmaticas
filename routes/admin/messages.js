@@ -57,4 +57,19 @@ router.put("/respond", function (req, res) {
     });
 });
 
+// deleteMessage()
+// matches with /adminapi/messages/delete/:messageId
+router.put("/delete/:messageId", function (req, res) {
+  const { messageId } = req.params;
+
+  model.Message.deleteOne({
+    _id: messageId,
+  })
+    .then(() => res.json("El mensaje fue eliminado con éxito."))
+    .catch((err) => {
+      console.log("@error", err);
+      res.status(422).send("Ocurrió un error.");
+    });
+});
+
 module.exports = router;

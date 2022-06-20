@@ -5,7 +5,7 @@ const model = require("../../models");
 // matches with /adminapi/teachers/all
 router.get("/all", (req, res) => {
   model.Teacher.find({})
-    .populate("classroom", "name")
+    .populate("classrooms", "name")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);
@@ -24,25 +24,6 @@ router.post("/new", async (req, res) => {
     email: req.body.email,
   })
     .then((data) => res.json(data))
-    .catch((err) => {
-      console.log("@error", err);
-      res.status(422).send("Ocurrió un error.");
-    });
-});
-
-// fetchAvailableTeachers()
-// matches with /adminapi/teachers/available
-router.get("/available", (req, res) => {
-  model.Teacher.find({})
-    .then((data) => {
-      const response = data.map(
-        ({ name, firstSurname, secondSurname, _id }) => ({
-          fullName: `${name} ${firstSurname} ${secondSurname}`,
-          _id,
-        })
-      );
-      res.json(response);
-    })
     .catch((err) => {
       console.log("@error", err);
       res.status(422).send("Ocurrió un error.");
@@ -68,8 +49,8 @@ router.put("/assign", async (req, res) => {
       await model.Teacher.findOneAndUpdate(
         { _id: currentTeacherId },
         {
-          $unset: {
-            classroom: null,
+          $pull: {
+            classrooms: classroomId,
           },
         }
       );
@@ -95,8 +76,8 @@ router.put("/assign", async (req, res) => {
       await model.Teacher.findOneAndUpdate(
         { _id: newTeacherId },
         {
-          $set: {
-            classroom: classroomId,
+          $push: {
+            classrooms: classroomId,
           },
         }
       );
@@ -124,9 +105,9 @@ router.get("/:teacherId", function (req, res) {
   const { teacherId } = req.params;
 
   model.Teacher.findById(teacherId)
-    .select("name firstSurname secondSurname email createdAt classroom")
+    .select("name firstSurname secondSurname email createdAt classrooms")
     .populate({
-      path: "classroom",
+      path: "classrooms",
       select: "name school description courses members",
       populate: {
         path: "courses members",

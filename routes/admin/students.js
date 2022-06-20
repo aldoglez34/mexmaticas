@@ -6,7 +6,7 @@ const model = require("../../models");
 router.get("/all", function (req, res) {
   model.Student.find({})
     .sort({ name: 1 })
-    .select("name firstSurname email registeredAt")
+    .select("name firstSurname secondSurname email registeredAt")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);

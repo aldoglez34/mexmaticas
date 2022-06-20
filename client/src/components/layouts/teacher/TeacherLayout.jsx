@@ -3,7 +3,14 @@ import { array, node, string } from "prop-types";
 import { LeftNav, ScrollButton, TopNav } from "../components";
 
 export const TeacherLayout = React.memo(
-  ({ backBttn, buttons, children, leftBarActive, optionsDropdown }) => {
+  ({
+    backBttn,
+    buttons,
+    children,
+    leftBarActive,
+    optionsDropdown,
+    topNavTitle,
+  }) => {
     const navItems = [
       {
         label: "Alumnos",
@@ -23,9 +30,10 @@ export const TeacherLayout = React.memo(
         <LeftNav {...{ leftBarActive, navItems, type: "[ MAESTRO ]" }} />
         <div style={{ marginLeft: "15rem" }} className="h-100 w-100">
           <TopNav
-            buttons={buttons}
             backBttn={backBttn}
+            buttons={buttons}
             optionsDropdown={optionsDropdown}
+            topNavTitle={topNavTitle ?? ""}
           />
           <div style={{ padding: "35px 28px" }}>{children}</div>
         </div>
@@ -41,6 +49,7 @@ TeacherLayout.propTypes = {
   children: node.isRequired,
   leftBarActive: string.isRequired,
   optionsDropdown: array,
+  topNavTitle: string,
 };
 
 TeacherLayout.displayName = "TeacherLayout";

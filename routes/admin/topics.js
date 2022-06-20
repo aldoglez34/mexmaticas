@@ -15,20 +15,43 @@ router.get("/:courseId/:topicId", function (req, res) {
     .lean()
     .populate("topics.exams", "name qCounter questions difficulty")
     .then(({ topics }) => {
-      const thisTopic = topics.filter((t) => t._id.toString() === topicId)[0];
+      const topic = topics.filter((t) => t._id.toString() === topicId)[0];
 
-      const thisTopicExams = thisTopic.exams.reduce((acc, cv) => {
-        acc.push({
-          _id: cv._id,
-          actualQCounter: cv.questions.length,
-          difficulty: cv.difficulty,
-          name: cv.name,
-          qCounter: cv.qCounter,
-        });
-        return acc;
-      }, []);
+      const exams = topic.exams
+        .reduce((acc, cv) => {
+          let orderNumber;
+          switch (cv.difficulty) {
+            case "Basic":
+              orderNumber = 1;
+              break;
+            case "Basic-Intermediate":
+              orderNumber = 2;
+              break;
+            case "Intermediate":
+              orderNumber = 3;
+              break;
+            case "Intermediate-Advanced":
+              orderNumber = 4;
+              break;
+            case "Advanced":
+              orderNumber = 5;
+              break;
+            default:
+              break;
+          }
+          acc.push({
+            _id: cv._id,
+            actualQCounter: cv.questions.length,
+            difficulty: cv.difficulty,
+            name: cv.name,
+            orderNumber,
+            qCounter: cv.qCounter,
+          });
+          return acc;
+        }, [])
+        .sort((a, b) => a.orderNumber - b.orderNumber);
 
-      res.json({ ...thisTopic, exams: thisTopicExams });
+      res.json({ ...topic, exams });
     })
     .catch((err) => {
       console.log("@error", err);

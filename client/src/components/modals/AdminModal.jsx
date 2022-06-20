@@ -3,14 +3,21 @@ import { Modal } from "react-bootstrap";
 import { any, bool, func, oneOf, string } from "prop-types";
 
 export const AdminModal = memo(
-  ({ children, handleClose, isCentered = false, show, size = "lg", title }) => (
+  ({
+    children,
+    handleClose,
+    isCentered = false,
+    isLocked = true,
+    show,
+    size = "md",
+    title,
+  }) => (
     <Modal
-      backdrop="static"
       centered={isCentered}
-      keyboard={false}
       onHide={() => handleClose(false)}
       show={show}
       size={size}
+      {...(isLocked ? { backdrop: "static", keyboard: false } : {})}
     >
       <Modal.Header className="bg-light" closeButton>
         {title && (
@@ -19,7 +26,7 @@ export const AdminModal = memo(
           </Modal.Title>
         )}
       </Modal.Header>
-      <Modal.Body className="bg-light rounded">{children}</Modal.Body>
+      <Modal.Body className="bg-light rounded shadow">{children}</Modal.Body>
     </Modal>
   )
 );
@@ -28,8 +35,9 @@ AdminModal.propTypes = {
   children: any.isRequired,
   handleClose: func.isRequired,
   isCentered: bool,
+  isLocked: bool,
   show: bool.isRequired,
-  size: oneOf(["sm", "lg", "xl"]),
+  size: oneOf(["sm", "md", "lg", "xl"]),
   title: string,
 };
 

@@ -5,7 +5,7 @@ import { Col, Row } from "react-bootstrap";
 export const RowWithButton = memo(({ button, rowTitle, value }) => (
   <Row className="mb-2">
     <Col>
-      {rowTitle && <span className="text-muted">{rowTitle}</span>}
+      {rowTitle && <span className="text-muted">{rowTitle.toUpperCase()}</span>}
       {value && <div>{value}</div>}
       {button && <div>{button}</div>}
     </Col>

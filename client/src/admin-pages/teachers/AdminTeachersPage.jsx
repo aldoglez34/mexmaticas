@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
+  AdminDataTemplate,
   AdminLayout,
-  AdminPagination,
-  AdminSpinner,
   ListGroupItem,
   SearchForm,
 } from "../../components";
-import { ListGroup } from "react-bootstrap";
 import { fetchTeachers } from "../../services";
-import { useDispatch } from "react-redux";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
+import { isEmpty } from "lodash";
 
 export const AdminTeachersPage = () => {
-  const dispatch = useDispatch();
-
   const [teachers, setTeachers] = useState();
 
   const {
@@ -34,7 +30,7 @@ export const AdminTeachersPage = () => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
-  }, [dispatch]);
+  }, []);
 
   const {
     data: { activePage, filtered, limit, offset, pages, searchRef, sort },
@@ -58,6 +54,22 @@ export const AdminTeachersPage = () => {
     },
   ];
 
+  const mapItemFunc = (item) => (
+    <ListGroupItem key={item._id} link={`/admin/teachers/edit/${item._id}`}>
+      <h4>{String(`${item.name} ${item.firstSurname}`).trim()}</h4>
+      <span>
+        <i className="fas fa-graduation-cap mr-2" />
+        {item.email}
+      </span>
+      {(item.classrooms || []).map((c) => (
+        <span key={c._id}>
+          <i className="fas fa-users mr-2" />
+          {c.name}
+        </span>
+      ))}
+    </ListGroupItem>
+  );
+
   return (
     <AdminLayout
       leftBarActive="Maestros"
@@ -69,49 +81,24 @@ export const AdminTeachersPage = () => {
         clearFilters={clearFilters}
         handleFilter={handleFilterData}
         handleSort={handleSortData}
+        isDataEmpty={isEmpty(teachers)}
         ref={searchRef}
         searchBarPlaceholder="Buscar por nombre de maestro..."
         sortOptions={SORT_OPTIONS}
       />
-      {filtered ? (
-        filtered.length ? (
-          <>
-            <ListGroup>
-              {filtered.slice(offset, limit).map((s) => (
-                <ListGroupItem
-                  key={s._id}
-                  link={`/admin/teachers/edit/${s._id}`}
-                >
-                  <h4>{String(`${s.name} ${s.firstSurname}`).trim()}</h4>
-                  <span>
-                    <i className="fas fa-graduation-cap mr-2" />
-                    {s.email}
-                  </span>
-                  {s.classroom?.name && (
-                    <span>
-                      <i className="fas fa-users mr-2" />
-                      {s.classroom.name}
-                    </span>
-                  )}
-                </ListGroupItem>
-              ))}
-            </ListGroup>
-            {filtered.length > PAGE_SIZE && (
-              <div className="mt-3">
-                <AdminPagination
-                  activePage={activePage}
-                  handleChangePage={(p) => handleChangePage(p)}
-                  pageCount={pages}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center mt-4">No hay maestros.</div>
-        )
-      ) : (
-        <AdminSpinner />
-      )}
+      <AdminDataTemplate
+        {...{
+          activePage,
+          data: filtered,
+          emptyMessage: "Lista de maestros vacía.",
+          handleChangePage,
+          limit,
+          mapItemFunc,
+          offset,
+          pages,
+          pageSize: PAGE_SIZE,
+        }}
+      />
     </AdminLayout>
   );
 };

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
+  AdminDataTemplate,
   AdminLayout,
-  AdminPagination,
-  AdminSpinner,
   ListGroupItem,
   SearchForm,
 } from "../../components";
-import { ListGroup } from "react-bootstrap";
 import { fetchStudents } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
+import { isEmpty } from "lodash";
 
 export const AdminStudentsPage = () => {
   const [students, setStudents] = useState();
@@ -48,6 +47,18 @@ export const AdminStudentsPage = () => {
     sortOptions: SORT_OPTIONS,
   });
 
+  const mapItemFunc = (item) => (
+    <ListGroupItem key={item._id} link={`/admin/students/${item._id}`}>
+      <h4>
+        {`${item.name} ${item.firstSurname} ${item.secondSurname}`.trim()}
+      </h4>
+      <span>
+        <i className="fas fa-user-graduate mr-2" />
+        {item.email}
+      </span>
+    </ListGroupItem>
+  );
+
   return (
     <AdminLayout leftBarActive="Alumnos" topNavTitle="Alumnos">
       <SearchForm
@@ -55,40 +66,24 @@ export const AdminStudentsPage = () => {
         clearFilters={clearFilters}
         handleFilter={handleFilterData}
         handleSort={handleSortData}
+        isDataEmpty={isEmpty(students)}
         ref={searchRef}
         searchBarPlaceholder="Buscar por nombre de alumno..."
         sortOptions={SORT_OPTIONS}
       />
-      {filtered ? (
-        filtered.length ? (
-          <>
-            <ListGroup>
-              {filtered.slice(offset, limit).map((s) => (
-                <ListGroupItem key={s._id} link={`/admin/students/${s._id}`}>
-                  <h4>{String(`${s.name} ${s.firstSurname}`).trim()}</h4>
-                  <span>
-                    <i className="fas fa-user-graduate mr-2" />
-                    {s.email}
-                  </span>
-                </ListGroupItem>
-              ))}
-            </ListGroup>
-            {filtered.length > PAGE_SIZE && (
-              <div className="mt-3">
-                <AdminPagination
-                  activePage={activePage}
-                  handleChangePage={(p) => handleChangePage(p)}
-                  pageCount={pages}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center mt-4">No hay alumnos.</div>
-        )
-      ) : (
-        <AdminSpinner />
-      )}
+      <AdminDataTemplate
+        {...{
+          activePage,
+          data: filtered,
+          emptyMessage: "Lista de alumnos vacía.",
+          handleChangePage,
+          limit,
+          mapItemFunc,
+          offset,
+          pages,
+          pageSize: PAGE_SIZE,
+        }}
+      />
     </AdminLayout>
   );
 };

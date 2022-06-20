@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { array, string } from "prop-types";
 import { ReactSortable } from "react-sortablejs";
-import { AdminPrimaryButton } from "../../../../components";
+import { AdminButton } from "../../../../components";
 import { updateTopicOrder } from "../../../../services";
 import cn from "classnames";
 
@@ -43,7 +43,7 @@ export const DraggableTopics = ({ courseId, topics }) => {
           <li key={t._id}>
             <h5 className={cn("mb-0", styles.item)}>
               {t.name}
-              <AdminPrimaryButton
+              <AdminButton
                 href={`/admin/courses/edit/topics/${courseId}/${t._id}`}
                 icon={<i className="fas fa-arrow-alt-circle-right" />}
               />

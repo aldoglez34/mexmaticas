@@ -7,12 +7,12 @@ export const EditableRow = memo(
   ({ formInitialText, ModalFormComponent, modalLabel, rowTitle, value }) => (
     <Row className="mb-2">
       <Col>
-        {rowTitle && <span className="text-muted">{rowTitle}</span>}
+        {rowTitle && <span className="text-muted">{rowTitle.toUpperCase()}</span>}
         <div className="d-flex align-items-center">
           <h4 className="d-inline mb-0">{value || "-"}</h4>
           <AdminEditModal
             Form={ModalFormComponent}
-            formInitialText={formInitialText || ""}
+            formInitialText={formInitialText ?? ""}
             formLabel={modalLabel || ""}
             icon={<i className="fas fa-pen-alt" />}
           />

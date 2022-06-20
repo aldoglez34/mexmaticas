@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const model = require("../../models");
+const { sortCoursesByLevel } = require("../utils/helpers");
 
 // fetchCourses()
 // matches with /adminapi/courses/all
@@ -7,7 +8,10 @@ router.get("/all", function (req, res) {
   model.Course.find({})
     .sort({ name: 1 })
     .select("name school isActive")
-    .then((data) => res.json(data))
+    .then((data) => {
+      const sortedCourses = sortCoursesByLevel(data);
+      res.json(sortedCourses);
+    })
     .catch((err) => {
       console.log("@error", err);
       res.status(422).send("Ocurrió un error.");

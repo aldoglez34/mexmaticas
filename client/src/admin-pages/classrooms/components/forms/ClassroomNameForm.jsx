@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, Col, Form } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateClassroomName } from "../../../../services";
+import { AdminSubmitButton } from "../../../../components/buttons/AdminSubmitButton";
 
 export const ClassroomNameForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -75,16 +76,8 @@ export const ClassroomNameForm = React.memo(
               </Form.Group>
             </Form.Row>
             {/* buttons */}
-            <Form.Group className="mt-1">
-              <Button
-                block
-                disabled={isSubmitting}
-                size="lg"
-                type="submit"
-                variant="dark"
-              >
-                Guardar
-              </Button>
+            <Form.Group>
+              <AdminSubmitButton {...{ isSubmitting }} />
             </Form.Group>
           </Form>
         )}

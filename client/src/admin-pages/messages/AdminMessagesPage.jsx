@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
+  AdminDataTemplate,
   AdminLayout,
   AdminModal,
-  AdminPagination,
-  AdminSpinner,
+  ListGroupItem,
+  SearchForm,
 } from "../../components";
-import { ListGroup } from "react-bootstrap";
-import { fetchMessages } from "../../services";
+import { deleteMessage, fetchMessages } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
 import { formatDate } from "../../utils/helpers";
 import { markSeen } from "../../services";
+import { isEmpty, isEqual } from "lodash";
+import { Button } from "react-bootstrap";
 
 export const AdminMessagesPage = () => {
   const [messages, setMessages] = useState();
@@ -32,11 +34,12 @@ export const AdminMessagesPage = () => {
   }, [readCount]);
 
   const {
-    data: { activePage, filtered, limit, offset, pages },
-    functions: { handleChangePage },
+    data: { activePage, filtered, limit, offset, pages, searchRef },
+    functions: { clearFilters, handleChangePage, handleFilterData },
   } = useDataUtils({
     data: messages,
     pageSize: PAGE_SIZE,
+    searchBarAccessor: "email",
   });
 
   const handleClose = () => {
@@ -58,74 +61,110 @@ export const AdminMessagesPage = () => {
   const ModalRow = ({ title, text }) => (
     <div className="mb-2">
       <h5 className="text-dark">{title}</h5>
-      <span>{text}</span>
+      {text}
     </div>
   );
 
-  const MessageItem = ({ message }) => (
-    <ListGroup.Item
-      className="d-flex py-4 courseitemstyle"
-      action
-      onClick={() => handleShow(message)}
-    >
-      <div className="d-flex flex-column ml-3">
-        <strong>Remitente</strong>
-        <p className="m-0">{message.email}</p>
-        <small>{formatDate(message.sentAt, "L")}</small>
+  const mapItemFunc = (item) => (
+    <ListGroupItem key={item._id} handleOnClick={() => handleShow(item)}>
+      <div className="d-flex flex-row">
+        <div>
+          <strong>Remitente</strong>
+          <p className="m-0">{item.email}</p>
+          <small>{formatDate(item.sentAt, "L")}</small>
+        </div>
+        <div className="d-flex flex-column ml-3">
+          <strong>Mensaje</strong>
+          {item.body}
+        </div>
+        {!item.seen && (
+          <i
+            className="fas fa-certificate text-warning ml-auto"
+            style={{ fontSize: "22px" }}
+            title="Nuevo"
+          />
+        )}
       </div>
-      <div className="d-flex flex-column ml-3">
-        <strong>Mensaje</strong>
-        {message.body}
-      </div>
-      {!message.seen && (
-        <i
-          className="fas fa-certificate text-warning ml-auto"
-          style={{ fontSize: "22px" }}
-          title="Nuevo"
-        />
-      )}
-    </ListGroup.Item>
+    </ListGroupItem>
   );
 
-  return filtered ? (
+  const handleDeleteMessage = async (messageId) => {
+    try {
+      await deleteMessage(messageId);
+
+      setActiveMessage(null);
+      // this state change will trigger the effect
+      setReadCount((prevState) => prevState + 1);
+    } catch (err) {
+      console.log(err);
+      alert("Ocurrió un error, vuelve a intentarlo.");
+    }
+  };
+
+  return (
     <AdminLayout expanded leftBarActive="Mensajes" topNavTitle="Mensajes">
-      {filtered.length ? (
-        <>
-          <ListGroup>
-            {filtered.slice(offset, limit).map((m) => (
-              <MessageItem key={m._id} message={m} />
-            ))}
-          </ListGroup>
-          {filtered.length > PAGE_SIZE && (
-            <div className="mt-3">
-              <AdminPagination
-                activePage={activePage}
-                handleChangePage={(p) => handleChangePage(p)}
-                pageCount={pages}
-              />
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="text-center mt-4">No hay mensajes.</div>
-      )}
+      <SearchForm
+        clearFilters={clearFilters}
+        handleFilter={handleFilterData}
+        isDataEmpty={isEmpty(messages)}
+        ref={searchRef}
+        searchBarPlaceholder="Buscar por remitente..."
+      />
+      <AdminDataTemplate
+        {...{
+          activePage,
+          data: filtered,
+          emptyMessage: "Lista de mensajes vacía.",
+          handleChangePage,
+          limit,
+          mapItemFunc,
+          offset,
+          pages,
+          pageSize: PAGE_SIZE,
+        }}
+      />
       {/* show modal if there's an active message */}
       <AdminModal
         handleClose={handleClose}
         show={!!activeMessage}
+        size="lg"
         title="Mensaje"
       >
         <ModalRow
           title="Remitente"
-          text={activeMessage?.username || activeMessage?.name}
+          text={
+            <div className="d-flex flex-column">
+              <span>{`Nombre: ${activeMessage?.name ?? ""}`}</span>
+              <span>{`Correo: ${activeMessage?.email ?? ""}`}</span>
+            </div>
+          }
         />
-        <ModalRow title="Fecha" text={formatDate(activeMessage?.sentAt, "L")} />
-        <ModalRow title="Tema" text={activeMessage?.subject} />
-        <ModalRow title="Correo" text={activeMessage?.email} />
-        <ModalRow title="Mensaje" text={activeMessage?.body} />
+        <ModalRow
+          title="Fecha"
+          text={formatDate(activeMessage?.sentAt, "LLLL")}
+        />
+        <ModalRow
+          title="Mensaje"
+          text={
+            <div className="d-flex flex-column">
+              <span>{`Tema: ${activeMessage?.subject ?? ""}`}</span>
+              <span>{`Mensaje: ${activeMessage?.body ?? ""}`}</span>
+            </div>
+          }
+        />
+        <Button
+          className="shadow-sm mt-2"
+          onClick={() =>
+            isEqual(
+              window.confirm("¿Estás seguro que quieres borrar este mensaje?"),
+              true
+            ) && handleDeleteMessage(activeMessage._id)
+          }
+          variant="danger"
+        >
+          Eliminar
+        </Button>
       </AdminModal>
     </AdminLayout>
-  ) : (
-    <AdminSpinner />
   );
 };

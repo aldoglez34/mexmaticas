@@ -1,11 +1,11 @@
 import React, { memo } from "react";
 import { ListGroup } from "react-bootstrap";
-import { any, string } from "prop-types";
+import { any, func, string } from "prop-types";
 import cn from "classnames";
 
 import styles from "./listgroupitem.module.scss";
 
-export const ListGroupItem = memo(({ children, link }) => (
+export const ListGroupItem = memo(({ children, link, handleOnClick }) => (
   <ListGroup.Item
     action
     className={cn(
@@ -16,6 +16,7 @@ export const ListGroupItem = memo(({ children, link }) => (
       styles.itemstyle
     )}
     {...(link ? { href: link } : {})}
+    {...(handleOnClick ? { onClick: handleOnClick } : {})}
   >
     {children}
   </ListGroup.Item>
@@ -23,6 +24,7 @@ export const ListGroupItem = memo(({ children, link }) => (
 
 ListGroupItem.propTypes = {
   children: any.isRequired,
+  handleOnClick: func,
   link: string,
 };
 

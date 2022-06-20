@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Col } from "react-bootstrap";
+import { Form, Col } from "react-bootstrap";
 import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { assignTeacher, fetchAvailableTeachers } from "../../../../services";
-import { AdminSpinner } from "../../../../components";
+import { assignTeacher, fetchTeachers } from "../../../../services";
+import { AdminSpinner, AdminSubmitButton } from "../../../../components";
 
 export const ClassroomTeachersForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -18,7 +18,7 @@ export const ClassroomTeachersForm = React.memo(
     });
 
     useEffect(() => {
-      fetchAvailableTeachers()
+      fetchTeachers()
         .then((res) => setAvailableTeachers(res.data))
         .catch((err) => {
           alert("Ocurrió un error.");
@@ -76,9 +76,9 @@ export const ClassroomTeachersForm = React.memo(
                   >
                     <option value="">Elige...</option>
                     {availableTeachers.length &&
-                      availableTeachers.map(({ fullName, _id }) => (
-                        <option value={_id} key={_id}>
-                          {fullName}
+                      availableTeachers.map((t) => (
+                        <option key={t._id} value={t._id}>
+                          {`${t.name} ${t.firstSurname} ${t.secondSurname}`.trim()}
                         </option>
                       ))}
                   </Form.Control>
@@ -93,16 +93,8 @@ export const ClassroomTeachersForm = React.memo(
               <AdminSpinner />
             )}
             {/* buttons */}
-            <Form.Group className="mt-1">
-              <Button
-                block
-                disabled={isSubmitting}
-                size="lg"
-                type="submit"
-                variant="dark"
-              >
-                Guardar
-              </Button>
+            <Form.Group>
+              <AdminSubmitButton {...{ isSubmitting }} />
             </Form.Group>
           </Form>
         )}

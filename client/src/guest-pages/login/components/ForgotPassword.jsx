@@ -38,8 +38,8 @@ export const ForgotPassword = () => {
         </small>
       </div>
       <Modal show={show} onHide={handleOnHide}>
-        <Modal.Body className="bg-light rounded shadow py-4">
-          <h5 className="text-dark my-3">
+        <Modal.Body className="bg-light rounded shadow">
+          <h5 className="text-dark mb-2">
             Ingresa tu cuenta para enviarte un correo de recuperación de
             contraseña:
           </h5>

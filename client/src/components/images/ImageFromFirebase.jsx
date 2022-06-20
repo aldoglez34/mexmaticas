@@ -5,6 +5,8 @@ import cn from "classnames";
 
 export const ImageFromFirebase = React.memo(
   ({ height, path, width, ...props }) => {
+    if (!path) return;
+
     const [firebaseUrl, setFirebaseUrl] = useState();
 
     useEffect(() => {

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
+  AdminDataTemplate,
   AdminLayout,
-  AdminPagination,
-  AdminSpinner,
   ListGroupItem,
   SearchForm,
 } from "../../components";
-import { ListGroup } from "react-bootstrap";
 import { fetchInstitutions } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
+import { isEmpty } from "lodash";
 
 export const AdminInstitutionsPage = () => {
   const [institutions, setInstitutions] = useState();
@@ -53,6 +52,13 @@ export const AdminInstitutionsPage = () => {
     },
   ];
 
+  const mapItemFunc = (item) => (
+    <ListGroupItem key={item._id} link={`/admin/institutions/edit/${item._id}`}>
+      <h4>{item.name}</h4>
+      {item.description && <span>{item.description}</span>}
+    </ListGroupItem>
+  );
+
   return (
     <AdminLayout
       leftBarActive="Escuelas"
@@ -67,37 +73,21 @@ export const AdminInstitutionsPage = () => {
         ref={searchRef}
         searchBarPlaceholder="Buscar por nombre de escuela..."
         sortOptions={SORT_OPTIONS}
+        isDataEmpty={isEmpty(institutions)}
       />
-      {filtered ? (
-        filtered.length ? (
-          <React.Fragment>
-            <ListGroup>
-              {filtered.slice(offset, limit).map((c) => (
-                <ListGroupItem
-                  key={c._id}
-                  link={`/admin/institutions/edit/${c._id}`}
-                >
-                  <h4>{c.name}</h4>
-                  {c.description && <span>{c.description}</span>}
-                </ListGroupItem>
-              ))}
-            </ListGroup>
-            {filtered.length > PAGE_SIZE && (
-              <div className="mt-3">
-                <AdminPagination
-                  activePage={activePage}
-                  handleChangePage={(p) => handleChangePage(p)}
-                  pageCount={pages}
-                />
-              </div>
-            )}
-          </React.Fragment>
-        ) : (
-          <div className="text-center mt-4">No hay escuelas.</div>
-        )
-      ) : (
-        <AdminSpinner />
-      )}
+      <AdminDataTemplate
+        {...{
+          activePage,
+          data: filtered,
+          emptyMessage: "Lista de escuelas vacía.",
+          handleChangePage,
+          limit,
+          mapItemFunc,
+          offset,
+          pages,
+          pageSize: PAGE_SIZE,
+        }}
+      />
     </AdminLayout>
   );
 };

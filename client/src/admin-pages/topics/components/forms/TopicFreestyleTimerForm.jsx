@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, Form, Col, InputGroup } from "react-bootstrap";
+import { Form, Col, InputGroup } from "react-bootstrap";
 import { number, string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateTopicFreestyleTimer } from "../../../../services";
 import { useSelector } from "react-redux";
+import { AdminSubmitButton } from "../../../../components";
 
 export const TopicFreestyleTimerForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -76,16 +77,8 @@ export const TopicFreestyleTimerForm = React.memo(
               </Form.Group>
             </Form.Row>
             {/* buttons */}
-            <Form.Group className="mt-1">
-              <Button
-                block
-                disabled={isSubmitting}
-                size="lg"
-                type="submit"
-                variant="dark"
-              >
-                Guardar
-              </Button>
+            <Form.Group>
+              <AdminSubmitButton {...{ isSubmitting }} />
             </Form.Group>
           </Form>
         )}

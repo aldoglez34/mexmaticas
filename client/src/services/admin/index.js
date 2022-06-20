@@ -43,7 +43,7 @@ import {
 
 import { addMaterial, deleteMaterial, updateMaterialOrder } from "./material";
 
-import { fetchMessages, markSeen, respondMsg } from "./messages";
+import { deleteMessage, fetchMessages, markSeen, respondMsg } from "./messages";
 
 import {
   deleteQuestion,
@@ -67,7 +67,6 @@ import {
 
 import {
   assignTeacher,
-  fetchAvailableTeachers,
   fetchOneTeacher,
   fetchTeachers,
   registerNewTeacher,
@@ -92,10 +91,10 @@ export {
   deleteClassroom,
   deleteInstitution,
   deleteMaterial,
+  deleteMessage,
   deleteQuestion,
   deleteTopic,
   fetchAvailableDifficulties,
-  fetchAvailableTeachers,
   fetchClassroomHistory,
   fetchClassrooms,
   fetchCourses,

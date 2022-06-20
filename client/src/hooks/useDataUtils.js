@@ -157,6 +157,10 @@ export const useDataUtils = ({
   const clearFilters = () => {
     setSort(sortOptions[0]);
     setFiltered(data);
+    // if there are filter buttons and one is active we have to clear it first
+    const { setActiveFilter } = filterButtons || {};
+    if (setActiveFilter) setActiveFilter(null);
+    // clear anything that is in the search bar
     searchRef.current.value = "";
     if (activePage !== 1) {
       setActivePage(1);

@@ -1,97 +1,60 @@
 import React, { useState, useEffect } from "react";
-import { AdminLayout, AdminSpinner, ListGroupItem } from "../../components";
-import { Badge, Button, ListGroup } from "react-bootstrap";
+import {
+  AdminDataTemplate,
+  AdminLayout,
+  ListGroupItem,
+  SearchForm,
+} from "../../components";
+import { Badge, Button } from "react-bootstrap";
 import { fetchCourses } from "../../services";
+import { ADMIN_PAGES } from "../../utils/constants";
+import { isEmpty, isEqual } from "lodash";
+import { useDataUtils } from "../../hooks/useDataUtils";
+import cn from "classnames";
 
 export const AdminCoursesPage = () => {
   const [courses, setCourses] = useState();
-  const [filtered, setFiltered] = useState();
-  const [filter, setFilter] = useState();
+  const [activeFilter, setActiveFilter] = useState(undefined);
+
+  const {
+    COURSES: { PAGE_SIZE, FILTER_BUTTONS },
+  } = ADMIN_PAGES;
 
   useEffect(() => {
     fetchCourses()
-      .then((res) => {
-        const unsortedExams = res.data;
-        const sortedCourses = unsortedExams
-          .reduce((acc, cv) => {
-            let orderNumber;
-            switch (cv.school) {
-              case "Primaria":
-                orderNumber = 1;
-                break;
-              case "Secundaria":
-                orderNumber = 2;
-                break;
-              case "Preparatoria":
-                orderNumber = 3;
-                break;
-              case "Universidad":
-                orderNumber = 4;
-                break;
-              default:
-                break;
-            }
-            acc.push({ ...cv, orderNumber });
-            return acc;
-          }, [])
-          .sort((a, b) => a.orderNumber - b.orderNumber);
-        //
-        setCourses(sortedCourses);
-        setFiltered(sortedCourses);
-      })
+      .then((res) => setCourses(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
       });
   }, []);
 
-  const filterCourses = (criteria) => {
-    setFilter(criteria === filter ? null : criteria);
-    setFiltered(
-      criteria === filter
-        ? courses
-        : courses.filter((c) => c.school === criteria)
-    );
-  };
+  const {
+    data: { activePage, filtered, limit, offset, pages, searchRef },
+    functions: { clearFilters, handleChangePage, handleFilterData },
+  } = useDataUtils({
+    data: courses,
+    filterButtons: { accessor: "school", activeFilter, setActiveFilter },
+    pageSize: PAGE_SIZE,
+    searchBarAccessor: "name",
+  });
 
-  const filters = (
+  const filterButtons = (
     <div className="d-flex">
-      <Button
-        disabled={courses ? false : true}
-        active={filter === "Primaria" ? true : false}
-        variant="outline-light"
-        className="shadow-sm"
-        onClick={() => filterCourses("Primaria")}
-      >
-        Primaria
-      </Button>
-      <Button
-        disabled={courses ? false : true}
-        active={filter === "Secundaria" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterCourses("Secundaria")}
-      >
-        Secundaria
-      </Button>
-      <Button
-        disabled={courses ? false : true}
-        active={filter === "Preparatoria" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterCourses("Preparatoria")}
-      >
-        Preparatoria
-      </Button>
-      <Button
-        disabled={courses ? false : true}
-        active={filter === "Universidad" ? true : false}
-        variant="outline-light"
-        className="shadow-sm ml-2"
-        onClick={() => filterCourses("Universidad")}
-      >
-        Universidad
-      </Button>
+      {FILTER_BUTTONS.map((opt, idx) => (
+        <Button
+          active={isEqual(activeFilter, opt)}
+          className={cn("shadow-sm", !isEqual(idx, 0) && "ml-2")}
+          disabled={isEmpty(courses)}
+          key={idx}
+          onClick={() =>
+            setActiveFilter(isEqual(opt, activeFilter) ? null : opt)
+          }
+          variant="outline-light"
+        >
+          {opt}
+        </Button>
+      ))}
     </div>
   );
 
@@ -102,37 +65,45 @@ export const AdminCoursesPage = () => {
     },
   ];
 
-  return filtered ? (
+  const mapItemFunc = (item) => (
+    <ListGroupItem key={item._id} link={`/admin/courses/edit/${item._id}`}>
+      <h4>{item.name}</h4>
+      <span>{item.school}</span>
+      <div>
+        <Badge variant={item.isActive ? "success" : "danger"}>
+          {item.isActive ? "Activo" : "No activo"}
+        </Badge>
+      </div>
+    </ListGroupItem>
+  );
+
+  return (
     <AdminLayout
-      buttons={filters}
+      buttons={filterButtons}
       leftBarActive="Cursos"
       optionsDropdown={optionsDropdown}
       topNavTitle="Cursos"
     >
-      {filtered.length ? (
-        <>
-          <h3 className="mb-3" style={{ color: "#0f5257" }}>
-            Selecciona un curso...
-          </h3>
-          <ListGroup>
-            {filtered.map((c) => (
-              <ListGroupItem key={c._id} link={`/admin/courses/edit/${c._id}`}>
-                <h4>{c.name}</h4>
-                <span>{c.school}</span>
-                <div>
-                  <Badge variant={c.isActive ? "success" : "danger"}>
-                    {c.isActive ? "Activo" : "No activo"}
-                  </Badge>
-                </div>
-              </ListGroupItem>
-            ))}
-          </ListGroup>
-        </>
-      ) : (
-        <div className="text-center mt-4">No hay cursos.</div>
-      )}
+      <SearchForm
+        clearFilters={clearFilters}
+        handleFilter={handleFilterData}
+        isDataEmpty={isEmpty(courses)}
+        ref={searchRef}
+        searchBarPlaceholder="Buscar por nombre de curso..."
+      />
+      <AdminDataTemplate
+        {...{
+          activePage,
+          data: filtered,
+          emptyMessage: "Lista de salones vacía.",
+          handleChangePage,
+          limit,
+          mapItemFunc,
+          offset,
+          pages,
+          pageSize: PAGE_SIZE,
+        }}
+      />
     </AdminLayout>
-  ) : (
-    <AdminSpinner />
   );
 };

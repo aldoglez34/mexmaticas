@@ -6,12 +6,13 @@ import cn from "classnames";
 import styles from "./adminbutton.module.scss";
 
 export const AdminButton = memo(
-  ({ className = "", href, icon, size = "md", text }) => {
+  ({ className = "", hoverText, href, icon, size = "md", text }) => {
     return (
       <Button
         {...{
           className: cn(styles.button, className),
           size,
+          ...(hoverText ? { title: hoverText } : {}),
           ...(href ? { onClick: () => (window.location.href = href) } : {}),
         }}
       >
@@ -24,6 +25,7 @@ export const AdminButton = memo(
 
 AdminButton.propTypes = {
   className: string,
+  hoverText: string,
   children: any,
   href: string,
   icon: any,

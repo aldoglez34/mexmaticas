@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { AdminLayout, ReadOnlyRow } from "../../../components";
+import { AdminButton, AdminLayout, ReadOnlyRow } from "../../../components";
 import { fetchOneTeacher } from "../../../services";
 import { isEmpty } from "lodash";
 import { formatDate } from "../../../utils/helpers";
@@ -26,9 +26,11 @@ export const AdminTeacherDetailPage = memo((props) => {
           {classrooms.sort().map((c) => (
             <li key={c._id}>
               {`${c.name} (${c.members.length})`}
-              <a href={`/admin/classrooms/edit/${c._id}`} className="ml-1">
-                <i className="fas fa-paper-plane" />
-              </a>
+              <AdminButton
+                hoverText="Ir a salón"
+                href={`/admin/classrooms/edit/${c._id}`}
+                icon={<i className="fas fa-paper-plane" />}
+              />
             </li>
           ))}
         </ul>

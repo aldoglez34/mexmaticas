@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Row } from "react-bootstrap";
 import { fetchOneStudent } from "../../../services";
 import { AdminLayout, AdminSpinner, ReadOnlyRow } from "../../../components";
 import { formatDate } from "../../../utils/helpers";
@@ -24,14 +23,29 @@ export const AdminStudentDetailPage = React.memo((props) => {
       });
   }, [studentId]);
 
+  const studentFullName = `${student?.name ?? ""} ${
+    student?.firstSurname ?? ""
+  } ${student?.secondSurname ?? ""}`.trim();
+
+  const optionsDropdown = [
+    {
+      text: "Asignar curso",
+      fn: () =>
+        (window.location.href = `/admin/students/unpurchased/${studentId}`),
+    },
+    {
+      text: "Ver historial",
+      fn: () => (window.location.href = `/admin/students/history/${studentId}`),
+    },
+  ];
+
   return student ? (
     <AdminLayout
       backBttn={comesFrom || "/admin/students"}
       expanded
       leftBarActive="Alumnos"
-      topNavTitle={`${student?.name ?? ""} ${student?.firstSurname ?? ""} ${
-        student?.secondSurname ?? ""
-      }`.trim()}
+      optionsDropdown={optionsDropdown}
+      topNavTitle={studentFullName}
     >
       <ReadOnlyRow rowTitle="Usuario" value={student.email.split("@", 1)[0]} />
       <ReadOnlyRow rowTitle="Correo electrónico" value={student.email} />
@@ -44,73 +58,20 @@ export const AdminStudentDetailPage = React.memo((props) => {
         rowTitle="Fecha de registro"
         value={formatDate(student.registeredAt, "LL")}
       />
-      {/* courses */}
-      <Row>
-        <Col>
-          <span className="text-muted d-flex">Cursos</span>
-          {student.courses.length ? (
-            <ul className="mb-2">
-              {student.courses.map((c) => {
-                return (
-                  <li key={c._id}>
-                    <h5 className="mb-0">{c.name}</h5>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <h5>-</h5>
-          )}
-          <Button
-            variant="dark"
-            size="sm"
-            href={`/admin/students/unpurchased/${studentId}`}
-          >
-            <i className="fas fa-shopping-cart mr-2" />
-            <span>Asignar curso</span>
-          </Button>
-        </Col>
-      </Row>
-      {/* attempts */}
-      <Row>
-        <Col>
-          <span className="text-muted d-flex mt-2">
-            Exámenes presentados / Calificaciones perfectas
-          </span>
-          <h2 className="mb-1">
-            {student.attempts.length +
-              " / " +
-              student.attempts.filter((a) => a.grade === 10).length}
-          </h2>
-          <Button
-            variant="dark"
-            size="sm"
-            href={`/admin/students/history/${studentId}`}
-          >
-            <i className="fas fa-history mr-2" />
-            <span>Ver historial</span>
-          </Button>
-        </Col>
-      </Row>
-      {/* medallas */}
-      <Row>
-        <Col>
-          <span className="text-muted d-flex mt-2">Medallas</span>
-          {student.rewards.length ? (
-            <ul>
-              {student.rewards.map((r) => {
-                return (
-                  <li key={r.name}>
-                    <h5 className="mb-0">{r.name}</h5>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <h5>Sin medallas</h5>
-          )}
-        </Col>
-      </Row>
+      <ReadOnlyRow
+        rowTitle="Cursos"
+        list={{ data: student.courses, accessor: "name" }}
+      />
+      <ReadOnlyRow
+        rowTitle="Exámenes presentados / Calificaciones perfectas"
+        value={`${student.attempts.length} / ${
+          student.attempts.filter((a) => a.grade === 10).length
+        }`}
+      />
+      <ReadOnlyRow
+        rowTitle="Medallas"
+        list={{ data: student.rewards, accessor: "name" }}
+      />
     </AdminLayout>
   ) : (
     <AdminSpinner />

@@ -1,4 +1,4 @@
-import { isEqual } from "lodash";
+import { get, isEqual } from "lodash";
 import moment from "moment";
 import "moment/locale/es";
 
@@ -21,3 +21,14 @@ export const getForwardUrl = (purchase) => {
 };
 
 export const formatDate = (str, format) => moment(str).format(format);
+
+export const getFullName = (name, firstSurname, secondSurname) =>
+  `${name ?? ""} ${firstSurname ?? ""} ${secondSurname ?? ""}`.trim();
+
+export const getAccessorValue = (object, accessor) => {
+  const accessorArr = Array.isArray(accessor) ? accessor : [accessor];
+  return accessorArr.reduce(
+    (acc, cv) => acc.concat(`${get(object, cv, "")} `),
+    ""
+  );
+};

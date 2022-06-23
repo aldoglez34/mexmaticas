@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Image, Modal, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { deleteInstitution, fetchOneInstitution } from "../../../services";
 import {
   AdminLayout,
+  AdminModal,
+  AdminRow,
   AdminSpinner,
-  EditableRow,
-  ReadOnlyRow,
+  Button,
 } from "../../../components";
 import { InstitutionDescriptionForm, InstitutionNameForm } from "../components";
 import { formatDate } from "../../../utils/helpers";
@@ -52,67 +53,71 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
       optionsDropdown={optionsDropdown}
       topNavTitle={institution?.name}
     >
-      <EditableRow
-        {...{
-          formInitialText: institution.name,
-          ModalFormComponent: InstitutionNameForm,
-          modalLabel: "Nombre",
-          rowTitle: "Nombre",
-          value: institution.name,
+      <AdminRow
+        rowTitle="Nombre"
+        value={institution.name}
+        icon={{
+          hoverText: "Editar nombre",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: InstitutionNameForm,
+            initialValue: institution.name,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: institution.description,
-          ModalFormComponent: InstitutionDescriptionForm,
-          modalLabel: "Descripción",
-          rowTitle: "Descripción",
-          value: institution.description || "-",
+      <AdminRow
+        rowTitle="Descripción"
+        value={institution.description}
+        icon={{
+          hoverText: "Editar descripción",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: InstitutionDescriptionForm,
+            initialValue: institution.description,
+          },
         }}
       />
-      <ReadOnlyRow
-        icon={<i className="far fa-calendar-alt mr-2" />}
+      <AdminRow
         rowTitle="Fecha de creación"
         value={formatDate(institution.createdAt, "LL")}
       />
       {/* delete institution modal */}
-      <Modal centered onHide={handleCloseModal} show={showModal}>
-        <Modal.Body className="bg-light rounded shadow text-center py-4">
-          {isDeleting ? (
-            <div className="py-4">
-              <strong className="mb-2">Borrando...</strong>
-              <br />
-              <br />
-              <Spinner variant="danger" animation="border" role="status">
-                <span className="sr-only">Borrando...</span>
-              </Spinner>
+      <AdminModal
+        handleClose={handleCloseModal}
+        show={showModal}
+        title="Borrar"
+      >
+        {isDeleting ? (
+          <div className="py-4">
+            <strong className="mb-2">Borrando...</strong>
+            <br />
+            <br />
+            <Spinner variant="danger" animation="border" role="status">
+              <span className="sr-only">Borrando...</span>
+            </Spinner>
+          </div>
+        ) : (
+          <>
+            <p className="text-center">{`¿Estás seguro que deseas borrar la escuela: ${institution.name}?`}</p>
+            <div className="d-flex flex-row justify-content-center">
+              <Button onClick={handleCloseModal} size="sm">
+                Cancelar
+              </Button>
+              <Button
+                className="ml-2"
+                onClick={handleDeleteInstitution}
+                size="sm"
+                variant="danger"
+              >
+                Borrar
+                <i className="fas fa-trash-alt ml-2" />
+              </Button>
             </div>
-          ) : (
-            <>
-              <Image
-                className="mb-3"
-                height="130"
-                src="/images/trash.png"
-                width="130"
-              />
-              <div className="lead text-center mt-2">{`¿Estás seguro que deseas borrar la escuela: ${institution.name}?`}</div>
-              <div className="d-flex flex-row justify-content-center mt-4">
-                <Button variant="dark" onClick={handleCloseModal}>
-                  Cancelar
-                </Button>
-                <Button
-                  variant="danger"
-                  className="ml-2"
-                  onClick={handleDeleteInstitution}
-                >
-                  Borrar
-                  <i className="fas fa-trash-alt ml-2" />
-                </Button>
-              </div>
-            </>
-          )}
-        </Modal.Body>
-      </Modal>
+          </>
+        )}
+      </AdminModal>
     </AdminLayout>
   ) : (
     <AdminSpinner />

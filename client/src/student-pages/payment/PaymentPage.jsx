@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { GuestLayout } from "../../components";
-import { Col, Container, Image, Modal, Row, Spinner } from "react-bootstrap";
-import { AdminSpinner, BackButton } from "../../components";
+import {
+  Button,
+  Col,
+  Container,
+  Image,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
+import { AdminSpinner } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
 import { fetchOneCourse } from "../../services";
 import { buyCourse } from "../../services";
 import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
 import { useHistory } from "react-router-dom";
+
+import styles from "./paymentpage.module.scss";
 
 export const PaymentPage = React.memo((props) => {
   const [course, setCourse] = useState();
@@ -80,7 +90,10 @@ export const PaymentPage = React.memo((props) => {
             marginBottom: "80px",
           }}
         >
-          <BackButton to={`/courses/${school}`} />
+          <Button className={styles.backButton} href={`/courses/${school}`}>
+            <i className="fas fa-long-arrow-alt-left mr-2" />
+            <span>Regresar</span>
+          </Button>
           <Container>
             <Row>
               <Col md={{ span: 5, offset: 4 }} className="p-0">

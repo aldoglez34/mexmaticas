@@ -4,7 +4,7 @@ import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateInstitutionDescription } from "../../../../services";
-import { AdminSubmitButton } from "../../../../components/buttons/AdminSubmitButton";
+import { Button } from "../../../../components";
 
 export const InstitutionDescriptionForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -53,8 +53,9 @@ export const InstitutionDescriptionForm = React.memo(
               <Form.Group as={Col}>
                 <Form.Label>{formLabel}</Form.Label>
                 <Form.Control
-                  maxLength="40"
-                  type="text"
+                  maxLength="500"
+                  as="textarea"
+                  rows="5"
                   name="newDescription"
                   value={values.newDescription}
                   onChange={handleChange}
@@ -71,7 +72,13 @@ export const InstitutionDescriptionForm = React.memo(
             </Form.Row>
             {/* buttons */}
             <Form.Group>
-              <AdminSubmitButton {...{ isSubmitting }} />
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              >
+                Guardar
+              </Button>
             </Form.Group>
           </Form>
         )}

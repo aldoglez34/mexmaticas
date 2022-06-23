@@ -1,12 +1,12 @@
 import React, { memo } from "react";
 import { CSVLink } from "react-csv";
-import { Modal } from "react-bootstrap";
+import { AdminModal } from "../../components";
 import { arrayOf, bool, func, object, string } from "prop-types";
-import { AdminSpinner } from "..";
+import { isEmpty } from "lodash";
 
 export const ExportHistoryToExcel = memo(
   ({ data = [], fileName = "", setShow, show = false }) => {
-    const handleOnHide = () => setShow(false);
+    const handleCloseModal = () => setShow(false);
 
     const headers = [
       { label: "Fecha", key: "date" },
@@ -18,31 +18,29 @@ export const ExportHistoryToExcel = memo(
     ];
 
     return (
-      <Modal show={show} onHide={handleOnHide}>
-        <Modal.Body className="bg-light rounded shadow py-4">
-          <h5 className="text-dark my-3">{`Exporta el historial de exámenes de ${fileName} a un archivo .csv`}</h5>
-          <div className="text-center mt-4">
-            {data?.length ? (
-              <CSVLink
-                className="btn btn-primary bg-dark border-dark"
-                data={data}
-                filename={`${fileName}.csv`}
-                headers={headers}
-                target="_blank"
-                onClick={() => {
-                  handleOnHide();
-                  return true;
-                }}
-              >
-                <i className="fas fa-file-csv mr-2" />
-                Exportar
-              </CSVLink>
-            ) : (
-              <AdminSpinner />
-            )}
-          </div>
-        </Modal.Body>
-      </Modal>
+      <AdminModal handleClose={handleCloseModal} show={show} title="Exportar">
+        <p>{`Exporta el historial de exámenes de ${fileName} a un archivo .csv`}</p>
+        <div>
+          {isEmpty(data) ? (
+            <div className="mt-3 text-center">Historial vacío.</div>
+          ) : (
+            <CSVLink
+              className="btn btn-primary bg-dark border-dark"
+              data={data}
+              filename={`${fileName}.csv`}
+              headers={headers}
+              target="_blank"
+              onClick={() => {
+                handleCloseModal();
+                return true;
+              }}
+            >
+              <i className="fas fa-file-csv mr-2" />
+              Exportar
+            </CSVLink>
+          )}
+        </div>
+      </AdminModal>
     );
   }
 );

@@ -10,10 +10,7 @@ export const AdminStudentAssignPage = React.memo((props) => {
 
   useEffect(() => {
     fetchStudentUnpurchased(studentId)
-      .then((res) => {
-        console.log(res.data);
-        setUnpurchased(res.data);
-      })
+      .then((res) => setUnpurchased(res.data))
       .catch((err) => {
         console.log(err);
         alert("Ocurrió un error, vuelve a intentarlo.");
@@ -37,10 +34,10 @@ export const AdminStudentAssignPage = React.memo((props) => {
 
   return unpurchased ? (
     <AdminLayout
-      leftBarActive="Alumnos"
       backBttn={`/admin/students/${studentId}`}
+      leftBarActive="Alumnos"
+      topNavTitle="Asignar Curso"
     >
-      <h3>Elige un curso de la lista...</h3>
       <span className="mb-4">
         Sólo se muestran cursos que no ha adquirido el alumno.
       </span>
@@ -62,9 +59,9 @@ export const AdminStudentAssignPage = React.memo((props) => {
           ))}
         </ListGroup>
       ) : (
-        <div className="py-4 text-center">
-          <em>No hay cursos disponibles para asignar a este alumno.</em>
-        </div>
+        <p className="mt-4 text-center">
+          <small>No hay cursos disponibles para asignar a este alumno.</small>
+        </p>
       )}
     </AdminLayout>
   ) : (

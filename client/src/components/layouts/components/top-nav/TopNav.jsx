@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import { array, node, string } from "prop-types";
+import { isEmpty, isEqual } from "lodash";
 import cn from "classnames";
 
 import styles from "./topnav.module.scss";
@@ -23,7 +24,7 @@ export const TopNav = memo(
             </Button>
           ) : null}
           {/* options dropdown */}
-          {optionsDropdown?.length && (
+          {!isEmpty(optionsDropdown || []) && (
             <Dropdown className={cn("ml-auto")}>
               <Dropdown.Toggle
                 variant="transparent"
@@ -38,15 +39,20 @@ export const TopNav = memo(
                 <i className="fas fa-ellipsis-h text-light" />
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                {optionsDropdown.map((o) => (
-                  <Dropdown.Item
-                    key={o.text}
-                    className="dropdownStyle"
-                    onClick={() => o.fn()}
-                  >
-                    {o.text}
-                  </Dropdown.Item>
-                ))}
+                {optionsDropdown.map((o) => {
+                  if (isEqual(o, "divider"))
+                    return <Dropdown.Divider key={o} />;
+                  return (
+                    <Dropdown.Item
+                      key={o.text}
+                      className="dropdownStyle"
+                      {...(o.href ? { href: o.href } : {})}
+                      {...(o.fn ? { onClick: () => o.fn() } : {})}
+                    >
+                      {o.text}
+                    </Dropdown.Item>
+                  );
+                })}
               </Dropdown.Menu>
             </Dropdown>
           )}

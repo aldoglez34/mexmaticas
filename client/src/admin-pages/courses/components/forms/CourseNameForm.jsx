@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateCourseName } from "../../../../services";
 import { useSelector } from "react-redux";
-import { AdminSubmitButton } from "../../../../components";
+import { Button } from "../../../../components";
 
 export const CourseNameForm = React.memo(({ formLabel, formInitialText }) => {
   const courseId = useSelector((state) => state.admin.course.courseId);
@@ -78,7 +78,9 @@ export const CourseNameForm = React.memo(({ formLabel, formInitialText }) => {
           </Form.Row>
           {/* buttons */}
           <Form.Group>
-            <AdminSubmitButton {...{ isSubmitting }} />
+            <Button isDisabled={isSubmitting} isLoading={isSubmitting} isSubmit>
+              Guardar
+            </Button>
           </Form.Group>
         </Form>
       )}

@@ -1,8 +1,8 @@
 import React from "react";
-import { AdminLayout } from "../../../components";
+import { AdminLayout, Button } from "../../../components";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { Button, Col, Form } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 import { newInstitution } from "../../../services";
 
 export const AdminNewInstitutionPage = () => {
@@ -97,13 +97,10 @@ export const AdminNewInstitutionPage = () => {
             {/* buttons */}
             <Form.Group className="mt-4">
               <Button
-                variant="dark"
-                type="submit"
-                className="shadow-sm"
-                disabled={isSubmitting}
-              >
-                Crear
-              </Button>
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              />
             </Form.Group>
           </Form>
         )}

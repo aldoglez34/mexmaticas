@@ -110,7 +110,7 @@ export const AdminStudentHistoryPage = memo((props) => {
 
   const optionsDropdown = [
     {
-      text: "Exportar calificaciones a .csv",
+      text: "Exportar a .csv",
       fn: () => setShowExportToExcel(true),
     },
   ];
@@ -120,6 +120,7 @@ export const AdminStudentHistoryPage = memo((props) => {
       backBttn={`/admin/students/${studentId}`}
       leftBarActive="Alumnos"
       optionsDropdown={optionsDropdown}
+      topNavTitle="Historial"
     >
       {showExportToExcel && (
         <ExportHistoryToExcel

@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { useSelector } from "react-redux";
 import { IMAGES } from "../../../../utils/constants";
-import { AdminSubmitButton } from "../../../../components";
+import { Button } from "../../../../components";
 
 export const TopicRewardForm = React.memo(({ formLabel }) => {
   const courseId = useSelector((state) => state.admin.course.courseId);
@@ -97,7 +97,9 @@ export const TopicRewardForm = React.memo(({ formLabel }) => {
           </Form.Row>
           {/* buttons */}
           <Form.Group>
-            <AdminSubmitButton {...{ isSubmitting }} />
+            <Button isDisabled={isSubmitting} isLoading={isSubmitting} isSubmit>
+              Guardar
+            </Button>
           </Form.Group>
         </Form>
       )}

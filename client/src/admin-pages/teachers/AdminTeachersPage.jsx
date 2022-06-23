@@ -50,7 +50,7 @@ export const AdminTeachersPage = () => {
   const optionsDropdown = [
     {
       text: "Nuevo Maestro",
-      fn: () => (window.location.href = "/admin/teachers/new"),
+      href: "/admin/teachers/new",
     },
   ];
 

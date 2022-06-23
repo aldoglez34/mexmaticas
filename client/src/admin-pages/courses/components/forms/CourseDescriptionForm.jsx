@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateCourseDescription } from "../../../../services";
 import { useSelector } from "react-redux";
-import { AdminSubmitButton } from "../../../../components";
+import { Button } from "../../../../components";
 
 export const CourseDescriptionForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -54,7 +54,7 @@ export const CourseDescriptionForm = React.memo(
               <Form.Group as={Col}>
                 <Form.Label>{formLabel}</Form.Label>
                 <Form.Control
-                  maxLength="250"
+                  maxLength="500"
                   as="textarea"
                   rows="5"
                   name="newDescription"
@@ -73,7 +73,13 @@ export const CourseDescriptionForm = React.memo(
             </Form.Row>
             {/* buttons */}
             <Form.Group>
-              <AdminSubmitButton {...{ isSubmitting }} />
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              >
+                Guardar
+              </Button>
             </Form.Group>
           </Form>
         )}

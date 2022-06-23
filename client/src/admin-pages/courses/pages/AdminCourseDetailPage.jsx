@@ -6,9 +6,8 @@ import * as adminActions from "../../../redux/actions/admin";
 import {
   AdminEditModal,
   AdminLayout,
+  AdminRow,
   AdminSpinner,
-  EditableRow,
-  ReadOnlyRow,
 } from "../../../components";
 import {
   CourseActiveForm,
@@ -53,74 +52,77 @@ export const AdminCourseDetailPage = React.memo((props) => {
       leftBarActive="Cursos"
       topNavTitle={course?.name}
     >
-      <EditableRow
-        {...{
-          formInitialText: course.name,
-          ModalFormComponent: CourseNameForm,
-          modalLabel: "Nombre",
-          rowTitle: "Nombre",
-          value: course.name,
+      <AdminRow
+        rowTitle="Nombre"
+        value={course.name}
+        icon={{
+          hoverText: "Editar nombre",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: CourseNameForm,
+            initialValue: course.name,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: course.school,
-          ModalFormComponent: CourseSchoolForm,
-          modalLabel: "Nivel escolar",
-          rowTitle: "Nivel escolar",
-          value: course.school,
+      <AdminRow
+        rowTitle="Nivel escolar"
+        value={course.school}
+        icon={{
+          hoverText: "Editar nivel escolar",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: CourseSchoolForm,
+            initialValue: course.school,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: course.price,
-          ModalFormComponent: CoursePriceForm,
-          modalLabel: "Precio",
-          rowTitle: "Precio",
-          value: `$${course.price}`,
+      <AdminRow
+        rowTitle="Precio"
+        value={`$${course.price}`}
+        icon={{
+          hoverText: "Editar precio",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: CoursePriceForm,
+            initialValue: course.price,
+          },
         }}
       />
-      {/* status */}
-      <Row>
-        <Col>
-          <span className="text-muted">
-            Estatus
-            {!hasTopics && (
-              <>
-                {" "}
-                <small>
-                  (para activar este curso es necesario agregar temas)
-                </small>
-              </>
-            )}
-          </span>
-          <h4 className="mb-3">
-            <small>
-              <Badge variant={course.isActive ? "success" : "danger"}>
-                {course.isActive ? "Activo" : "No activo"}
-              </Badge>
-            </small>
-            {hasTopics && (
-              <AdminEditModal
-                Form={CourseActiveForm}
-                formInitialText={course.isActive}
-                formLabel="Estatus"
-                icon={<i className="fas fa-pen-alt" />}
-              />
-            )}
-          </h4>
-        </Col>
-      </Row>
-      <EditableRow
-        {...{
-          formInitialText: course.description,
-          ModalFormComponent: CourseDescriptionForm,
-          modalLabel:
-            "Descripción (Utiliza el símbolo \n para saltos de línea)",
-          rowTitle: "Descripción",
-          value: course.description,
+      <AdminRow
+        rowTitle="Estatus"
+        value={
+          <Badge variant={course.isActive ? "success" : "danger"}>
+            {course.isActive ? "Activo" : "No activo"}
+          </Badge>
+        }
+        icon={{
+          hoverText: "Editar estatus",
+          svg: "edit",
+          isDisabled: !hasTopics,
+          modal: {
+            title: "Editar",
+            Form: CourseActiveForm,
+            initialValue: course.isActive,
+          },
         }}
       />
+      <AdminRow
+        rowTitle="Descripción"
+        value={course.description}
+        icon={{
+          hoverText: "Editar descripción",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: CourseDescriptionForm,
+            initialValue: course.description,
+          },
+        }}
+      />
+      {/* TODO convert this to AdminRow */}
       {/* summary */}
       <Row>
         <Col>
@@ -174,8 +176,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
           </Button>
         </Col>
       </Row>
-      <ReadOnlyRow
-        icon={<i className="far fa-calendar-alt mr-2" />}
+      <AdminRow
         rowTitle="Fecha de creación"
         value={formatDate(course.createdAt, "LL")}
       />

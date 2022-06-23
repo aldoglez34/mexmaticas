@@ -4,7 +4,7 @@ import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateInstitutionName } from "../../../../services";
-import { AdminSubmitButton } from "../../../../components/buttons/AdminSubmitButton";
+import { Button } from "../../../../components";
 
 export const InstitutionNameForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -76,7 +76,13 @@ export const InstitutionNameForm = React.memo(
             </Form.Row>
             {/* buttons */}
             <Form.Group>
-              <AdminSubmitButton {...{ isSubmitting }} />
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              >
+                Guardar
+              </Button>
             </Form.Group>
           </Form>
         )}

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { GuestLayout } from "../../components";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { CourseInfoCard } from "./components";
 import { fetchCoursesBySchool } from "../../services";
-import { BackButton } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./courseinfopage.module.scss";
@@ -51,7 +50,10 @@ export const CourseInfoPage = React.memo((props) => {
           marginBottom: "80px",
         }}
       >
-        <BackButton to="/" />
+        <Button className={styles.backButton} href="/">
+          <i className="fas fa-long-arrow-alt-left mr-2" />
+          <span>Regresar</span>
+        </Button>
         <Row>
           <Col md={{ span: 8, offset: 2 }}>
             <div className="text-center">

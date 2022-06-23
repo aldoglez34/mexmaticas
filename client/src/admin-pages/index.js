@@ -1,4 +1,6 @@
 export * from "./classrooms/AdminClassroomsPage";
+export * from "./classrooms/pages/AdminAddCourseToClassroom";
+export * from "./classrooms/pages/AdminAddStudentToClassroom";
 export * from "./classrooms/pages/AdminClassroomDetailPage";
 export * from "./classrooms/pages/AdminNewClassroomPage";
 export * from "./courses/AdminCoursesPage";

@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { get, isEqual } from "lodash";
-
-const getAccessor = (object, accessor) => {
-  const accessorArr = Array.isArray(accessor) ? accessor : [accessor];
-  return accessorArr.reduce(
-    (acc, cv) => acc.concat(`${get(object, cv, "")} `),
-    ""
-  );
-};
+import { isEqual } from "lodash";
+import { getAccessorValue } from "../utils/helpers";
 
 export const useDataUtils = ({
   data,
@@ -48,7 +41,7 @@ export const useDataUtils = ({
       if (setActiveFilter) setActiveFilter(null);
       setFiltered(
         data.filter((s) => {
-          const value = getAccessor(s, searchBarAccessor).trim();
+          const value = getAccessorValue(s, searchBarAccessor).trim();
           return value.toUpperCase().includes(criteria.toUpperCase());
         })
       );

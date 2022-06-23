@@ -1,8 +1,9 @@
 import React from "react";
 import { Formik, ErrorMessage } from "formik";
-import { Button, Col, Form } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 import * as yup from "yup";
 import { useAddTeacher } from "../../hooks/useAddTeacher";
+import { Button } from "../../../../components";
 
 export const NewTeacherForm = () => {
   const { addTeacher } = useAddTeacher();
@@ -196,9 +197,11 @@ export const NewTeacherForm = () => {
             </Form.Group>
           </Form.Row>
           <Form.Group className="mt-4">
-            <Button variant="dark" type="submit" disabled={isSubmitting}>
-              Crear
-            </Button>
+            <Button
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+              isSubmit
+            />
           </Form.Group>
         </Form>
       )}

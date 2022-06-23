@@ -3,11 +3,8 @@
   border-color: transparent !important;
   color: #48bf84 !important;
 
-  font-size: 22px !important;
+  font-size: 16px !important;
   padding: 1px 5px !important;
-
-  // font-size: 16px !important;
-  // padding: 1px 5px !important;
 
   outline: none;
   box-shadow: none !important;
@@ -17,5 +14,14 @@
     border-color: #48bf84 !important;
     color: white !important;
     transition: 0.3s;
+  }
+
+  &:disabled {
+    color: gray !important;
+    &:hover {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      color: gray !important;
+    }
   }
 }

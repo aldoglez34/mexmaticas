@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
 import { bool, node, number, oneOfType, string } from "prop-types";
 import { AdminModal } from "./AdminModal";
-import cn from "classnames";
 
-import styles from "./admineditmodal.module.scss";
+import { IconButton } from "../buttons/IconButton";
 
 export const AdminEditModal = React.memo(
-  ({ Form, formInitialText, formLabel, icon }) => {
+  ({
+    Form,
+    formInitialText,
+    formLabel,
+    hoverText,
+    icon,
+    isDisabled = false,
+  }) => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -15,13 +20,12 @@ export const AdminEditModal = React.memo(
 
     return (
       <>
-        <Button
-          className={cn("ml-1", styles.button)}
+        <IconButton
+          hoverText={hoverText}
+          icon={icon}
+          isDisabled={isDisabled}
           onClick={handleShow}
-          size="sm"
-        >
-          {icon}
-        </Button>
+        />
 
         <AdminModal handleClose={handleClose} show={show} title="Editar">
           <Form formLabel={formLabel} formInitialText={formInitialText} />
@@ -34,7 +38,9 @@ export const AdminEditModal = React.memo(
 AdminEditModal.propTypes = {
   formInitialText: oneOfType([bool, number, string]),
   formLabel: string,
+  hoverText: string,
   icon: node,
+  isDisabled: bool,
 };
 
 AdminEditModal.displayName = "AdminEditModal";

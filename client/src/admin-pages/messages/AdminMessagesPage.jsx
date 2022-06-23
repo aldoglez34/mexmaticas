@@ -3,6 +3,7 @@ import {
   AdminDataTemplate,
   AdminLayout,
   AdminModal,
+  Button,
   ListGroupItem,
   SearchForm,
 } from "../../components";
@@ -12,7 +13,6 @@ import { ADMIN_PAGES } from "../../utils/constants";
 import { formatDate } from "../../utils/helpers";
 import { markSeen } from "../../services";
 import { isEmpty, isEqual } from "lodash";
-import { Button } from "react-bootstrap";
 
 export const AdminMessagesPage = () => {
   const [messages, setMessages] = useState();
@@ -153,10 +153,12 @@ export const AdminMessagesPage = () => {
           }
         />
         <Button
-          className="shadow-sm mt-2"
+          className="mt-2"
           onClick={() =>
             isEqual(
-              window.confirm("¿Estás seguro que quieres borrar este mensaje?"),
+              window.confirm(
+                "¿Estás seguro que quieres eliminar este mensaje?"
+              ),
               true
             ) && handleDeleteMessage(activeMessage._id)
           }

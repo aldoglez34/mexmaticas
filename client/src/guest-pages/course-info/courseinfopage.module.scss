@@ -1,3 +1,20 @@
+.backButton {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #48bf84 !important;
+  font-size: larger !important;
+  margin-bottom: 30px;
+  padding: 0px !important;
+
+  box-shadow: none !important;
+  outline: none;
+
+  &:hover {
+    color: #75ca9f !important;
+    transition: 0.2s;
+  }
+}
+
 .courseinfoheader {
   border-left: solid 1px #0f5257;
   border-right: solid 1px #0f5257;

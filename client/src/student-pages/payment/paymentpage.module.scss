@@ -1,13 +1,12 @@
-.button {
+.backButton {
   background-color: transparent !important;
   border-color: transparent !important;
-  color: #48bf84 !important;
-  font-size: larger !important;
-  margin-bottom: 30px;
-  padding: 0px !important;
-
   box-shadow: none !important;
+  color: #48bf84 !important;
+  font-size: 17px !important;
+  font-weight: bolder !important;
   outline: none;
+  padding: 0px !important;
 
   &:hover {
     color: #75ca9f !important;

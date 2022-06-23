@@ -7,7 +7,7 @@ import {
   fetchInstitutions,
   updateClassroomInstitution,
 } from "../../../../services";
-import { AdminSubmitButton } from "../../../../components/buttons/AdminSubmitButton";
+import { Button } from "../../../../components";
 
 export const ClassroomInstitutionForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -106,7 +106,13 @@ export const ClassroomInstitutionForm = React.memo(
             </Form.Row>
             {/* buttons */}
             <Form.Group>
-              <AdminSubmitButton {...{ isSubmitting }} />
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              >
+                Guardar
+              </Button>
             </Form.Group>
           </Form>
         )}

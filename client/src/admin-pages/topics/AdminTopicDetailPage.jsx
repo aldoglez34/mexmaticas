@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Badge, Button, Col, Image, Row, Spinner } from "react-bootstrap";
 import { deleteMaterial, deleteTopic, fetchTopic } from "../../services";
 import {
-  AdminButton,
   AdminLayout,
   AdminModal,
-  EditableRow,
+  AdminRow,
+  IconButton,
   ImageFromFirebase,
 } from "../../components";
 import {
@@ -108,49 +108,69 @@ export const AdminTopicDetailPage = React.memo((props) => {
       optionsDropdown={optionsDropdown}
       topNavTitle={`${courseName} | ${topic?.name ?? ""}`.trim()}
     >
-      <EditableRow
-        {...{
-          formInitialText: topic?.name,
-          ModalFormComponent: TopicNameForm,
-          modalLabel: "Nombre",
-          rowTitle: "Nombre",
-          value: topic?.name,
+      <AdminRow
+        rowTitle="Nombre"
+        value={topic?.name}
+        icon={{
+          hoverText: "Editar nombre",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: TopicNameForm,
+            initialValue: topic?.name,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: topic?.subject,
-          ModalFormComponent: TopicSubjectForm,
-          modalLabel: "Materia",
-          rowTitle: "Materia",
-          value: topic?.subject,
+      <AdminRow
+        rowTitle="Materia"
+        value={topic?.subject}
+        icon={{
+          hoverText: "Editar materia",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: TopicSubjectForm,
+            initialValue: topic?.subject,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: topic?.description,
-          ModalFormComponent: TopicDescriptionForm,
-          modalLabel: "Descripción",
-          rowTitle: "Descripción",
-          value: topic?.description,
+      <AdminRow
+        rowTitle="Descripción"
+        value={topic?.description}
+        icon={{
+          hoverText: "Editar descripción",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: TopicDescriptionForm,
+            initialValue: topic?.description,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: topic?.freestyle?.timer || 0,
-          ModalFormComponent: TopicFreestyleTimerForm,
-          modalLabel: "Modo Rápido",
-          rowTitle: "Modo Rápido",
-          value: `${topic?.freestyle?.timer} minutos`,
+      <AdminRow
+        rowTitle="Modo Rápido"
+        value={`${topic?.freestyle?.timer} minutos`}
+        icon={{
+          hoverText: "Editar modo rápido",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: TopicFreestyleTimerForm,
+            initialValue: topic?.freestyle?.timer || 0,
+          },
         }}
       />
-      <EditableRow
-        {...{
-          formInitialText: topic?.name,
-          ModalFormComponent: TopicRewardForm,
-          modalLabel: "Recompensa",
-          rowTitle: "Recompensa",
-          value: `Medalla de ${topic?.name}`,
+      <AdminRow
+        rowTitle="Recompensa"
+        value={`Medalla de ${topic?.name}`}
+        icon={{
+          hoverText: "Editar recompensa",
+          svg: "edit",
+          modal: {
+            title: "Editar",
+            Form: TopicRewardForm,
+            initialValue: topic?.name,
+          },
         }}
       />
       <ImageFromFirebase
@@ -202,7 +222,7 @@ export const AdminTopicDetailPage = React.memo((props) => {
                         {badgeText}
                       </Badge>
                       {e.name}
-                      <AdminButton
+                      <IconButton
                         href={path}
                         icon={<i className="fas fa-arrow-alt-circle-right" />}
                       />

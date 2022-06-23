@@ -48,7 +48,7 @@ export const AdminInstitutionsPage = () => {
   const optionsDropdown = [
     {
       text: "Nueva Escuela",
-      fn: () => (window.location.href = "/admin/institutions/new"),
+      href: "/admin/institutions/new",
     },
   ];
 

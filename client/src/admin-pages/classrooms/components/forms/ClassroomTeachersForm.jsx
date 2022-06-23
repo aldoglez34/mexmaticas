@@ -4,7 +4,7 @@ import { string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { assignTeacher, fetchTeachers } from "../../../../services";
-import { AdminSpinner, AdminSubmitButton } from "../../../../components";
+import { AdminSpinner, Button } from "../../../../components";
 
 export const ClassroomTeachersForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -94,7 +94,13 @@ export const ClassroomTeachersForm = React.memo(
             )}
             {/* buttons */}
             <Form.Group>
-              <AdminSubmitButton {...{ isSubmitting }} />
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              >
+                Guardar
+              </Button>
             </Form.Group>
           </Form>
         )}

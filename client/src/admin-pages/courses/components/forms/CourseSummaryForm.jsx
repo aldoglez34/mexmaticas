@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateCourseSummary } from "../../../../services";
 import { useSelector } from "react-redux";
-import { AdminSubmitButton } from "../../../../components";
+import { Button } from "../../../../components";
 
 export const CourseSummaryForm = React.memo(
   ({ formLabel, formInitialText }) => {
@@ -74,7 +74,13 @@ export const CourseSummaryForm = React.memo(
             </Form.Row>
             {/* buttons */}
             <Form.Group>
-              <AdminSubmitButton {...{ isSubmitting }} />
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              >
+                Guardar
+              </Button>
             </Form.Group>
           </Form>
         )}

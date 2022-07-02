@@ -89,9 +89,11 @@ export const TopicSubjectForm = React.memo(({ formLabel, formInitialText }) => {
           </Form.Row>
           {/* buttons */}
           <Form.Group>
-            <Button isDisabled={isSubmitting} isLoading={isSubmitting} isSubmit>
-              Guardar
-            </Button>
+            <Button
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+              isSubmit
+            />
           </Form.Group>
         </Form>
       )}

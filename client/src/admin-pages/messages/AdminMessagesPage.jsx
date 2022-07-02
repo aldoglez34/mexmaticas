@@ -58,13 +58,6 @@ export const AdminMessagesPage = () => {
     setActiveMessage(message);
   };
 
-  const ModalRow = ({ title, text }) => (
-    <div className="mb-2">
-      <h5 className="text-dark">{title}</h5>
-      {text}
-    </div>
-  );
-
   const mapItemFunc = (item) => (
     <ListGroupItem key={item._id} handleOnClick={() => handleShow(item)}>
       <div className="d-flex flex-row">
@@ -100,6 +93,13 @@ export const AdminMessagesPage = () => {
       alert("Ocurrió un error, vuelve a intentarlo.");
     }
   };
+
+  const ModalRow = ({ title, text }) => (
+    <div className="mb-2">
+      {title && <h5 className="text-dark">{title}</h5>}
+      {text}
+    </div>
+  );
 
   return (
     <AdminLayout expanded leftBarActive="Mensajes" topNavTitle="Mensajes">
@@ -148,7 +148,13 @@ export const AdminMessagesPage = () => {
           text={
             <div className="d-flex flex-column">
               <span>{`Tema: ${activeMessage?.subject ?? ""}`}</span>
-              <span>{`Mensaje: ${activeMessage?.body ?? ""}`}</span>
+            </div>
+          }
+        />
+        <ModalRow
+          text={
+            <div className="d-flex flex-column py-4">
+              <span>{activeMessage?.body ?? ""}</span>
             </div>
           }
         />

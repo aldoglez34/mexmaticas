@@ -17,23 +17,20 @@ export const AdminTeacherDetailPage = memo((props) => {
       });
   }, [teacherId]);
 
+  const teacherFullName = getFullName(
+    teacher?.name,
+    teacher?.firstSurname,
+    teacher?.secondSurname
+  );
+
   return (
     <AdminLayout
       backBttn="/admin/teachers"
       expanded
       leftBarActive="Maestros"
-      topNavTitle={`${teacher?.name ?? ""} ${teacher?.firstSurname ?? ""} ${
-        teacher?.secondSurname ?? ""
-      }`.trim()}
+      topNavTitle={teacherFullName}
     >
-      <AdminRow
-        rowTitle="Nombre"
-        value={getFullName(
-          teacher?.name,
-          teacher?.firstSurname,
-          teacher?.secondSurname
-        )}
-      />
+      <AdminRow rowTitle="Nombre" value={teacherFullName} />
       <AdminRow rowTitle="Cuenta" value={teacher?.email} />
       <AdminRow
         rowTitle="Fecha de Registro"
@@ -45,12 +42,9 @@ export const AdminTeacherDetailPage = memo((props) => {
           accessor: "name",
           data: teacher?.classrooms,
           icon: {
+            getLink: (item) => `/admin/classrooms/edit/${item._id}`,
             hoverText: "Ir a salón",
             svg: "anchor",
-            link: {
-              url: "/admin/classrooms/edit/",
-              urlAccessor: "_id",
-            },
           },
         }}
       />

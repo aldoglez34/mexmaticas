@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, Form, Col } from "react-bootstrap";
+import { Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { newSimpleWithTwoAnswersQuestion } from "../../../../services";
 import { useSelector } from "react-redux";
 import { object } from "prop-types";
+import { Button } from "../../../../components";
 
 export const SimpleWithTwoAnswersForm = ({ question }) => {
   const examId = useSelector((state) => state.admin.exam.examId);
@@ -286,14 +287,10 @@ export const SimpleWithTwoAnswersForm = ({ question }) => {
           {/* buttons */}
           <Form.Group className="mt-1">
             <Button
-              block
-              disabled={isSubmitting}
-              size="lg"
-              type="submit"
-              variant="dark"
-            >
-              Guardar
-            </Button>
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+              isSubmit
+            />
           </Form.Group>
         </Form>
       )}

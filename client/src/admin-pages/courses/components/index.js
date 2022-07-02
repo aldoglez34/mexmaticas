@@ -1,4 +1,3 @@
-export * from "./draggable-topic/DraggableTopics";
 export * from "./forms/CourseActiveForm";
 export * from "./forms/CourseDescriptionForm";
 export * from "./forms/CourseNameForm";

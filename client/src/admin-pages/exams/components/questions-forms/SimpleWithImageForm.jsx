@@ -1,12 +1,12 @@
 import React from "react";
-import { Button, Form, Col } from "react-bootstrap";
+import { Form, Col } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { newSimpleWithImageQuestion } from "../../../../services";
 import { useSelector } from "react-redux";
 import { firebaseStorage } from "../../../../firebase/firebase";
 import { object } from "prop-types";
-import { ImageFromFirebase } from "../../../../components";
+import { Button, ImageFromFirebase } from "../../../../components";
 import { IMAGES } from "../../../../utils/constants";
 
 export const SimpleWithImageForm = ({ question }) => {
@@ -285,14 +285,10 @@ export const SimpleWithImageForm = ({ question }) => {
           {/* buttons */}
           <Form.Group className="mt-1">
             <Button
-              block
-              disabled={isSubmitting}
-              size="lg"
-              type="submit"
-              variant="dark"
-            >
-              Guardar
-            </Button>
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+              isSubmit
+            />
           </Form.Group>
         </Form>
       )}

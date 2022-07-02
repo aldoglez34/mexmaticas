@@ -1,18 +1,10 @@
 import React, { memo, useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
 import {
   deleteClassroom,
   fetchClassroomHistory,
   fetchOneClassroom,
 } from "../../../services";
-import {
-  AdminLayout,
-  AdminModal,
-  AdminRow,
-  AdminSpinner,
-  ExportHistoryToExcel,
-  Button,
-} from "../../../components";
+import { AdminExportToExcel, AdminLayout, AdminRow } from "../../../components";
 import {
   ClassroomDescriptionForm,
   ClassroomInstitutionForm,
@@ -21,27 +13,17 @@ import {
   ClassroomTeachersForm,
 } from "../components";
 import { formatDate, getFullName } from "../../../utils/helpers";
+import { AdminDeleteModal } from "../../../components/modals/AdminDeleteModal";
 
 export const AdminClassroomDetailPage = memo((props) => {
   const [showExportToExcel, setShowExportToExcel] = useState(false);
   const [classroom, setClassroom] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [history, setHistory] = useState();
 
   const classroomId = props.routeProps.match.params.classroomId;
 
-  useEffect(() => {
-    fetchOneClassroom(classroomId)
-      .then((res) => setClassroom(res.data))
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
-  }, [classroomId]);
-
   const handleDeleteClassroom = async () => {
-    setIsDeleting(true);
     try {
       // delete classroom from database
       const deleteRes = await deleteClassroom({ classroomId });
@@ -76,12 +58,23 @@ export const AdminClassroomDetailPage = memo((props) => {
   useEffect(() => {
     try {
       fetchClassroomHistory(classroomId).then((res) => setHistory(res.data));
+      fetchOneClassroom(classroomId).then((res) => setClassroom(res.data));
     } catch (err) {
       console.log(err);
+      alert("Ocurrió un error, vuelve a intentarlo.");
     }
   }, [classroomId]);
 
-  return classroom && history ? (
+  const headers = [
+    { label: "Fecha", key: "date" },
+    { label: "Alumno", key: "student" },
+    { label: "Curso", key: "course" },
+    { label: "Tema", key: "topic" },
+    { label: "Examen", key: "exam" },
+    { label: "Calificación", key: "grade" },
+  ];
+
+  return (
     <AdminLayout
       backBttn="/admin/classrooms"
       expanded
@@ -91,23 +84,23 @@ export const AdminClassroomDetailPage = memo((props) => {
     >
       <AdminRow
         rowTitle="Nombre"
-        value={classroom.name}
+        value={classroom?.name}
         icon={{
           hoverText: "Editar nombre",
           svg: "edit",
           modal: {
             title: "Editar",
             Form: ClassroomNameForm,
-            initialValue: classroom.name,
+            initialValue: classroom?.name,
           },
         }}
       />
       <AdminRow
         rowTitle="Maestro"
         value={getFullName(
-          classroom.teacher?.name,
-          classroom.teacher?.firstSurname,
-          classroom.teacher?.secondSurname
+          classroom?.teacher?.name,
+          classroom?.teacher?.firstSurname,
+          classroom?.teacher?.secondSurname
         )}
         icon={{
           hoverText: "Editar maestro",
@@ -115,130 +108,93 @@ export const AdminClassroomDetailPage = memo((props) => {
           modal: {
             title: "Editar",
             Form: ClassroomTeachersForm,
-            initialValue: classroom.teacher?._id,
+            initialValue: classroom?.teacher?._id,
           },
         }}
       />
       <AdminRow
         rowTitle="Nivel Educativo"
-        value={classroom.school}
+        value={classroom?.school}
         icon={{
           hoverText: "Editar nivel educativo",
           svg: "edit",
           modal: {
             title: "Editar",
             Form: ClassroomSchoolForm,
-            initialValue: classroom.school || "Elige...",
+            initialValue: classroom?.school || "Elige...",
           },
         }}
       />
       <AdminRow
         rowTitle="Escuela"
-        value={classroom.institution?.name}
+        value={classroom?.institution?.name}
         icon={{
           hoverText: "Editar escuela",
           svg: "edit",
           modal: {
             title: "Editar",
             Form: ClassroomInstitutionForm,
-            initialValue: classroom.institution?._id || "Elige...",
+            initialValue: classroom?.institution?._id || "Elige...",
           },
         }}
       />
       <AdminRow
         rowTitle="Descripción"
-        value={classroom.description}
+        value={classroom?.description}
         icon={{
           hoverText: "Editar descripción",
           svg: "edit",
           modal: {
             title: "Editar",
             Form: ClassroomDescriptionForm,
-            initialValue: classroom.description,
+            initialValue: classroom?.description,
           },
         }}
       />
       <AdminRow
         rowTitle="Fecha de Creación"
-        value={formatDate(classroom.createdAt, "LL")}
+        value={formatDate(classroom?.createdAt, "LL")}
       />
       <AdminRow
         rowTitle="Cursos"
         list={{
           accessor: "name",
-          data: classroom.courses,
+          data: classroom?.courses,
           icon: {
+            getLink: (item) => `/admin/courses/edit/${item._id}`,
             hoverText: "Ir a curso",
             svg: "anchor",
-            link: {
-              url: "/admin/courses/edit/",
-              urlAccessor: "_id",
-            },
           },
         }}
       />
       <AdminRow
-        rowTitle={`Alumnos (${classroom.members.length})`}
+        rowTitle={`Alumnos (${classroom?.members?.length})`}
         list={{
           accessor: ["name", "firstSurname", "secondSurname"],
-          data: classroom.members,
+          data: classroom?.members,
           icon: {
+            getLink: (item) => `/admin/students/${item._id}`,
             hoverText: "Ir a alumno",
             svg: "anchor",
-            link: {
-              url: "/admin/students/",
-              urlAccessor: "_id",
-            },
           },
         }}
       />
-      {/* delete classroom modal */}
-      <AdminModal
-        handleClose={handleCloseModal}
+      <AdminDeleteModal
+        handleCloseModal={handleCloseModal}
+        handleDelete={handleDeleteClassroom}
+        modalText={`¿Estás seguro que deseas borrar el salón: ${classroom?.name}?`}
         show={showModal}
-        title="Borrar"
-      >
-        {isDeleting ? (
-          <div className="py-4">
-            <strong className="mb-2">Borrando...</strong>
-            <br />
-            <br />
-            <Spinner variant="danger" animation="border" role="status">
-              <span className="sr-only">Borrando...</span>
-            </Spinner>
-          </div>
-        ) : (
-          <>
-            <p className="text-center">{`¿Estás seguro que deseas borrar el salón: ${classroom.name}?`}</p>
-            <div className="d-flex flex-row justify-content-center">
-              <Button size="sm" onClick={handleCloseModal}>
-                Cancelar
-              </Button>
-              <Button
-                className="ml-2"
-                onClick={handleDeleteClassroom}
-                size="sm"
-                variant="danger"
-              >
-                Borrar
-                <i className="fas fa-trash-alt ml-2" />
-              </Button>
-            </div>
-          </>
-        )}
-      </AdminModal>
-      {/* export students history modal */}
-      {showExportToExcel && (
-        <ExportHistoryToExcel
-          data={history}
-          fileName={classroom?.name}
-          setShow={setShowExportToExcel}
-          show={showExportToExcel}
-        />
-      )}
+      />
+      <AdminExportToExcel
+        data={history || []}
+        fileName={classroom?.name}
+        headers={headers}
+        modalText="Exporta el historial de calificaciones de los alumnos de este salón."
+        setShow={setShowExportToExcel}
+        show={showExportToExcel}
+        textIfEmpty="Historial vacío"
+      />
     </AdminLayout>
-  ) : (
-    <AdminSpinner />
   );
 });
 

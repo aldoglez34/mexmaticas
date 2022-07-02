@@ -249,9 +249,11 @@ export const AdminNewTopicPage = React.memo((props) => {
             </Form.Row>
             {/* buttons */}
             <Form.Group className="mt-2">
-              <Button variant="dark" type="submit" disabled={isSubmitting}>
-                Crear
-              </Button>
+              <Button
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
+                isSubmit
+              />
             </Form.Group>
           </Form>
         )}

@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Badge, Button, Col, Image, Row, Spinner } from "react-bootstrap";
-import { deleteMaterial, deleteTopic, fetchTopic } from "../../services";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  AdminLayout,
-  AdminModal,
-  AdminRow,
-  IconButton,
-  ImageFromFirebase,
-} from "../../components";
+  deleteMaterial,
+  deleteTopic,
+  fetchTopic,
+  updateMaterialOrder,
+} from "../../services";
+import { AdminLayout, AdminRow, ImageFromFirebase } from "../../components";
 import {
-  AddPDF,
-  AddVideo,
-  DraggableMaterial,
+  AddPDFModal,
+  AddVideoModal,
   TopicDescriptionForm,
   TopicFreestyleTimerForm,
   TopicNameForm,
@@ -21,19 +18,22 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as adminActions from "../../redux/actions/admin";
 import { firebaseStorage } from "../../firebase/firebase";
+import { AdminDeleteModal } from "../../components/modals/AdminDeleteModal";
+import { isEmpty } from "lodash";
+import { askUserToConfirm } from "../../utils/helpers";
 
 export const AdminTopicDetailPage = React.memo((props) => {
-  const dispatch = useDispatch();
-
-  const courseName = useSelector((state) => state.admin.course.courseName);
-  const reduxTopic = useSelector((state) => state.admin.topic);
-
   const [topic, setTopic] = useState();
-  const [showModal, setShowModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteTopicModal, setShowDeleteTopicModal] = useState(false);
+  const [showAddPDFModal, setShowAddPDFModal] = useState(false);
+  const [showAddVideoModal, setShowAddVideoModal] = useState(false);
 
   const courseId = props.routeProps.match.params.courseId;
   const topicId = props.routeProps.match.params.topicId;
+
+  const dispatch = useDispatch();
+  const courseName = useSelector((state) => state.admin.course.courseName);
+  const reduxTopic = useSelector((state) => state.admin.topic);
 
   useEffect(() => {
     fetchTopic(courseId, topicId)
@@ -47,42 +47,47 @@ export const AdminTopicDetailPage = React.memo((props) => {
       });
   }, [courseId, dispatch, topicId]);
 
-  const handleDeleteMaterialItem = (materialType, materialId, materialLink) => {
-    deleteMaterial({
-      courseId,
-      materialId,
-      topicId,
-    })
-      .then(() => {
-        if (materialType === "video") {
-          alert("Borrado con éxito.");
-          window.location.reload();
-        }
+  const handleDeleteMaterialItem = useCallback(
+    (item) => {
+      const { type: materialType, _id: materialId, link: materialLink } = item;
 
-        if (materialType === "pdf") {
-          const storageRef = firebaseStorage.ref();
-          const fileRef = storageRef.child(materialLink);
-
-          fileRef
-            .delete()
-            .then(() => {
-              alert("El artículo seleccionado ha sido eliminado con éxito.");
-              window.location.reload();
-            })
-            .catch((err) => {
-              console.log(err);
-              alert("Ocurrió un error, vuelve a intentarlo.");
-            });
-        }
+      deleteMaterial({
+        courseId,
+        materialId,
+        topicId,
       })
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
-  };
+        .then(() => {
+          if (materialType === "video") {
+            alert("Borrado con éxito.");
+            window.location.reload();
+            return;
+          }
+
+          if (materialType === "pdf") {
+            const storageRef = firebaseStorage.ref();
+            const fileRef = storageRef.child(materialLink);
+
+            fileRef
+              .delete()
+              .then(() => {
+                alert("Borrado con éxito.");
+                window.location.reload();
+              })
+              .catch((err) => {
+                console.log(err);
+                alert("Ocurrió un error, vuelve a intentarlo.");
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Ocurrió un error, vuelve a intentarlo.");
+        });
+    },
+    [courseId, topicId]
+  );
 
   const handleDeleteTopic = async () => {
-    setIsDeleting(true);
     try {
       // delete topic from database
       const deleteRes = await deleteTopic({ courseId, topicId });
@@ -95,10 +100,60 @@ export const AdminTopicDetailPage = React.memo((props) => {
     }
   };
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const optionsDropdown = [
+    { text: "Agregar PDF", fn: () => setShowAddPDFModal(true) },
+    { text: "Agregar video", fn: () => setShowAddVideoModal(true) },
+    "divider",
+    { text: "Borrar Tema", fn: () => setShowDeleteTopicModal(true) },
+  ];
 
-  const optionsDropdown = [{ text: "Borrar Tema", fn: handleShowModal }];
+  const sortedMaterial = useMemo(
+    () =>
+      (topic?.material || [])
+        .sort((a, b) => a.materialOrderNumber - b.materialOrderNumber)
+        .map((m) => ({
+          _id: m._id,
+          id: m.materialOrderNumber,
+          link: m.link,
+          name: m.name,
+          type: m.type,
+          nameWithType: `[${m.type}] ${m.name}`,
+        })),
+    [topic]
+  );
+
+  const sortedExams = useMemo(
+    () =>
+      (topic?.exams || [])
+        .sort((a, b) => a.orderNumber - b.orderNumber)
+        .map((e) => ({
+          ...e,
+          nameWithQCounter: `[${e.actualQCounter}/${e.qCounter}] ${e.name}`,
+        })),
+    [topic]
+  );
+
+  const handleOnChangeDraggableMaterial = async (data) => {
+    const changes = data.reduce((acc, cv, idx) => {
+      if (cv.id !== idx + 1)
+        acc.push({
+          _id: cv._id,
+          name: cv.name,
+          lastId: cv.id,
+          newOrderNumber: idx + 1,
+        });
+      return acc;
+    }, []);
+
+    if (isEmpty(changes)) return;
+
+    try {
+      await updateMaterialOrder({ courseId, newList: changes, topicId });
+    } catch (err) {
+      console.log(err);
+      alert("Ocurrió un error en el servidor");
+    }
+  };
 
   return (
     <AdminLayout
@@ -108,6 +163,24 @@ export const AdminTopicDetailPage = React.memo((props) => {
       optionsDropdown={optionsDropdown}
       topNavTitle={`${courseName} | ${topic?.name ?? ""}`.trim()}
     >
+      <AdminDeleteModal
+        handleCloseModal={() => setShowDeleteTopicModal(false)}
+        handleDelete={handleDeleteTopic}
+        modalText={`¿Estás seguro que deseas borrar el tema: ${reduxTopic?.topicName}?`}
+        show={showDeleteTopicModal}
+      />
+      <AddPDFModal
+        courseId={courseId}
+        handleCloseModal={() => setShowAddPDFModal(false)}
+        show={showAddPDFModal}
+        topicId={topicId}
+      />
+      <AddVideoModal
+        courseId={courseId}
+        handleCloseModal={() => setShowAddVideoModal(false)}
+        show={showAddVideoModal}
+        topicId={topicId}
+      />
       <AdminRow
         rowTitle="Nombre"
         value={topic?.name}
@@ -162,7 +235,17 @@ export const AdminTopicDetailPage = React.memo((props) => {
       />
       <AdminRow
         rowTitle="Recompensa"
-        value={`Medalla de ${topic?.name}`}
+        value={
+          <div>
+            <span>{`Medalla de ${topic?.name}`}</span>
+            <ImageFromFirebase
+              className="mt-2 d-block"
+              height="100"
+              path={topic?.reward?.link}
+              width="70"
+            />
+          </div>
+        }
         icon={{
           hoverText: "Editar recompensa",
           svg: "edit",
@@ -173,99 +256,37 @@ export const AdminTopicDetailPage = React.memo((props) => {
           },
         }}
       />
-      <ImageFromFirebase
-        className="mb-3"
-        height="100"
-        path={topic?.reward?.link}
-        width="70"
+      <AdminRow
+        rowTitle="Exámenes"
+        list={{
+          accessor: "nameWithQCounter",
+          data: sortedExams,
+          icon: {
+            getLink: (item) =>
+              `/admin/courses/edit/exam/${courseId}/${topicId}/${item._id}`,
+            hoverText: "Ir a examen",
+            svg: "anchor",
+          },
+        }}
       />
-      {/* material */}
-      <Row>
-        <Col>
-          <span className="text-muted">
-            Material <small>(lista reordenable)</small>
-          </span>
-          <DraggableMaterial
-            {...{ courseId, handleDeleteMaterialItem, topicId }}
-            material={(topic?.material || [])
-              .sort((a, b) => a.materialOrderNumber - b.materialOrderNumber)
-              .map((m) => ({
-                _id: m._id,
-                id: m.materialOrderNumber,
-                link: m.link,
-                name: m.name,
-                type: m.type,
-              }))}
-          />
-          <div className="mb-3">
-            <AddVideo {...{ courseId, topicId }} />
-            <AddPDF {...{ courseId, topicId }} />
-          </div>
-        </Col>
-      </Row>
-      {/* exams */}
-      <Row>
-        <Col>
-          <span className="text-muted">Exámenes</span>
-          <div className="d-flex flex-column mb-1">
-            {(topic?.exams || [])
-              .sort((a, b) => a.orderNumber - b.orderNumber)
-              .map((e) => {
-                const path = `/admin/courses/edit/exam/${courseId}/${topicId}/${e._id}`;
-                const badgeText = `${e.actualQCounter}/${e.qCounter}`;
-                const variant =
-                  e.actualQCounter >= e.qCounter ? "success" : "warning";
-                return (
-                  <span key={e._id}>
-                    <strong style={{ color: "#0f5257" }}>
-                      <Badge pill variant={variant} className="mr-1">
-                        {badgeText}
-                      </Badge>
-                      {e.name}
-                      <IconButton
-                        href={path}
-                        icon={<i className="fas fa-arrow-alt-circle-right" />}
-                      />
-                    </strong>
-                  </span>
-                );
-              })}
-          </div>
-        </Col>
-      </Row>
-      {/* delete topic modal */}
-      <AdminModal
-        handleClose={handleCloseModal}
-        show={showModal}
-        title="Borrar"
-      >
-        {isDeleting ? (
-          <div className="text-center py-4">
-            <p className="lead">Borrando...</p>
-            <Spinner variant="danger" animation="border" role="status">
-              <span className="sr-only">Borrando...</span>
-            </Spinner>
-          </div>
-        ) : (
-          <div className="text-center">
-            <Image height="130" src="/images/trash.png" width="130" />
-            <div className="lead text-center mt-2">{`¿Estás seguro que deseas borrar el tema: ${reduxTopic?.topicName}?`}</div>
-            <div className="d-flex flex-row justify-content-center mt-4">
-              <Button variant="dark" onClick={handleCloseModal}>
-                Cancelar
-              </Button>
-              <Button
-                variant="danger"
-                className="ml-2"
-                onClick={handleDeleteTopic}
-              >
-                Borrar
-                <i className="fas fa-trash-alt ml-2" />
-              </Button>
-            </div>
-          </div>
-        )}
-      </AdminModal>
+      <AdminRow
+        rowTitle="Material"
+        tooltip="Lista reordenable"
+        list={{
+          accessor: "nameWithType",
+          data: sortedMaterial,
+          onOrderChange: handleOnChangeDraggableMaterial,
+          icon: {
+            hoverText: "Borrar material",
+            onClick: (item) =>
+              askUserToConfirm(
+                "¿Estás seguro que quieres eliminar este material?",
+                () => handleDeleteMaterialItem(item)
+              ),
+            svg: "delete",
+          },
+        }}
+      />
     </AdminLayout>
   );
 });

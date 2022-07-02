@@ -97,9 +97,11 @@ export const TopicRewardForm = React.memo(({ formLabel }) => {
           </Form.Row>
           {/* buttons */}
           <Form.Group>
-            <Button isDisabled={isSubmitting} isLoading={isSubmitting} isSubmit>
-              Guardar
-            </Button>
+            <Button
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+              isSubmit
+            />
           </Form.Group>
         </Form>
       )}

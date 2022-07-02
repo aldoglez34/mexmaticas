@@ -81,9 +81,7 @@ export const ClassroomNameForm = React.memo(
                 isDisabled={isSubmitting}
                 isLoading={isSubmitting}
                 isSubmit
-              >
-                Guardar
-              </Button>
+              />
             </Form.Group>
           </Form>
         )}

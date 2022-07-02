@@ -1,68 +1,74 @@
 import React from "react";
-import { get, isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { getAccessorValue } from "../utils/helpers";
-import { AdminEditModal, IconButton } from "../components";
+import {
+  AnchorList,
+  DraggableList,
+  IconButton,
+  ModalIconButton,
+} from "../components";
+import cn from "classnames";
 
 export const useAdminRow = () => {
-  const getSvg = (svg) => {
-    if (!svg) return;
-    switch (svg) {
-      case "anchor":
-        return <i className="fas fa-paper-plane" />;
-      case "edit":
-        return <i className="fas fa-pen-alt" />;
-      default:
-        return <i className="fas fa-pen-alt" />;
-    }
-  };
-
   const renderIcon = (icon, item) => {
-    // if there's a link then create the href
-    if (icon.link) {
+    const isLink = !!icon.getLink;
+    const isFunc = !!icon.onClick;
+    const isModal = !!icon.modal;
+
+    if (isLink || isFunc) {
       return (
         <IconButton
           {...{
-            hoverText: icon.hoverText ?? "",
-            href: `${icon.link.url}${get(item, icon.link.urlAccessor)}`,
-            icon: getSvg(icon.svg),
+            hoverText: icon.hoverText,
             isDisabled: icon.isDisabled,
+            svg: icon.svg,
+            ...(isLink && { href: icon.getLink(item) }),
+            ...(isFunc && { onClick: () => icon.onClick(item) }),
           }}
         />
       );
     }
 
-    // if it's a modal assign the content
-    if (icon.modal) {
+    if (isModal) {
+      const { Form, initialValue, size, title } = icon.modal;
       return (
-        <AdminEditModal
-          Form={icon.modal.Form}
-          formInitialText={icon.modal.initialValue}
-          formLabel={icon.hoverText ?? ""}
-          hoverText={icon.hoverText ?? ""}
-          icon={getSvg(icon.svg)}
-          modalTitle={icon.modal.title ?? ""}
-          isDisabled={icon.isDisabled}
+        <ModalIconButton
+          {...{
+            Form: !isEqual(typeof Form, "function") ? Form : Form(item),
+            formLabel: icon.hoverText,
+            hoverText: icon.hoverText,
+            isDisabled: icon.isDisabled,
+            modalTitle: !isEqual(typeof title, "function")
+              ? title
+              : title(item),
+            svg: icon.svg,
+            ...(initialValue && { formInitialText: initialValue }),
+            ...(size && { size }),
+          }}
         />
       );
     }
   };
 
-  const renderList = (list) => {
-    if (!list.data || isEmpty(list.data)) return <span>-</span>;
-    return (
-      <ul>
-        {list.data.map((item, idx) => {
-          const value = getAccessorValue(item, list.accessor).trim();
-          return (
-            <li key={idx}>
-              {value}
-              {list.icon && renderIcon(list.icon, item)}
-            </li>
-          );
-        })}
-      </ul>
-    );
+  const renderList = (list, className) => {
+    if (isEmpty(list.data)) return <span>-</span>;
+    return list.data.map((item, idx) => (
+      <span key={idx} className={cn("d-block", className)}>
+        {getAccessorValue(item, list.accessor).trim()}
+        {list.icon && renderIcon(list.icon, item)}
+      </span>
+    ));
   };
 
-  return { renderIcon, renderList };
+  const renderDraggableList = (list) => {
+    if (isEmpty(list.data)) return <span>-</span>;
+    return <DraggableList list={list} handleOnChange={list.onOrderChange} />;
+  };
+
+  const renderAnchorsList = (list) => {
+    if (isEmpty(list.data)) return <span>-</span>;
+    return <AnchorList list={list} />;
+  };
+
+  return { renderAnchorsList, renderDraggableList, renderIcon, renderList };
 };

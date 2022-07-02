@@ -10,9 +10,33 @@
   box-shadow: none !important;
 
   &:hover {
-    background-color: #48bf84 !important;
-    border-color: #48bf84 !important;
-    color: white !important;
+    color: #89fcc2 !important;
+    transition: 0.3s;
+  }
+
+  &:disabled {
+    color: gray !important;
+    &:hover {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      color: gray !important;
+    }
+  }
+}
+
+.deleteButton {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #bf4848 !important;
+
+  font-size: 16px !important;
+  padding: 1px 5px !important;
+
+  outline: none;
+  box-shadow: none !important;
+
+  &:hover {
+    color: #f88282 !important;
     transition: 0.3s;
   }
 

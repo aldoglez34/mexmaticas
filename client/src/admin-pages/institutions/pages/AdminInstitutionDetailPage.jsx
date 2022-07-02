@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Spinner } from "react-bootstrap";
 import { deleteInstitution, fetchOneInstitution } from "../../../services";
-import {
-  AdminLayout,
-  AdminModal,
-  AdminRow,
-  AdminSpinner,
-  Button,
-} from "../../../components";
+import { AdminLayout, AdminRow, AdminSpinner } from "../../../components";
 import { InstitutionDescriptionForm, InstitutionNameForm } from "../components";
 import { formatDate } from "../../../utils/helpers";
+import { AdminDeleteModal } from "../../../components/modals/AdminDeleteModal";
 
 export const AdminInstitutionDetailPage = React.memo((props) => {
   const [institution, setInstitution] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const institutionId = props.routeProps.match.params.institutionId;
 
@@ -28,7 +21,6 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
   }, [institutionId]);
 
   const handleDeleteInstitution = async () => {
-    setIsDeleting(true);
     try {
       // delete classroom from database
       const deleteRes = await deleteInstitution({ institutionId });
@@ -83,41 +75,12 @@ export const AdminInstitutionDetailPage = React.memo((props) => {
         rowTitle="Fecha de creación"
         value={formatDate(institution.createdAt, "LL")}
       />
-      {/* delete institution modal */}
-      <AdminModal
-        handleClose={handleCloseModal}
+      <AdminDeleteModal
+        handleCloseModal={handleCloseModal}
+        handleDelete={handleDeleteInstitution}
+        modalText={`¿Estás seguro que deseas borrar la escuela: ${institution.name}?`}
         show={showModal}
-        title="Borrar"
-      >
-        {isDeleting ? (
-          <div className="py-4">
-            <strong className="mb-2">Borrando...</strong>
-            <br />
-            <br />
-            <Spinner variant="danger" animation="border" role="status">
-              <span className="sr-only">Borrando...</span>
-            </Spinner>
-          </div>
-        ) : (
-          <>
-            <p className="text-center">{`¿Estás seguro que deseas borrar la escuela: ${institution.name}?`}</p>
-            <div className="d-flex flex-row justify-content-center">
-              <Button onClick={handleCloseModal} size="sm">
-                Cancelar
-              </Button>
-              <Button
-                className="ml-2"
-                onClick={handleDeleteInstitution}
-                size="sm"
-                variant="danger"
-              >
-                Borrar
-                <i className="fas fa-trash-alt ml-2" />
-              </Button>
-            </div>
-          </>
-        )}
-      </AdminModal>
+      />
     </AdminLayout>
   ) : (
     <AdminSpinner />

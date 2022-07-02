@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { fetchOneStudent } from "../../../services";
-import { AdminLayout, AdminRow, AdminSpinner } from "../../../components";
+import { AdminLayout, AdminRow } from "../../../components";
 import { formatDate, getFullName } from "../../../utils/helpers";
 
-export const AdminStudentDetailPage = React.memo((props) => {
+export const AdminStudentDetailPage = (props) => {
   const url = new URL(window.location.href);
   const comesFrom =
     url.href.split("comesFrom=").length === 2
@@ -38,7 +38,7 @@ export const AdminStudentDetailPage = React.memo((props) => {
     },
   ];
 
-  return student ? (
+  return (
     <AdminLayout
       backBttn={comesFrom || "/admin/students"}
       expanded
@@ -46,49 +46,42 @@ export const AdminStudentDetailPage = React.memo((props) => {
       optionsDropdown={optionsDropdown}
       topNavTitle={studentFullName}
     >
-      <AdminRow rowTitle="Usuario" value={student.email.split("@", 1)[0]} />
-      <AdminRow rowTitle="Correo electrónico" value={student.email} />
+      <AdminRow rowTitle="Usuario" value={student?.email.split("@", 1)[0]} />
+      <AdminRow rowTitle="Correo electrónico" value={student?.email} />
       <AdminRow
         rowTitle="Nombre"
         value={getFullName(
-          student.name,
-          student.firstSurname,
-          student.secondSurname
+          student?.name,
+          student?.firstSurname,
+          student?.secondSurname
         )}
       />
       <AdminRow
         rowTitle="Fecha de registro"
-        value={formatDate(student.registeredAt, "LL")}
+        value={formatDate(student?.registeredAt, "LL")}
       />
       <AdminRow
         rowTitle="Cursos"
         list={{
           accessor: "name",
-          data: student.courses,
+          data: student?.courses,
           icon: {
+            getLink: (item) => `/admin/courses/edit/${item._id}`,
             hoverText: "Ir a curso",
             svg: "anchor",
-            link: {
-              url: "/admin/courses/edit/",
-              urlAccessor: "_id",
-            },
           },
         }}
       />
       <AdminRow
         rowTitle="Exámenes presentados / Calificaciones perfectas"
-        value={`${student.attempts.length} / ${
-          (student.attempts || []).filter((a) => a.grade === 10).length
+        value={`${student?.attempts?.length} / ${
+          (student?.attempts || []).filter((a) => a.grade === 10).length
         }`}
       />
       <AdminRow
         rowTitle="Medallas"
-        list={{ accessor: "name", data: student.rewards }}
+        list={{ accessor: "name", data: student?.rewards }}
       />
     </AdminLayout>
-  ) : (
-    <AdminSpinner />
   );
-});
-
-AdminStudentDetailPage.displayName = "AdminStudentDetailPage";
+};

@@ -2,12 +2,11 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Table } from "react-bootstrap";
 import { fetchStudentHistory } from "../../../services";
 import {
+  AdminExportToExcel,
   AdminLayout,
   AdminPagination,
   AdminSpinner,
-  ExportHistoryToExcel,
 } from "../../../components";
-import { useSelector } from "react-redux";
 import { formatDate } from "../../../utils/helpers";
 
 const PAGE_SIZE = 25;
@@ -24,7 +23,8 @@ export const AdminStudentHistoryPage = memo((props) => {
   const [showExportToExcel, setShowExportToExcel] = useState(false);
 
   const studentId = props.routeProps.match.params.studentId;
-  const studentName = useSelector((state) => state?.admin?.title);
+  // TODO do this logic
+  const studentName = "nombre del estudiante";
 
   const searchRef = useRef(null);
 
@@ -115,6 +115,15 @@ export const AdminStudentHistoryPage = memo((props) => {
     },
   ];
 
+  const headers = [
+    { label: "Fecha", key: "date" },
+    { label: "Alumno", key: "student" },
+    { label: "Curso", key: "course" },
+    { label: "Tema", key: "topic" },
+    { label: "Examen", key: "exam" },
+    { label: "Calificación", key: "grade" },
+  ];
+
   return (
     <AdminLayout
       backBttn={`/admin/students/${studentId}`}
@@ -122,24 +131,6 @@ export const AdminStudentHistoryPage = memo((props) => {
       optionsDropdown={optionsDropdown}
       topNavTitle="Historial"
     >
-      {showExportToExcel && (
-        <ExportHistoryToExcel
-          data={history?.reduce((acc, cv) => {
-            acc.push({
-              date: cv.date,
-              student: studentName,
-              course: cv.courseName,
-              topic: cv.topicName,
-              grade: cv.grade,
-              exam: cv.exam,
-            });
-            return acc;
-          }, [])}
-          fileName={studentName}
-          setShow={setShowExportToExcel}
-          show={showExportToExcel}
-        />
-      )}
       <Form className="mb-3">
         <Form.Row>
           <Col md="4" className="d-flex">
@@ -254,6 +245,25 @@ export const AdminStudentHistoryPage = memo((props) => {
       ) : (
         <AdminSpinner />
       )}
+      <AdminExportToExcel
+        data={history?.reduce((acc, cv) => {
+          acc.push({
+            date: cv.date,
+            student: studentName,
+            course: cv.courseName,
+            topic: cv.topicName,
+            grade: cv.grade,
+            exam: cv.exam,
+          });
+          return acc;
+        }, [])}
+        fileName={studentName}
+        headers={headers}
+        modalText={`Exporta el historial de exámenes de ${studentName} a un archivo .csv`}
+        setShow={setShowExportToExcel}
+        show={showExportToExcel}
+        textIfEmpty="Historial vacío"
+      />
     </AdminLayout>
   );
 });

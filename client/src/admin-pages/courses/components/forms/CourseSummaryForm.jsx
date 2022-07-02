@@ -78,9 +78,7 @@ export const CourseSummaryForm = React.memo(
                 isDisabled={isSubmitting}
                 isLoading={isSubmitting}
                 isSubmit
-              >
-                Guardar
-              </Button>
+              />
             </Form.Group>
           </Form>
         )}

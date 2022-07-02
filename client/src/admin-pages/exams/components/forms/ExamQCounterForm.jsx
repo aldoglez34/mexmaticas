@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, Col, Form, InputGroup } from "react-bootstrap";
+import { Col, Form, InputGroup } from "react-bootstrap";
 import { number, string } from "prop-types";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { updateExamQCounter } from "../../../../services";
 import { useSelector } from "react-redux";
+import { Button } from "../../../../components";
 
 export const ExamQCounterForm = React.memo(({ formInitialText, formLabel }) => {
   const examId = useSelector((state) => state.admin.exam.examId);
@@ -75,14 +76,10 @@ export const ExamQCounterForm = React.memo(({ formInitialText, formLabel }) => {
           {/* buttons */}
           <Form.Group className="mt-1">
             <Button
-              block
-              disabled={isSubmitting}
-              size="lg"
-              type="submit"
-              variant="dark"
-            >
-              Guardar
-            </Button>
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+              isSubmit
+            />
           </Form.Group>
         </Form>
       )}

@@ -1,0 +1,19 @@
+.anchor {
+  cursor: pointer;
+
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #4d535a !important;
+
+  font-size: 1rem;
+  font-weight: bolder !important;
+  padding: 0 !important;
+
+  outline: none;
+  box-shadow: none !important;
+
+  &:hover {
+    color: #858b91 !important;
+    transition: 0.3s;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { forwardRef } from "react";
 import {
   array,
   arrayOf,
@@ -12,18 +12,20 @@ import { Table } from "react-bootstrap";
 import { useAdminTable } from "../../hooks/useAdminTable";
 import { isEmpty } from "lodash";
 
-export const AdminTable = memo(
-  ({
-    hasIdColumn = true,
-    headers = [],
-    name,
-    onDeleteFunc,
-    onEditForm,
-    rowsAccessors = [],
-    rowsData = [],
-    sortDataBy,
-    title,
-  }) => {
+export const AdminTable = forwardRef(
+  (
+    {
+      hasIdColumn = true,
+      headers = [],
+      onDeleteFunc,
+      onEditForm,
+      rowsAccessors = [],
+      rowsData = [],
+      sortDataBy,
+      title,
+    },
+    ref
+  ) => {
     const { renderHeaders, renderRows } = useAdminTable();
 
     if (isEmpty(rowsData) || isEmpty(rowsAccessors)) return;
@@ -34,13 +36,22 @@ export const AdminTable = memo(
     };
 
     return (
-      <div {...(name && { id: name })}>
+      <div>
         {title && (
           <strong className="text-muted d-block mb-1">
             {title.toLocaleUpperCase()}
           </strong>
         )}
-        <Table bordered className="shadow-sm rounded" hover size="sm" striped>
+        <Table
+          {...{
+            bordered: true,
+            className: "shadow-sm rounded",
+            hover: true,
+            size: "sm",
+            striped: true,
+            ...(ref && { ref }),
+          }}
+        >
           <thead>
             <tr>
               {renderHeaders({
@@ -68,7 +79,6 @@ export const AdminTable = memo(
 AdminTable.propTypes = {
   hasIdColumn: bool,
   headers: arrayOf(string),
-  name: string,
   onDeleteFunc: func,
   onEditForm: elementType,
   rowsAccessors: array,

@@ -2,7 +2,7 @@ import React from "react";
 import { isEmpty, isEqual } from "lodash";
 import { getAccessorValue } from "../utils/helpers";
 import {
-  AnchorList,
+  Button,
   DraggableList,
   IconButton,
   ModalIconButton,
@@ -52,12 +52,25 @@ export const useAdminRow = () => {
 
   const renderList = (list, className) => {
     if (isEmpty(list.data)) return <span>-</span>;
-    return list.data.map((item, idx) => (
-      <span key={idx} className={cn("d-block", className)}>
-        {getAccessorValue(item, list.accessor).trim()}
-        {list.icon && renderIcon(list.icon, item)}
-      </span>
-    ));
+    return list.data.map((item, idx) => {
+      if (item.hasRef) {
+        const scrollToRef = () => item.ref.current.scrollIntoView();
+        return (
+          <React.Fragment key={idx}>
+            <Button hoverText="Ir a preguntas" isAnchor onClick={scrollToRef}>
+              {getAccessorValue(item, list.accessor).trim()}
+            </Button>
+            {list.icon && renderIcon(list.icon, item)}
+          </React.Fragment>
+        );
+      }
+      return (
+        <span className={cn("d-block", className)} key={idx}>
+          {getAccessorValue(item, list.accessor).trim()}
+          {list.icon && renderIcon(list.icon, item)}
+        </span>
+      );
+    });
   };
 
   const renderDraggableList = (list) => {
@@ -65,10 +78,5 @@ export const useAdminRow = () => {
     return <DraggableList list={list} handleOnChange={list.onOrderChange} />;
   };
 
-  const renderAnchorsList = (list) => {
-    if (isEmpty(list.data)) return <span>-</span>;
-    return <AnchorList list={list} />;
-  };
-
-  return { renderAnchorsList, renderDraggableList, renderIcon, renderList };
+  return { renderDraggableList, renderIcon, renderList };
 };

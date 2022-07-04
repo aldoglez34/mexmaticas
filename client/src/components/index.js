@@ -5,7 +5,6 @@ export * from "./buttons/Tooltip";
 export * from "./images/ImageFromFirebase";
 export * from "./items/ListGroupItem";
 export * from "./layouts";
-export * from "./lists/AnchorList";
 export * from "./lists/DraggableList";
 export * from "./modals/AdminDangerModal";
 export * from "./modals/AdminExportToExcel";

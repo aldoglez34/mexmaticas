@@ -10,16 +10,6 @@ import {
   SimpleWithImageForm,
   SimpleWithTwoAnswersForm,
 } from "../questions-forms";
-import {
-  DichotomousQuestionTable,
-  DichotomousQuestionWithImageTable,
-  ImageWithTwoAnswersTable,
-  MultipleOptionQuestionsTable,
-  MultipleOptionWithImageTable,
-  SimpleQuestionTable,
-  SimpleWithImageQuestionsTable,
-  SimpleWithTwoAnswersTable,
-} from "../questions-tables";
 import { deleteQuestion } from "../../../../services";
 
 export const useExamsData = (questions = [], courseId, examId) => {
@@ -35,7 +25,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: SimpleQuestionForm,
       name: "Sencilla",
-      Table: SimpleQuestionTable,
       type: "simple",
       table: {
         headers: ["Instrucción", "I. Técnica", "Respuesta", "Comentario"],
@@ -61,7 +50,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: SimpleWithImageForm,
       name: "Sencilla con imagen",
-      Table: SimpleWithImageQuestionsTable,
       type: "simpleWithPic",
       table: {
         headers: ["Instrucción", "Imagen", "Respuesta", "Comentario"],
@@ -87,7 +75,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: SimpleWithTwoAnswersForm,
       name: "Sencilla con 2 respuestas",
-      Table: SimpleWithTwoAnswersTable,
       type: "twoAnswers",
       table: {
         headers: ["Instrucción", "I. Técnica", "Respuestas", "Comentario"],
@@ -112,7 +99,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: ImageWithTwoAnswers,
       name: "Imagen con 2 respuestas",
-      Table: ImageWithTwoAnswersTable,
       type: "imageWithTwoAnswers",
       table: {
         headers: ["Instrucción", "Imagen", "Respuestas", "Comentario"],
@@ -137,7 +123,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: MultipleOptionForm,
       name: "Opción múltiple",
-      Table: MultipleOptionQuestionsTable,
       type: "multipleOption",
       table: {
         headers: [
@@ -169,7 +154,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: MultipleOptionWithImage,
       name: "Opción múltiple con imagen",
-      Table: MultipleOptionWithImageTable,
       type: "multipleOptionWithPic",
       table: {
         headers: [
@@ -201,7 +185,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: DichotomousQuestion,
       name: "Dicotómica",
-      Table: DichotomousQuestionTable,
       type: "dichotomous",
       table: {
         headers: [
@@ -233,7 +216,6 @@ export const useExamsData = (questions = [], courseId, examId) => {
     {
       Form: DichotomousQuestionWithImage,
       name: "Dicotómica con imagen",
-      Table: DichotomousQuestionWithImageTable,
       type: "dichotomousWithPic",
       table: {
         headers: [
@@ -276,11 +258,11 @@ export const useExamsData = (questions = [], courseId, examId) => {
             ...q.rows,
             data: questionData,
           },
-          hasQuestions: Boolean(questionData.length),
+          hasRef: Boolean(questionData.length),
           nameWithCounter: `[${questionData.length}] ${q.name}`,
         };
       }),
-    [questions]
+    [questions, questionTypes]
   );
 
   return { questionTypesData };

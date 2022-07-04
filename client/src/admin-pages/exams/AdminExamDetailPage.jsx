@@ -13,6 +13,7 @@ import { setExam } from "../../redux/actions/admin";
 import { isEmpty } from "lodash";
 import { getDifficultyNameInSpanish } from "../../utils/helpers";
 import { useExamsData } from "./components/hooks/useExamsData";
+import { useDataRefs } from "./components/hooks/useDataRefs";
 
 export const AdminExamDetailPage = (props) => {
   // state
@@ -29,6 +30,8 @@ export const AdminExamDetailPage = (props) => {
   const examId = props.routeProps.match.params.examId;
 
   const { questionTypesData } = useExamsData(exam?.questions, courseId, examId);
+
+  const { dataWithRefs } = useDataRefs(questionTypesData);
 
   useEffect(() => {
     fetchExam(examId)
@@ -53,21 +56,6 @@ export const AdminExamDetailPage = (props) => {
         }
       </Alert>
     );
-
-  const renderTables = () =>
-    (questionTypesData || []).map((data, index) => (
-      <AdminTable
-        headers={data.table.headers}
-        key={index}
-        name={data.name}
-        onDeleteFunc={data.table.onDeleteFunc}
-        onEditForm={data.table.onEditForm}
-        rowsAccessors={data.rows.accessors}
-        rowsData={data.rows.data}
-        sortDataBy="_id"
-        title={data.name}
-      />
-    ));
 
   return (
     <AdminLayout
@@ -137,11 +125,10 @@ export const AdminExamDetailPage = (props) => {
       />
       <AdminRow
         rowTitle="Tipos de preguntas"
-        tooltip="Click en cualquier tipo para deslizarte a las preguntas pertenecientes a ese tipo."
+        tooltip="Lista desplazable."
         list={{
           accessor: "nameWithCounter",
-          data: questionTypesData,
-          isAnchor: true,
+          data: dataWithRefs,
           icon: {
             hoverText: "Nueva pregunta",
             svg: "add",
@@ -158,7 +145,19 @@ export const AdminExamDetailPage = (props) => {
         tooltip="Cantidad total de preguntas que hay disponibles para este examen."
         value={`${exam?.questions?.length ?? ""} preguntas`.trim()}
       />
-      {renderTables()}
+      {(dataWithRefs || []).map((data, index) => (
+        <AdminTable
+          headers={data.table.headers}
+          key={index}
+          onDeleteFunc={data.table.onDeleteFunc}
+          onEditForm={data.table.onEditForm}
+          ref={data.ref}
+          rowsAccessors={data.rows.accessors}
+          rowsData={data.rows.data}
+          sortDataBy="_id"
+          title={data.name}
+        />
+      ))}
     </AdminLayout>
   );
 };

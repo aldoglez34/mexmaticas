@@ -15,8 +15,7 @@ import { useAdminRow } from "../../hooks/useAdminRow";
 import { Tooltip } from "../";
 
 export const AdminRow = memo(({ icon, list, rowTitle, tooltip, value }) => {
-  const { renderAnchorsList, renderDraggableList, renderIcon, renderList } =
-    useAdminRow();
+  const { renderDraggableList, renderIcon, renderList } = useAdminRow();
 
   const renderValue = () => {
     if (!list) {
@@ -28,7 +27,6 @@ export const AdminRow = memo(({ icon, list, rowTitle, tooltip, value }) => {
 
   const renderTypeList = (list) => {
     if (list.onOrderChange) return renderDraggableList(list);
-    if (list.isAnchor) return renderAnchorsList(list);
     return renderList(list);
   };
 

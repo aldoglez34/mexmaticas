@@ -3,12 +3,15 @@ import { Button as BootstrapButton, Spinner } from "react-bootstrap";
 import { any, bool, func, oneOf, string } from "prop-types";
 import cn from "classnames";
 
+import styles from "./button.module.scss";
+
 export const Button = memo(
   ({
     children,
     className = "",
     hasShadow = true,
     hoverText,
+    isAnchor = false,
     isBlock = false,
     isDisabled = false,
     isLoading = false,
@@ -19,9 +22,11 @@ export const Button = memo(
   }) => {
     return (
       <BootstrapButton
-        className={cn(className, { "shadow-lg": hasShadow })}
         {...{
           block: isBlock,
+          className: isAnchor
+            ? cn(styles.anchor)
+            : cn(className, { "shadow-lg": hasShadow }),
           disabled: isDisabled,
           size,
           variant,
@@ -51,6 +56,7 @@ Button.propTypes = {
   disabled: bool,
   hasShadow: bool,
   hoverText: string,
+  isAnchor: bool,
   isBlock: bool,
   isDisabled: bool,
   isLoading: bool,

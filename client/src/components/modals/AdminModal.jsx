@@ -17,7 +17,7 @@ export const AdminModal = memo(
       onHide={() => handleClose(false)}
       show={show}
       size={size}
-      {...(isLocked ? { backdrop: "static", keyboard: false } : {})}
+      {...(isLocked && { backdrop: "static", keyboard: false })}
     >
       <Modal.Header className="bg-light" closeButton>
         {title && (

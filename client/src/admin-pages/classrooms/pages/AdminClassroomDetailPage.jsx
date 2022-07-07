@@ -11,15 +11,19 @@ import {
   ClassroomNameForm,
   ClassroomSchoolForm,
   ClassroomTeachersForm,
-} from "../components";
+} from "../components/forms";
 import { formatDate, getFullName } from "../../../utils/helpers";
 import { AdminDeleteModal } from "../../../components/modals/AdminDeleteModal";
+import { AddCoursesModal } from "../components/modals";
 
 export const AdminClassroomDetailPage = memo((props) => {
   const [showExportToExcel, setShowExportToExcel] = useState(false);
   const [classroom, setClassroom] = useState();
   const [showModal, setShowModal] = useState(false);
   const [history, setHistory] = useState();
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const classroomId = props.routeProps.match.params.classroomId;
 
@@ -35,13 +39,14 @@ export const AdminClassroomDetailPage = memo((props) => {
     }
   };
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
   const optionsDropdown = [
     {
-      text: "Agregar curso",
-      href: `/admin/classrooms/edit/${classroomId}/course/add`,
+      text: "Agregar cursos",
+      modal: {
+        Content: AddCoursesModal,
+        props: { classroomId },
+        title: "Agregar cursos",
+      },
     },
     {
       text: "Agregar alumnos",
@@ -179,6 +184,7 @@ export const AdminClassroomDetailPage = memo((props) => {
           },
         }}
       />
+      {/* modals */}
       <AdminDeleteModal
         handleCloseModal={handleCloseModal}
         handleDelete={handleDeleteClassroom}

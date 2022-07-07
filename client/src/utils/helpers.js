@@ -25,10 +25,22 @@ export const getForwardUrl = (purchase) => {
 
 export const formatDate = (str, format) => moment(str).format(format);
 
+export const convertToUpperCase = (str) =>
+  String(str).toLocaleUpperCase().trim();
+
+export const sortArrayOfObjects = (arr = [], key = "") =>
+  arr.sort((a, b) =>
+    convertToUpperCase(get(a, key, "")) < convertToUpperCase(get(b, key, ""))
+      ? -1
+      : 1
+  );
+
 export const isObject = (obj) =>
   Object.prototype.toString.call(obj) === "[object Object]";
 
 export const isArray = (arr) => Array.isArray(arr);
+
+export const isString = (str) => isEqual(typeof str, "string");
 
 export const getFullName = (name, firstSurname, secondSurname) =>
   `${name ?? ""} ${firstSurname ?? ""} ${secondSurname ?? ""}`.trim();

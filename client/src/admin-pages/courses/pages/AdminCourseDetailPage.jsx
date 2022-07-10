@@ -100,10 +100,10 @@ export const AdminCourseDetailPage = React.memo((props) => {
         }}
       />
       <AdminRow
-        rowTitle="Nivel escolar"
+        rowTitle="Nivel"
         value={course?.school}
         icon={{
-          hoverText: "Editar nivel escolar",
+          hoverText: "Editar nivel",
           svg: "edit",
           modal: {
             title: "Editar",
@@ -187,7 +187,7 @@ export const AdminCourseDetailPage = React.memo((props) => {
         }}
       />
       <AdminRow
-        rowTitle="Fecha de creación"
+        rowTitle="Creación"
         value={formatDate(course?.createdAt, "LL")}
       />
     </AdminLayout>

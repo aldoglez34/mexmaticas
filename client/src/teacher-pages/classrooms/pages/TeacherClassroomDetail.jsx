@@ -25,11 +25,11 @@ export const TeacherClassroomDetail = memo((props) => {
       topNavTitle={classroom?.name}
     >
       <AdminRow rowTitle="Nombre" value={classroom?.name} />
-      <AdminRow rowTitle="Nivel Educativo" value={classroom?.school} />
+      <AdminRow rowTitle="Nivel" value={classroom?.school} />
       <AdminRow rowTitle="Escuela" value={classroom?.institution?.name} />
       <AdminRow rowTitle="Descripción" value={classroom?.description} />
       <AdminRow
-        rowTitle="Fecha de Creación"
+        rowTitle="Creación"
         value={formatDate(classroom?.createdAt, "LL")}
       />
       <AdminRow

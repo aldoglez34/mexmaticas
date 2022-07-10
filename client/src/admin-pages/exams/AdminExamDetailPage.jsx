@@ -10,7 +10,7 @@ import {
 } from "./components";
 import { useDispatch, useSelector } from "react-redux";
 import { setExam } from "../../redux/actions/admin";
-import { isEmpty } from "lodash";
+import { gt } from "lodash";
 import { getDifficultyNameInSpanish } from "../../utils/helpers";
 import { useExamsData } from "./components/hooks/useExamsData";
 import { useDataRefs } from "./components/hooks/useDataRefs";
@@ -46,7 +46,7 @@ export const AdminExamDetailPage = (props) => {
   }, [dispatch, examId]);
 
   const renderAlert = () =>
-    exam?.qCounter > !isEmpty(exam?.questions) && (
+    gt(exam?.qCounter, exam?.questions?.length) && (
       <Alert variant="danger">
         {
           <span>

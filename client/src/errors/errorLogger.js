@@ -1,9 +1,11 @@
-export const errorLogger = (error, alertType) => {
-  console.log({ error });
+export const errorLogger = (error, alertMessage) => {
+  if (error.code) console.log("ERROR CODE", error.code);
+  if (error.message) console.log("ERROR MESSAGE", error.MESSAGE);
+  console.log(error);
 
-  switch (alertType) {
+  switch (alertMessage) {
     case 1:
-      alert("Ocurrió un error.");
+      alert("Usuario incorrecto.");
       break;
     default:
       alert("Ocurrió un error.");

@@ -1,4 +1,4 @@
-const courseReducers = (state = null, action) => {
+const course = (state = null, action) => {
   switch (action.type) {
     case "course/set":
       return {
@@ -12,4 +12,4 @@ const courseReducers = (state = null, action) => {
   }
 };
 
-export default courseReducers;
+export default course;

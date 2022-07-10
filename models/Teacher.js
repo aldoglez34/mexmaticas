@@ -33,6 +33,17 @@ const schema = new Schema({
       ref: "Classroom",
     },
   ],
+  messages: [
+    {
+      date: { type: Date, default: Date.now },
+      text: { type: Number, required: true },
+      origin: { type: String, required: true },
+      studentId: {
+        type: Schema.Types.ObjectId,
+        ref: "Student",
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

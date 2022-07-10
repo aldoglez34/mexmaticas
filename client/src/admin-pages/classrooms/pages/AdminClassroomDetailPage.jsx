@@ -179,7 +179,7 @@ export const AdminClassroomDetailPage = memo((props) => {
         }}
       />
       <AdminRow
-        rowTitle={`Alumnos (${classroom?.members?.length})`}
+        rowTitle="Alumnos"
         list={{
           accessor: ["name", "firstSurname", "secondSurname"],
           data: classroom?.members,

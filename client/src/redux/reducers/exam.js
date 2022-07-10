@@ -1,4 +1,4 @@
-const examReducers = (state = null, action) => {
+const exam = (state = null, action) => {
   switch (action.type) {
     case "exam/set":
       return action.data;
@@ -19,4 +19,4 @@ const examReducers = (state = null, action) => {
   }
 };
 
-export default examReducers;
+export default exam;

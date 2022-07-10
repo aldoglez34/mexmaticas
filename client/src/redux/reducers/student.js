@@ -1,4 +1,4 @@
-const studentReducers = (state = null, action) => {
+const student = (state = null, action) => {
   switch (action.type) {
     case "student/login":
       return {
@@ -16,4 +16,4 @@ const studentReducers = (state = null, action) => {
   }
 };
 
-export default studentReducers;
+export default student;

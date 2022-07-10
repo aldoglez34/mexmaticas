@@ -28,14 +28,6 @@ const schema = new Schema({
     {
       qType: {
         type: String,
-        // enum: [
-        //   "simple",
-        //   "multipleOption",
-        //   "simpleWithPic",
-        //   "twoAnswers",
-        //   "multipleOptionWithPic",
-        //   "imageWithTwoAnswers",
-        // ],
       },
       qInstruction: { type: String, required: true },
       qTechnicalInstruction: {

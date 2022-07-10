@@ -55,7 +55,7 @@ export const AdminStudentsPage = () => {
       title={getFullName(item.name, item.firstSurname, item.secondSurname)}
       content={
         <>
-          <i className="fas fa-user-graduate mr-2" />
+          <i className="fas fa-envelope mr-2" />
           {item.email}
         </>
       }

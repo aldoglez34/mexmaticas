@@ -1,10 +1,11 @@
 import { combineReducers } from "redux";
-import admin from "./adminReducer";
-import course from "./courseReducers";
-import exam from "./examReducers";
-import purchase from "./purchaseReducer";
-import student from "./studentReducers";
-import zenMode from "./zenModeReducers";
+import admin from "./admin";
+import course from "./course";
+import exam from "./exam";
+import purchase from "./purchase";
+import student from "./student";
+import teacher from "./teacher";
+import zenMode from "./zen";
 
 const rootReducer = combineReducers({
   admin,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   exam,
   purchase,
   student,
+  teacher,
   zenMode,
 });
 

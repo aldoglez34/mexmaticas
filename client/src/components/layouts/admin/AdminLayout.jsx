@@ -1,17 +1,17 @@
 import React from "react";
-import { array, bool, node, string } from "prop-types";
-import { LeftNav, ScrollButton, TopNav } from "../components";
-import { Container, Row, Col } from "react-bootstrap";
+import { Dashboard, DashboardType } from "../dashboard/Dashboard";
 
 export const AdminLayout = React.memo(
   ({
     backBttn,
     buttons,
     children,
-    expanded = false,
+    expanded,
+    hasScrollToTopButton,
     leftBarActive,
     optionsDropdown,
     topNavTitle,
+    userName,
   }) => {
     const navItems = [
       {
@@ -24,48 +24,34 @@ export const AdminLayout = React.memo(
       {
         label: "Maestros",
         link: "/admin/teachers",
-        icon: "fas fa-graduation-cap",
+        icon: "fas fa-user-tie",
       },
-      { label: "Mensajes", link: "/admin/messages", icon: "fas fa-envelope" },
+      { label: "Mensajes", link: "/admin/messages", icon: "fas fa-comments" },
       { label: "Salones", link: "/admin/classrooms", icon: "fas fa-users" },
     ];
 
     return (
-      <div className="d-flex h-100">
-        <LeftNav {...{ leftBarActive, navItems, type: "[ ADMIN ]" }} />
-        <div style={{ marginLeft: "15rem" }} className="h-100 w-100">
-          <TopNav
-            backBttn={backBttn}
-            buttons={buttons}
-            optionsDropdown={optionsDropdown}
-            topNavTitle={topNavTitle ?? ""}
-          />
-          <div style={{ padding: "35px 28px" }}>
-            <Container fluid>
-              {expanded ? (
-                children
-              ) : (
-                <Row>
-                  <Col md={{ offset: 2, span: 8 }}>{children}</Col>
-                </Row>
-              )}
-            </Container>
-          </div>
-        </div>
-        <ScrollButton scrollStepInPx={150} delayInMs={16.66} />
-      </div>
+      <Dashboard
+        {...{
+          backBttn,
+          buttons,
+          children,
+          expanded,
+          hasScrollToTopButton,
+          leftBarActive,
+          navItems,
+          optionsDropdown,
+          topNavTitle,
+          type: "[ ADMIN ]",
+          userName,
+        }}
+      >
+        {children}
+      </Dashboard>
     );
   }
 );
 
-AdminLayout.propTypes = {
-  backBttn: string,
-  buttons: node,
-  children: node.isRequired,
-  expanded: bool,
-  leftBarActive: string.isRequired,
-  optionsDropdown: array,
-  topNavTitle: string,
-};
+AdminLayout.propTypes = DashboardType;
 
 AdminLayout.displayName = "AdminLayout";

@@ -6,7 +6,7 @@ const {
 } = require("../utils/helpers");
 
 // fetchClassrooms()
-// matches with matches with /adminapi/classrooms/all
+// matches with /adminapi/classrooms/all
 router.get("/all", (req, res) => {
   model.Classroom.find({})
     .lean()

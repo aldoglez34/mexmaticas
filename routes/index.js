@@ -1,47 +1,40 @@
 const router = require("express").Router();
 
+const BASE_URL = {
+  ADMIN: "adminapi",
+  GUEST: "guestapi",
+  STUDENT: "studentapi",
+  TEACHER: "teacherapi",
+};
+
 // ==============================================
 // GUEST
 // ==============================================
-const guest = require("./guest/guest");
-router.use("/guestapi", guest);
+router.use(`/${BASE_URL.GUEST}`, require("./guest/guest"));
 
 // ==============================================
 // STUDENT
 // ==============================================
-const student = require("./student/student");
-router.use("/studentapi", student);
+router.use(`/${BASE_URL.STUDENT}`, require("./student/student"));
 
 // ==============================================
 // ADMIN
 // ==============================================
-const classroomRoutes = require("./admin/classroom");
-router.use("/adminapi/classrooms", classroomRoutes);
+router.use(`/${BASE_URL.ADMIN}/classrooms`, require("./admin/classroom"));
+router.use(`/${BASE_URL.ADMIN}/courses`, require("./admin/courses"));
+router.use(`/${BASE_URL.ADMIN}/exam`, require("./admin/exam"));
+router.use(`/${BASE_URL.ADMIN}/institutions`, require("./admin/institutions"));
+router.use(`/${BASE_URL.ADMIN}/material`, require("./admin/material"));
+router.use(`/${BASE_URL.ADMIN}/messages`, require("./admin/messages"));
+router.use(`/${BASE_URL.ADMIN}/questions`, require("./admin/questions"));
+router.use(`/${BASE_URL.ADMIN}/students`, require("./admin/students"));
+router.use(`/${BASE_URL.ADMIN}/teachers`, require("./admin/teachers"));
+router.use(`/${BASE_URL.ADMIN}/topics`, require("./admin/topics"));
 
-const coursesRoutes = require("./admin/courses");
-router.use("/adminapi/courses", coursesRoutes);
-
-const examRoutes = require("./admin/exam");
-router.use("/adminapi/exam", examRoutes);
-
-const institutionsRoutes = require("./admin/institutions");
-router.use("/adminapi/institutions", institutionsRoutes);
-
-const materialRoutes = require("./admin/material");
-router.use("/adminapi/material", materialRoutes);
-
-const messagesRoutes = require("./admin/messages");
-router.use("/adminapi/messages", messagesRoutes);
-
-const questionsRoutes = require("./admin/questions");
-router.use("/adminapi/questions", questionsRoutes);
-
-const studentsRoutes = require("./admin/students");
-router.use("/adminapi/students", studentsRoutes);
-
-router.use("/adminapi/teachers", require("./admin/teachers"));
-
-const topicsRoutes = require("./admin/topics");
-router.use("/adminapi/topics", topicsRoutes);
+// ==============================================
+// TEACHER
+// ==============================================
+router.use(`/${BASE_URL.TEACHER}/classrooms`, require("./teacher/classroom"));
+router.use(`/${BASE_URL.TEACHER}/teacher`, require("./teacher/teacher"));
 
 module.exports = router;

@@ -62,16 +62,8 @@ export const AdminTeachersPage = () => {
       title={getFullName(item.name, item.firstSurname, item.secondSurname)}
       content={
         <>
-          <span className="d-block">
-            <i className="fas fa-graduation-cap mr-2" />
-            {item.email}
-          </span>
-          {(item.classrooms || []).map((c) => (
-            <span key={c._id}>
-              <i className="fas fa-users mr-2" />
-              {c.name}
-            </span>
-          ))}
+          <i className="fas fa-envelope mr-2" />
+          {item.email}
         </>
       }
     />

@@ -85,7 +85,7 @@ export const AdminClassroomsPage = () => {
         <>
           {item.teacher && (
             <span className="mb-1">
-              <i className="fas fa-graduation-cap mr-2" />
+              <i className="fas fa-user-tie mr-2" />
               {getFullName(
                 item.teacher?.name,
                 item.teacher?.firstSurname,
@@ -93,18 +93,16 @@ export const AdminClassroomsPage = () => {
               )}
             </span>
           )}
-          <div>
-            <span className="mr-2">
-              <i className="fas fa-school mr-2" />
-              {item.institution?.name ?? "Sin escuela"}
-              {item.school && ` - ${item.school}`}
-            </span>
-            <span>
-              |
-              <i className="fas fa-user-graduate mr-2 ml-2" />
-              {(item.members || []).length}
-            </span>
-          </div>
+          <span className="d-block">
+            <i className="fas fa-user-graduate mr-2" />
+            {`${(item.members || []).length} alumnos`}
+          </span>
+          <span>
+            <i className="fas fa-school mr-2" />
+            {`[${item.school ?? ""}] ${
+              item.institution?.name ?? "Sin escuela"
+            }`}
+          </span>
         </>
       }
     />

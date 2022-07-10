@@ -72,12 +72,13 @@ export const AdminCoursesPage = () => {
       title={item.name}
       content={
         <>
-          <span>{item.school}</span>
-          <div>
-            <Badge variant={item.isActive ? "success" : "danger"}>
-              {item.isActive ? "Activo" : "No activo"}
-            </Badge>
-          </div>
+          <Badge
+            className="mr-2"
+            variant={item.isActive ? "success" : "danger"}
+          >
+            {item.isActive ? "Activo" : "No activo"}
+          </Badge>
+          {item.school}
         </>
       }
     />

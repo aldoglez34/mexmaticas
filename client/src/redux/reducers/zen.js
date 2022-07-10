@@ -1,4 +1,4 @@
-const examReducers = (state = null, action) => {
+const zen = (state = null, action) => {
   switch (action.type) {
     case "zenMode/on":
       return true;
@@ -9,4 +9,4 @@ const examReducers = (state = null, action) => {
   }
 };
 
-export default examReducers;
+export default zen;

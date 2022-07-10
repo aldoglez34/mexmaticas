@@ -1,11 +1,21 @@
 import React, { memo, useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
-import { array, node, string } from "prop-types";
+import {
+  arrayOf,
+  elementType,
+  func,
+  node,
+  object,
+  oneOf,
+  oneOfType,
+  shape,
+  string,
+} from "prop-types";
 import { isEmpty, isEqual } from "lodash";
 import cn from "classnames";
+import { AdminModal } from "../../../modals/AdminModal";
 
 import styles from "./topnav.module.scss";
-import { AdminModal } from "../../../modals/AdminModal";
 
 export const TopNav = memo(
   ({ backBttn, buttons, optionsDropdown, topNavTitle }) => {
@@ -108,10 +118,23 @@ export const TopNav = memo(
   }
 );
 
+const optionsDropdownType = shape({
+  text: string,
+  href: string,
+  fn: func,
+  modal: shape({
+    Content: elementType,
+    props: object,
+    size: oneOf(["sm", "md", "lg", "xl"]),
+    title: string,
+  }),
+});
+
 TopNav.propTypes = {
   backBttn: string,
   buttons: node,
-  optionsDropdown: array,
+  // optionsDropdown: oneOfType([arrayOf(optionsDropdownType), string]),
+  optionsDropdown: arrayOf(oneOfType([optionsDropdownType, string])),
   topNavTitle: string,
 };
 

@@ -2,6 +2,8 @@ import { get, isEqual } from "lodash";
 import moment from "moment";
 import "moment/locale/es";
 
+export const getUserFromEmail = (email) => email?.split("@", 1)[0];
+
 export const askUserToConfirm = (message, callback) =>
   isEqual(window.confirm(message), true) && callback();
 

@@ -16,27 +16,27 @@ import { USERS } from "./utils/constants";
 const App = () => {
   const [navigation, setNavigation] = useState();
 
-  const reduxUser = useSelector((state) => state.student);
+  const reduxStudent = useSelector((state) => state.student);
 
   const dispatch = useDispatch();
 
   const handleIsGuest = useCallback(() => {
-    // logout user from redux if needed
-    if (reduxUser) dispatch(logoutStudent());
+    // logout student/teacher from redux if needed
+    if (reduxStudent) dispatch(logoutStudent());
     setNavigation(USERS.GUEST);
-  }, [dispatch, reduxUser]);
+  }, [dispatch, reduxStudent]);
 
   const handleIsStudent = useCallback(
     (emailVerified, uid) => {
       if (!emailVerified) {
         // logout user from redux if needed
-        if (reduxUser) dispatch(logoutStudent());
+        if (reduxStudent) dispatch(logoutStudent());
         setNavigation(USERS.GUEST);
         return;
       }
 
       if (emailVerified) {
-        if (!reduxUser)
+        if (!reduxStudent)
           fetchStudentByUID(uid).then(({ data }) =>
             dispatch(
               loginStudent({
@@ -51,16 +51,12 @@ const App = () => {
         setNavigation(USERS.STUDENT);
       }
     },
-    [dispatch, reduxUser]
+    [dispatch, reduxStudent]
   );
 
-  const handleIsTeacher = useCallback(() => {
-    setNavigation(USERS.TEACHER);
-  }, []);
+  const handleIsTeacher = useCallback(() => setNavigation(USERS.TEACHER), []);
 
-  const handleIsAdmin = useCallback(() => {
-    setNavigation(USERS.ADMIN);
-  }, []);
+  const handleIsAdmin = useCallback(() => setNavigation(USERS.ADMIN), []);
 
   useEffect(() => {
     firebaseAuth.onAuthStateChanged(async (user) => {

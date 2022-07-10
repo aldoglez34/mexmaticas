@@ -7,6 +7,7 @@ import fbApp from "firebase/app";
 import cn from "classnames";
 
 import styles from "./adminloginpage.module.scss";
+import { errorLogger } from "../../errors/errorLogger";
 
 export const AdminLoginPage = () => {
   const loginSchema = yup.object({
@@ -25,21 +26,20 @@ export const AdminLoginPage = () => {
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={loginSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
-              firebaseAuth
-                .setPersistence(fbApp.auth.Auth.Persistence.SESSION)
-                .then(() => {
-                  return firebaseAuth
-                    .signInWithEmailAndPassword(values.email, values.password)
-                    .then(() => alert("Bienvenido, administrador."));
-                })
-                .catch((error) => {
-                  alert("Usuario incorrecto.");
-                  console.log(error.code);
-                  console.log(error.message);
-                  setSubmitting(false);
-                });
+              try {
+                await firebaseAuth.setPersistence(
+                  fbApp.auth.Auth.Persistence.SESSION
+                );
+                await firebaseAuth.signInWithEmailAndPassword(
+                  values.email,
+                  values.password
+                );
+              } catch (err) {
+                errorLogger(err);
+              }
+              setSubmitting(false);
             }}
           >
             {({

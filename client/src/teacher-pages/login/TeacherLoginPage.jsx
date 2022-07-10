@@ -5,10 +5,16 @@ import * as yup from "yup";
 import { firebaseAuth } from "../../firebase/firebase";
 import fbApp from "firebase/app";
 import cn from "classnames";
+import { errorLogger } from "../../errors/errorLogger";
+import { fetchTeacherInfo } from "../../services";
+import { useDispatch } from "react-redux";
+import { loginTeacher } from "../../redux/actions/teacher";
 
 import styles from "./teacherLoginPage.module.scss";
 
 export const TeacherLoginPage = () => {
+  const dispatch = useDispatch();
+
   const loginSchema = yup.object({
     email: yup.string().email("Formato inválido").required("Requerido"),
     password: yup.string().min(6, "Longitud incorrecta").required("Requerido"),
@@ -25,21 +31,23 @@ export const TeacherLoginPage = () => {
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={loginSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
-              firebaseAuth
-                .setPersistence(fbApp.auth.Auth.Persistence.SESSION)
-                .then(() => {
-                  return firebaseAuth
-                    .signInWithEmailAndPassword(values.email, values.password)
-                    .then(() => alert("Bienvenido, maestro."));
-                })
-                .catch((error) => {
-                  alert("Usuario incorrecto.");
-                  console.log(error.code);
-                  console.log(error.message);
-                  setSubmitting(false);
-                });
+              try {
+                await fetchTeacherInfo(values.email).then((res) =>
+                  dispatch(loginTeacher(res.data))
+                );
+                await firebaseAuth.setPersistence(
+                  fbApp.auth.Auth.Persistence.SESSION
+                );
+                await firebaseAuth.signInWithEmailAndPassword(
+                  values.email,
+                  values.password
+                );
+              } catch (err) {
+                errorLogger(err);
+              }
+              setSubmitting(false);
             }}
           >
             {({

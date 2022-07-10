@@ -1,55 +1,63 @@
 import React from "react";
-import { array, node, string } from "prop-types";
-import { LeftNav, ScrollButton, TopNav } from "../components";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserFromEmail } from "../../../utils/helpers";
+import { Dashboard, DashboardType } from "../dashboard/Dashboard";
+import { logoutTeacher } from "../../../redux/actions/teacher";
 
 export const TeacherLayout = React.memo(
   ({
     backBttn,
     buttons,
     children,
+    expanded,
+    hasScrollToTopButton,
     leftBarActive,
     optionsDropdown,
     topNavTitle,
   }) => {
+    const dispatch = useDispatch();
+
     const navItems = [
+      { label: "Salones", link: "/teacher/classrooms", icon: "fas fa-users" },
       {
-        label: "Alumnos",
-        link: "/teachers/students",
-        icon: "fas fa-user-graduate",
+        label: "Exámenes",
+        link: "/teacher/exams",
+        icon: "fas fa-file-alt",
       },
       {
         label: "Mensajes",
-        link: "/teachers/messages",
-        icon: "fas fa-envelope",
+        link: "/teacher/messages",
+        icon: "fas fa-comments",
       },
-      { label: "Salones", link: "/teachers/classrooms", icon: "fas fa-users" },
     ];
 
+    const teacherEmail = useSelector((state) => state.teacher?.email);
+
+    const onLogoutCallback = () => dispatch(logoutTeacher());
+
     return (
-      <div className="d-flex h-100">
-        <LeftNav {...{ leftBarActive, navItems, type: "[ MAESTRO ]" }} />
-        <div style={{ marginLeft: "15rem" }} className="h-100 w-100">
-          <TopNav
-            backBttn={backBttn}
-            buttons={buttons}
-            optionsDropdown={optionsDropdown}
-            topNavTitle={topNavTitle ?? ""}
-          />
-          <div style={{ padding: "35px 28px" }}>{children}</div>
-        </div>
-        <ScrollButton scrollStepInPx={150} delayInMs={16.66} />
-      </div>
+      <Dashboard
+        {...{
+          backBttn,
+          buttons,
+          children,
+          expanded,
+          hasScrollToTopButton,
+          leftBarActive,
+          navItems,
+          onLogoutCallback,
+          optionsDropdown,
+          topNavTitle,
+          type: "[ MAESTRO ]",
+          userName: getUserFromEmail(teacherEmail),
+        }}
+      >
+        {children}
+      </Dashboard>
     );
   }
 );
 
-TeacherLayout.propTypes = {
-  backBttn: string,
-  buttons: node,
-  children: node.isRequired,
-  leftBarActive: string.isRequired,
-  optionsDropdown: array,
-  topNavTitle: string,
-};
+TeacherLayout.propTypes = DashboardType;
 
 TeacherLayout.displayName = "TeacherLayout";

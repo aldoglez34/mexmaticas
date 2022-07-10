@@ -1,29 +1,52 @@
-import React, { memo, useCallback, useMemo, useState } from "react";
-import { array, shape, string } from "prop-types";
-import { Button } from "../";
-import { isEqual } from "lodash";
-import cn from "classnames";
-import { convertToUpperCase } from "../../utils/helpers";
+import React, { memo, useEffect, useMemo, useState } from "react";
+import { array, arrayOf, func, shape, string } from "prop-types";
+import { Button, ScrollableDiv } from "../";
+import { gte, isEmpty, isEqual, lt } from "lodash";
+import { Form, Tab, Tabs } from "react-bootstrap";
+import { convertToUpperCase, getAccessorValue } from "../../utils/helpers";
+import { errorLogger } from "../../errors/errorLogger";
 
 import styles from "./assigndata.module.scss";
 
 export const AssignData = memo(
-  ({ allData = {}, assignedData = {}, accessors = {}, buttonLabels = [] }) => {
+  ({
+    accessors = {},
+    allData = [],
+    assignedData = [],
+    canSearchBy,
+    onSubmitData = {},
+    tabLabels = ["Todos", "Asignados"],
+  }) => {
     const [selectedItems, setSelectedItems] = useState([]);
-    const [activeButton, setActiveButton] = useState("all");
+    const [activeTab, setActiveTab] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [filtered, setFiltered] = useState([]);
+    const [search, setSearch] = useState("");
+
+    useEffect(() => setFiltered(allData), [allData]);
+
+    useEffect(() => {
+      if (!isEmpty(assignedData)) {
+        const defaultData = assignedData.map((item) => ({
+          value: item[accessors.value],
+          label: item[accessors.label],
+        }));
+        setSelectedItems(defaultData);
+      }
+    }, [accessors.label, accessors.value, assignedData]);
+
+    const tabs = useMemo(
+      () => [
+        { label: tabLabels[0], value: "all" },
+        { label: tabLabels[1], value: "assigned" },
+      ],
+      [tabLabels]
+    );
 
     const isItemSelected = (item) =>
       selectedItems.some((selected) =>
         isEqual(selected.value, item[accessors.value])
       );
-
-    const buttons = useMemo(
-      () => [
-        { label: buttonLabels[0] || "", value: "all" },
-        { label: buttonLabels[1] || "", value: "assigned" },
-      ],
-      [buttonLabels]
-    );
 
     const handleSelectItem = (item) => {
       if (isItemSelected(item)) {
@@ -43,46 +66,77 @@ export const AssignData = memo(
       );
     };
 
-    const getButtonClassname = (value) =>
-      isEqual(value, activeButton)
-        ? styles.activeButton
-        : styles.inactiveButton;
+    const handleSubmit = async () => {
+      const { afterSubmit, getProps, onSubmit } = onSubmitData;
+      if (!onSubmit || !getProps) return;
+      setIsLoading(true);
+      try {
+        await onSubmit(getProps(selectedItems));
+        afterSubmit && afterSubmit();
+      } catch (err) {
+        errorLogger(err);
+      }
+      !afterSubmit && setIsLoading(false);
+    };
 
-    const renderButtons = useCallback(
-      () =>
-        buttons.map((btn, idx) => (
-          <Button
-            className={getButtonClassname(btn.value)}
-            key={idx}
-            onClick={() => setActiveButton(btn.value)}
-          >
-            {convertToUpperCase(btn.label)}
-          </Button>
-        )),
-      [activeButton, buttons]
+    const isFilterActive = useMemo(
+      () => !isEqual(allData.length, filtered.length),
+      [allData, filtered]
     );
 
-    const renderAllView = () => (
-      <div className="mb-2">
-        {(allData.data || []).map((item, idx) => {
+    const handleOnChangeTab = (tab) => {
+      if (canSearchBy) {
+        if (!isEmpty(search)) setSearch("");
+        if (isFilterActive) setFiltered(allData);
+      }
+      setActiveTab(tab);
+    };
+
+    useEffect(() => {
+      if (isEmpty(allData)) return;
+
+      if (lt(search.length, 3)) {
+        if (isFilterActive) setFiltered(allData);
+        return;
+      }
+
+      if (gte(search.length, 3)) {
+        setFiltered(
+          allData.filter((s) => {
+            const value = getAccessorValue(s, canSearchBy).trim();
+            return value.toUpperCase().includes(search.toUpperCase());
+          })
+        );
+      }
+    }, [allData, canSearchBy, isFilterActive, search]);
+
+    const AllView = () => (
+      <ScrollableDiv className="py-3 px-0">
+        {filtered.map((item, idx) => {
           const isSelected = isItemSelected(item);
           return (
             <Button
-              className={cn("d-block", isSelected && styles.activeItem)}
+              className="d-block"
+              hoverText={!isSelected ? "Agregar curso" : ""}
+              isActive={isSelected}
               isAnchor
               key={idx}
               onClick={() => handleSelectItem(item)}
             >
-              {isSelected && <i className="fas fa-check mr-2" />}
+              {isSelected ? (
+                <i className="fas fa-check mr-2" />
+              ) : (
+                <i className="far fa-circle mr-2" />
+              )}
               {item[accessors.label]}
             </Button>
           );
         })}
-      </div>
+      </ScrollableDiv>
     );
 
-    const renderAssignedView = () => (
-      <div className="mb-2">
+    const AssignedView = () => (
+      <ScrollableDiv className="py-3 px-0">
         <ol className="pl-3">
           {selectedItems.map((selectedItem, idx) => (
             <li key={idx}>
@@ -90,34 +144,60 @@ export const AssignData = memo(
             </li>
           ))}
         </ol>
-      </div>
+      </ScrollableDiv>
     );
 
     return (
       <>
-        <div className="d-flex justify-content-around mb-2">
-          {renderButtons()}
-        </div>
-        {isEqual(activeButton, buttons[0].value) && renderAllView()}
-        {isEqual(activeButton, buttons[1].value) && renderAssignedView()}
-        <Button isSubmit />
+        <Tabs
+          activeKey={activeTab}
+          className={styles.customTabs}
+          onSelect={(tab) => handleOnChangeTab(tab)}
+        >
+          <Tab eventKey={0} title={convertToUpperCase(tabs[0].label)}>
+            {canSearchBy && (
+              <Form className="mt-4">
+                <Form.Control
+                  onChange={(str) => setSearch(str.target.value)}
+                  placeholder="Buscar..."
+                  type="text"
+                  value={search}
+                />
+              </Form>
+            )}
+            <AllView />
+          </Tab>
+          <Tab eventKey={1} title={convertToUpperCase(tabs[1].label)}>
+            <AssignedView />
+          </Tab>
+        </Tabs>
+        <Button
+          {...{
+            isDisabled: isLoading,
+            isLoading,
+            isSubmit: true,
+            onClick: handleSubmit,
+          }}
+        />
       </>
     );
   }
 );
-
-const dataType = shape({
-  data: array,
-  title: string,
-});
 
 AssignData.propTypes = {
   accessors: shape({
     value: string,
     label: string,
   }),
-  allData: dataType,
-  assignedData: dataType,
+  allData: array,
+  assignedData: array,
+  canSearchBy: string,
+  tabLabels: arrayOf(string),
+  onSubmitData: shape({
+    afterSubmit: func,
+    getProps: func,
+    onSubmit: func,
+  }),
 };
 
 AssignData.displayName = "AssignData";

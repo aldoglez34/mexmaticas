@@ -13,7 +13,7 @@ export const useDataUtils = ({
   const [limit, setLimit] = useState(pageSize);
   const [offset, setOffset] = useState(0);
   const [sort, setSort] = useState(sortOptions[0]);
-  const [filtered, setFiltered] = useState();
+  const [filtered, setFiltered] = useState([]);
   const [pages, setPages] = useState();
 
   const searchRef = useRef(null);

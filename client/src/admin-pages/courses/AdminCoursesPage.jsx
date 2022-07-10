@@ -66,15 +66,21 @@ export const AdminCoursesPage = () => {
   ];
 
   const mapItemFunc = (item) => (
-    <ListGroupItem key={item._id} link={`/admin/courses/edit/${item._id}`}>
-      <h4>{item.name}</h4>
-      <span>{item.school}</span>
-      <div>
-        <Badge variant={item.isActive ? "success" : "danger"}>
-          {item.isActive ? "Activo" : "No activo"}
-        </Badge>
-      </div>
-    </ListGroupItem>
+    <ListGroupItem
+      key={item._id}
+      link={`/admin/courses/edit/${item._id}`}
+      title={item.name}
+      content={
+        <>
+          <span>{item.school}</span>
+          <div>
+            <Badge variant={item.isActive ? "success" : "danger"}>
+              {item.isActive ? "Activo" : "No activo"}
+            </Badge>
+          </div>
+        </>
+      }
+    />
   );
 
   return (

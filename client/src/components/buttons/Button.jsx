@@ -11,6 +11,7 @@ export const Button = memo(
     className = "",
     hasShadow = true,
     hoverText,
+    isActive = false,
     isAnchor = false,
     isBlock = false,
     isDisabled = false,
@@ -19,33 +20,41 @@ export const Button = memo(
     onClick,
     size = "md",
     variant = "dark",
-  }) => (
-    <BootstrapButton
-      {...{
-        block: isBlock,
-        className: isAnchor
-          ? cn(styles.anchor, className)
-          : cn(className, { "shadow-lg": hasShadow }),
-        disabled: isDisabled,
-        size,
-        variant,
-        ...(hoverText ? { title: hoverText } : {}),
-        ...(isSubmit ? { type: "submit" } : {}),
-        ...(onClick ? { onClick: onClick } : {}),
-      }}
-    >
-      {children}
-      {isSubmit && !children && "Guardar"}
-      {isSubmit && isLoading && (
-        <Spinner
-          animation="border"
-          className="ml-2"
-          size="sm"
-          variant="light"
-        />
-      )}
-    </BootstrapButton>
-  )
+  }) => {
+    const getClassName = () => {
+      if (isAnchor) {
+        if (!isActive) return cn(styles.anchor, className);
+        if (isActive) return cn(styles.activeAnchor, className);
+      }
+      return cn(className, { shadow: hasShadow });
+    };
+
+    return (
+      <BootstrapButton
+        {...{
+          block: isBlock,
+          className: getClassName(),
+          disabled: isDisabled,
+          size,
+          variant,
+          ...(hoverText && { title: hoverText }),
+          ...(isSubmit && { type: "submit" }),
+          ...(onClick && { onClick: onClick }),
+        }}
+      >
+        {children}
+        {isSubmit && !children && "Guardar"}
+        {isSubmit && isLoading && (
+          <Spinner
+            animation="border"
+            className="ml-2"
+            size="sm"
+            variant="light"
+          />
+        )}
+      </BootstrapButton>
+    );
+  }
 );
 
 Button.propTypes = {
@@ -54,6 +63,7 @@ Button.propTypes = {
   disabled: bool,
   hasShadow: bool,
   hoverText: string,
+  isActive: bool,
   isAnchor: bool,
   isBlock: bool,
   isDisabled: bool,

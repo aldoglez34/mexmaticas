@@ -11,6 +11,7 @@ import { useDataUtils } from "../../hooks/useDataUtils";
 import { isEmpty, isEqual } from "lodash";
 import { ADMIN_PAGES } from "../../utils/constants";
 import cn from "classnames";
+import { getFullName } from "../../utils/helpers";
 
 export const AdminClassroomsPage = () => {
   const [classrooms, setClassrooms] = useState();
@@ -76,29 +77,37 @@ export const AdminClassroomsPage = () => {
   ];
 
   const mapItemFunc = (item) => (
-    <ListGroupItem key={item._id} link={`/admin/classrooms/edit/${item._id}`}>
-      <h4>{item.name}</h4>
-      {item.teacher && (
-        <span className="mb-1">
-          <i className="fas fa-graduation-cap mr-2" />
-          {`${item.teacher?.name ?? ""} ${item.teacher?.firstSurname ?? ""} ${
-            item.teacher?.secondSurname ?? ""
-          }`.trim()}
-        </span>
-      )}
-      <div>
-        <span className="mr-2">
-          <i className="fas fa-school mr-2" />
-          {item.institution?.name ?? "Sin escuela"}
-          {item.school && ` - ${item.school}`}
-        </span>
-        <span>
-          |
-          <i className="fas fa-user-graduate mr-2 ml-2" />
-          {(item.members || []).length}
-        </span>
-      </div>
-    </ListGroupItem>
+    <ListGroupItem
+      key={item._id}
+      link={`/admin/classrooms/edit/${item._id}`}
+      title={item.name}
+      content={
+        <>
+          {item.teacher && (
+            <span className="mb-1">
+              <i className="fas fa-graduation-cap mr-2" />
+              {getFullName(
+                item.teacher?.name,
+                item.teacher?.firstSurname,
+                item.teacher?.secondSurname
+              )}
+            </span>
+          )}
+          <div>
+            <span className="mr-2">
+              <i className="fas fa-school mr-2" />
+              {item.institution?.name ?? "Sin escuela"}
+              {item.school && ` - ${item.school}`}
+            </span>
+            <span>
+              |
+              <i className="fas fa-user-graduate mr-2 ml-2" />
+              {(item.members || []).length}
+            </span>
+          </div>
+        </>
+      }
+    />
   );
 
   return (

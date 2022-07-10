@@ -14,7 +14,7 @@ import {
 } from "../components/forms";
 import { formatDate, getFullName } from "../../../utils/helpers";
 import { AdminDeleteModal } from "../../../components/modals/AdminDeleteModal";
-import { AddCoursesModal } from "../components/modals";
+import { AddCoursesModal, AddStudentsModal } from "../components/modals";
 
 export const AdminClassroomDetailPage = memo((props) => {
   const [showExportToExcel, setShowExportToExcel] = useState(false);
@@ -45,12 +45,18 @@ export const AdminClassroomDetailPage = memo((props) => {
       modal: {
         Content: AddCoursesModal,
         props: { classroomId },
+        size: "lg",
         title: "Agregar cursos",
       },
     },
     {
       text: "Agregar alumnos",
-      href: `/admin/classrooms/edit/${classroomId}/student/add`,
+      modal: {
+        Content: AddStudentsModal,
+        props: { classroomId },
+        size: "lg",
+        title: "Agregar estudiantes",
+      },
     },
     {
       text: "Exportar calificaciones",
@@ -198,7 +204,7 @@ export const AdminClassroomDetailPage = memo((props) => {
         modalText="Exporta el historial de calificaciones de los alumnos de este salón."
         setShow={setShowExportToExcel}
         show={showExportToExcel}
-        textIfEmpty="Historial vacío"
+        textIfEmpty="Historial vacío."
       />
     </AdminLayout>
   );

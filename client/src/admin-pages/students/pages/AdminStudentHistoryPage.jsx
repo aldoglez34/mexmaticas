@@ -262,7 +262,7 @@ export const AdminStudentHistoryPage = memo((props) => {
         modalText={`Exporta el historial de exámenes de ${studentName} a un archivo .csv`}
         setShow={setShowExportToExcel}
         show={showExportToExcel}
-        textIfEmpty="Historial vacío"
+        textIfEmpty="Historial vacío."
       />
     </AdminLayout>
   );

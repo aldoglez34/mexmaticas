@@ -9,6 +9,7 @@ import { fetchStudents } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
 import { isEmpty } from "lodash";
+import { getFullName } from "../../utils/helpers";
 
 export const AdminStudentsPage = () => {
   const [students, setStudents] = useState();
@@ -48,15 +49,17 @@ export const AdminStudentsPage = () => {
   });
 
   const mapItemFunc = (item) => (
-    <ListGroupItem key={item._id} link={`/admin/students/${item._id}`}>
-      <h4>
-        {`${item.name} ${item.firstSurname} ${item.secondSurname}`.trim()}
-      </h4>
-      <span>
-        <i className="fas fa-user-graduate mr-2" />
-        {item.email}
-      </span>
-    </ListGroupItem>
+    <ListGroupItem
+      key={item._id}
+      link={`/admin/students/${item._id}`}
+      title={getFullName(item.name, item.firstSurname, item.secondSurname)}
+      content={
+        <>
+          <i className="fas fa-user-graduate mr-2" />
+          {item.email}
+        </>
+      }
+    />
   );
 
   return (

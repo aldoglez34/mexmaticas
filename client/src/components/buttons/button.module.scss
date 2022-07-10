@@ -17,3 +17,23 @@
     transition: 0.3s;
   }
 }
+
+.activeAnchor {
+  cursor: pointer;
+
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #48bf84 !important;
+
+  font-size: 1rem;
+  font-weight: bolder !important;
+  padding: 0 !important;
+
+  outline: none;
+  box-shadow: none !important;
+
+  &:hover {
+    color: #48bf84 !important;
+    transition: 0.3s;
+  }
+}

@@ -53,10 +53,12 @@ export const AdminInstitutionsPage = () => {
   ];
 
   const mapItemFunc = (item) => (
-    <ListGroupItem key={item._id} link={`/admin/institutions/edit/${item._id}`}>
-      <h4>{item.name}</h4>
-      {item.description && <span>{item.description}</span>}
-    </ListGroupItem>
+    <ListGroupItem
+      key={item._id}
+      link={`/admin/institutions/edit/${item._id}`}
+      title={item.name}
+      content={item.description && <span>{item.description}</span>}
+    />
   );
 
   return (

@@ -17,7 +17,7 @@ export const SearchForm = forwardRef(
   ) => {
     const canSort = Boolean(activeSort && handleSort && sortOptions);
     return (
-      <Form className="mb-3">
+      <Form className="pb-4">
         <Form.Row>
           {canSort && (
             <Col md="4" className="d-flex">
@@ -38,7 +38,7 @@ export const SearchForm = forwardRef(
               </Form.Control>
             </Col>
           )}
-          <Col {...(canSort ? { md: "8" } : {})} className="d-flex">
+          <Col {...(canSort && { md: "8" })} className="d-flex">
             <div className="d-flex align-items-center mr-2">
               <i className="fas fa-search" style={{ fontSize: "19px" }} />
             </div>

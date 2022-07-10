@@ -53,15 +53,16 @@ export const useAdminRow = () => {
   const renderList = (list, className) => {
     if (isEmpty(list.data)) return <span>-</span>;
     return list.data.map((item, idx) => {
+      if (!item) return null;
       if (item.hasRef) {
         const scrollToRef = () => item.ref.current.scrollIntoView();
         return (
-          <React.Fragment key={idx}>
+          <span className="d-block" key={idx}>
             <Button hoverText="Ir a preguntas" isAnchor onClick={scrollToRef}>
               {getAccessorValue(item, list.accessor).trim()}
             </Button>
             {list.icon && renderIcon(list.icon, item)}
-          </React.Fragment>
+          </span>
         );
       }
       return (

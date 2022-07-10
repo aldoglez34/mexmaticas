@@ -13,6 +13,7 @@ import { ADMIN_PAGES } from "../../utils/constants";
 import { formatDate } from "../../utils/helpers";
 import { markSeen } from "../../services";
 import { isEmpty, isEqual } from "lodash";
+import { Badge } from "react-bootstrap";
 
 export const AdminMessagesPage = () => {
   const [messages, setMessages] = useState();
@@ -59,26 +60,26 @@ export const AdminMessagesPage = () => {
   };
 
   const mapItemFunc = (item) => (
-    <ListGroupItem key={item._id} handleOnClick={() => handleShow(item)}>
-      <div className="d-flex flex-row">
-        <div>
-          <strong>Remitente</strong>
-          <p className="m-0">{item.email}</p>
-          <small>{formatDate(item.sentAt, "L")}</small>
-        </div>
-        <div className="d-flex flex-column ml-3">
-          <strong>Mensaje</strong>
-          {item.body}
-        </div>
-        {!item.seen && (
-          <i
-            className="fas fa-certificate text-warning ml-auto"
-            style={{ fontSize: "22px" }}
-            title="Nuevo"
-          />
-        )}
-      </div>
-    </ListGroupItem>
+    <ListGroupItem
+      key={item._id}
+      handleOnClick={() => handleShow(item)}
+      title={`${item.email} - ${formatDate(item.sentAt, "L")}`}
+      content={
+        <>
+          <div className="d-flex flex-column">
+            <strong>
+              Mensaje
+              {!item.seen && (
+                <Badge className="ml-1" variant="danger">
+                  Nuevo
+                </Badge>
+              )}
+            </strong>
+            {item.body}
+          </div>
+        </>
+      }
+    />
   );
 
   const handleDeleteMessage = async (messageId) => {

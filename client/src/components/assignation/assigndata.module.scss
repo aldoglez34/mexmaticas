@@ -1,31 +1,19 @@
-.activeItem {
-  color: #48bf84 !important;
-}
-
-.activeButton {
-  background-color: rgb(100, 98, 98) !important;
-  border-color: rgb(100, 98, 98) !important;
-
-  color: white !important;
-  font-size: 16px !important;
-
+.customTabs > a {
+  background-color: transparent;
+  border-bottom-color: transparent;
+  color: #4d535a;
   &:hover {
-    background-color: #48bf84 !important;
-    border-color: #48bf84 !important;
-
-    color: white !important;
+    color: #48bf84;
   }
 }
 
-.inactiveButton {
-  background-color: transparent !important;
-  border-color: #4d535a !important;
-
-  color: #4d535a !important;
-  font-size: 16px !important;
-
+.customTabs > a.active {
   &:hover {
-    background-color: rgb(77, 196, 136) !important;
-    color: white !important;
+    border: 0;
+    color: #4d535a;
   }
+}
+
+.customTabs > a.disabled {
+  color: gray;
 }

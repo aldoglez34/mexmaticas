@@ -9,6 +9,7 @@ import { fetchTeachers } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
 import { isEmpty } from "lodash";
+import { getFullName } from "../../utils/helpers";
 
 export const AdminTeachersPage = () => {
   const [teachers, setTeachers] = useState();
@@ -55,19 +56,25 @@ export const AdminTeachersPage = () => {
   ];
 
   const mapItemFunc = (item) => (
-    <ListGroupItem key={item._id} link={`/admin/teachers/edit/${item._id}`}>
-      <h4>{String(`${item.name} ${item.firstSurname}`).trim()}</h4>
-      <span>
-        <i className="fas fa-graduation-cap mr-2" />
-        {item.email}
-      </span>
-      {(item.classrooms || []).map((c) => (
-        <span key={c._id}>
-          <i className="fas fa-users mr-2" />
-          {c.name}
-        </span>
-      ))}
-    </ListGroupItem>
+    <ListGroupItem
+      key={item._id}
+      link={`/admin/teachers/edit/${item._id}`}
+      title={getFullName(item.name, item.firstSurname, item.secondSurname)}
+      content={
+        <>
+          <span className="d-block">
+            <i className="fas fa-graduation-cap mr-2" />
+            {item.email}
+          </span>
+          {(item.classrooms || []).map((c) => (
+            <span key={c._id}>
+              <i className="fas fa-users mr-2" />
+              {c.name}
+            </span>
+          ))}
+        </>
+      }
+    />
   );
 
   return (

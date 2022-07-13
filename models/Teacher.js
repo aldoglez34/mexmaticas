@@ -35,10 +35,13 @@ const schema = new Schema({
   ],
   messages: [
     {
-      date: { type: Date, default: Date.now },
-      text: { type: Number, required: true },
+      sentAt: { type: Date, default: Date.now },
+      isResponded: { type: Boolean, default: false },
+      isSeen: { type: Boolean, default: false },
+      text: { type: String, required: true },
       origin: { type: String, required: true },
-      studentId: {
+      image: { type: String },
+      student: {
         type: Schema.Types.ObjectId,
         ref: "Student",
       },

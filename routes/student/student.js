@@ -1,6 +1,7 @@
 const router = require("express").Router();
+const errorLogger = require("../utils/errors");
 const model = require("../../models");
-const { getNextDifficulty } = require("../utils/helpers");
+const { getFullName, getNextDifficulty } = require("../utils/helpers");
 
 // buyCourse()
 // matches with /studentapi/student/buyCourse
@@ -49,19 +50,55 @@ router.put("/student/buyCourse", function (req, res) {
 });
 
 // fetchStudentByUID()
-// matches with /studentapi/fetchByUID/:uid
+// matches with /studentapi/student/fetchByUID/:uid
 router.get("/student/fetchByUID/:uid", function (req, res) {
-  model.Student.find({ firebaseUID: req.params.uid })
-    .select("name firstSurname secondSurname email")
-    .then((data) => res.json(data[0]))
+  model.Student.findOne({ firebaseUID: req.params.uid })
+    .select("name firstSurname secondSurname email isDeleted")
+    .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);
       res.status(422).send({ msg: "Ocurrió un error" });
     });
 });
 
+// fetchStudentClassrooms()
+// matches with /studentapi/student/fetchClassrooms/:id
+router.get("/student/fetchClassrooms/:id", (req, res) =>
+  model.Student.findById(req.params.id)
+    .select("classrooms")
+    .populate({
+      path: "classrooms",
+      select: "name teacher institution courses",
+      populate: {
+        path: "teacher institution courses",
+        select:
+          "name firstSurname secondSurname topics.name topics.subject topics._id teacher._id",
+      },
+    })
+    .then((data) => {
+      const classrooms = (data.classrooms || []).map((classroom) => {
+        const name = classroom.name;
+        const institution = classroom.institution && classroom.institution.name;
+        const teacher =
+          classroom.teacher &&
+          getFullName(
+            classroom.teacher.name,
+            classroom.teacher.firstSurname,
+            classroom.teacher.secondSurname
+          );
+        const teacherId = classroom.teacher?._id;
+        const courses = classroom.courses;
+
+        return { courses, institution, name, teacher, teacherId };
+      });
+
+      res.json(classrooms);
+    })
+    .catch((err) => errorLogger(err, res, 422))
+);
+
 // registerNewStudent()
-// matches with /studentapi/new
+// matches with /studentapi/student/new
 router.post("/student/new", function (req, res) {
   model.Student.create({
     firebaseUID: req.body.firebaseUID,
@@ -125,7 +162,7 @@ router.get("/student/fetchDashboard/:studentId", function (req, res) {
 });
 
 // fetchMessages()
-// matches with /studentapi/messages/:username
+// matches with /studentapi/student/messages/:username
 router.get("/messages/:username", function (req, res) {
   const username = req.params.username;
 
@@ -139,7 +176,7 @@ router.get("/messages/:username", function (req, res) {
 });
 
 // fetchUnseeenMessages()
-// matches with /studentapi/messages/unseen/:studentId
+// matches with /studentapi/student/messages/unseen/:studentId
 router.get("/messages/unseen/:studentId", function (req, res) {
   const studentId = req.params.studentId;
 
@@ -153,7 +190,7 @@ router.get("/messages/unseen/:studentId", function (req, res) {
 });
 
 // markAllMessagesSeen()
-// matches with /studentapi/messages/markAllSeen/:studentId
+// matches with /studentapi/student/messages/markAllSeen/:studentId
 router.put("/messages/markAllSeen/:studentId", function (req, res) {
   const studentId = req.params.studentId;
 
@@ -603,6 +640,23 @@ router.put("/freestyle/registerAttempt", function (req, res) {
       console.log("@error", err);
       res.status(422).send("Ocurrió un error");
     });
+});
+
+// messageTeacher()
+// matches with /studentapi/messageTeacher
+router.put("/messageTeacher", function (req, res) {
+  const { image, origin, student, teacherId, text } = req.body;
+
+  model.Teacher.findOneAndUpdate(
+    { _id: teacherId },
+    {
+      $push: {
+        messages: { image, origin, student, text },
+      },
+    }
+  )
+    .then(() => res.json("El mensaje se ha enviado con éxito."))
+    .catch((err) => errorLogger(err, res, 422));
 });
 
 module.exports = router;

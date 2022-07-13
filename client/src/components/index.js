@@ -16,7 +16,6 @@ export * from "./pagination/AdminPagination";
 export * from "./question/components/ExitButton";
 export * from "./question/components/Progress";
 export * from "./question/components/Timer";
-export * from "./question/modals/HelpModalSM";
 export * from "./question/modals/TimeOutModal";
 export * from "./question/question/QInstruction";
 export * from "./question/question/QMultipleChoice";

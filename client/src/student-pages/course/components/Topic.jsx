@@ -1,25 +1,18 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { string, object } from "prop-types";
+import { bool, func, object, string } from "prop-types";
 import { ExamsAccordion, HelpModal, PDFLInk, Leaderboards } from ".";
 
-export const Topic = React.memo(({ courseName, topic }) => {
-  return (
+import styles from "./topic.module.scss";
+
+export const Topic = React.memo(
+  ({ courseName, getTeacherNames, isPartOfClassroom, topic }) => (
     <>
       {/* title */}
       <Row id={topic.name}>
         <Col>
-          <h1 className="display-4 topicName mb-2" style={{ color: "#48bf84" }}>
-            {topic.name}
-          </h1>
-          <div className="d-flex mb-2">
-            <h3
-              className="mb-0"
-              style={{ backgroundColor: "#c6d9d7", color: "#212529" }}
-            >
-              {topic.subject}
-            </h3>
-          </div>
+          <p className={styles.topicName}>{topic.name}</p>
+          <p className={styles.topicSubject}>{topic.subject}</p>
         </Col>
       </Row>
       {/* description, material and exams */}
@@ -35,9 +28,11 @@ export const Topic = React.memo(({ courseName, topic }) => {
                 );
               })}
           </p>
-          <p className="my-3">
-            <Leaderboards topicId={topic._id} />
-          </p>
+          {isPartOfClassroom && (
+            <p className="my-3">
+              <Leaderboards topicId={topic._id} />
+            </p>
+          )}
           <div className="mb-2">
             {topic.material
               .sort((a, b) => a.materialOrderNumber - b.materialOrderNumber)
@@ -64,9 +59,7 @@ export const Topic = React.memo(({ courseName, topic }) => {
           </div>
         </Col>
         <Col lg={6} className="mt-2 mt-lg-0">
-          <h4 className="mb-3" style={{ color: "#212529" }}>
-            Exámenes
-          </h4>
+          <h4 className="mb-3">Exámenes</h4>
           <ExamsAccordion
             exams={topic.exams}
             reward={topic.reward}
@@ -78,17 +71,28 @@ export const Topic = React.memo(({ courseName, topic }) => {
               topicId: topic._id,
             }}
           />
-          <div className="text-right mt-2">
-            <HelpModal courseName={courseName} topic={topic.name} />
-          </div>
+          {isPartOfClassroom && (
+            <div className="text-right mt-2">
+              <HelpModal
+                {...{
+                  courseName,
+                  getTeacherNames,
+                  topic: topic.name,
+                  topicId: topic._id,
+                }}
+              />
+            </div>
+          )}
         </Col>
       </Row>
     </>
-  );
-});
+  )
+);
 
 Topic.propTypes = {
   courseName: string.isRequired,
+  getTeacherNames: func,
+  isPartOfClassroom: bool,
   topic: object.isRequired,
 };
 

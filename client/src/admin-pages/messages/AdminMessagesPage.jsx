@@ -14,6 +14,7 @@ import { formatDate } from "../../utils/helpers";
 import { markSeen } from "../../services";
 import { isEmpty, isEqual } from "lodash";
 import { Badge } from "react-bootstrap";
+import { errorLogger } from "../../errors/errorLogger";
 
 export const AdminMessagesPage = () => {
   const [messages, setMessages] = useState();
@@ -50,12 +51,7 @@ export const AdminMessagesPage = () => {
   };
 
   const handleShow = (message) => {
-    markSeen(message._id).catch((err) => {
-      console.log(err.response);
-      err.response.data.msg
-        ? alert(err.response.data.msg)
-        : alert("Ocurrió un error al marcar mensaje como leído.");
-    });
+    if (!message.seen) markSeen(message._id).catch((err) => errorLogger(err));
     setActiveMessage(message);
   };
 
@@ -63,7 +59,7 @@ export const AdminMessagesPage = () => {
     <ListGroupItem
       key={item._id}
       handleOnClick={() => handleShow(item)}
-      title={`${item.email} - ${formatDate(item.sentAt, "L")}`}
+      title={`[${item.email}] ${item.name}`}
       content={
         <>
           <div className="d-flex flex-column">
@@ -135,8 +131,8 @@ export const AdminMessagesPage = () => {
           title="Remitente"
           text={
             <div className="d-flex flex-column">
-              <span>{`Nombre: ${activeMessage?.name ?? ""}`}</span>
-              <span>{`Correo: ${activeMessage?.email ?? ""}`}</span>
+              <span>{activeMessage?.name ?? ""}</span>
+              <small>{activeMessage?.email ?? ""}</small>
             </div>
           }
         />
@@ -145,16 +141,17 @@ export const AdminMessagesPage = () => {
           text={formatDate(activeMessage?.sentAt, "LLLL")}
         />
         <ModalRow
-          title="Mensaje"
+          title="Tema"
           text={
             <div className="d-flex flex-column">
-              <span>{`Tema: ${activeMessage?.subject ?? ""}`}</span>
+              <span>{activeMessage?.subject ?? ""}</span>
             </div>
           }
         />
         <ModalRow
+          title="Mensaje"
           text={
-            <div className="d-flex flex-column py-4">
+            <div className="d-flex flex-column">
               <span>{activeMessage?.body ?? ""}</span>
             </div>
           }

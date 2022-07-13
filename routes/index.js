@@ -36,5 +36,6 @@ router.use(`/${BASE_URL.ADMIN}/topics`, require("./admin/topics"));
 // ==============================================
 router.use(`/${BASE_URL.TEACHER}/classrooms`, require("./teacher/classroom"));
 router.use(`/${BASE_URL.TEACHER}/teacher`, require("./teacher/teacher"));
+router.use(`/${BASE_URL.TEACHER}/messages`, require("./teacher/messages"));
 
 module.exports = router;

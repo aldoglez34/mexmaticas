@@ -4,7 +4,6 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { array, bool } from "prop-types";
 import * as examActions from "../../redux/actions/exam";
 import {
-  HelpModalSM,
   Progress,
   QInstruction,
   QMultipleChoice,
@@ -20,9 +19,10 @@ import {
   IncorrectModal,
   ScoreModal,
 } from "../../student-pages/freestyle/components";
+import { HelpModal } from "../../student-pages/course/components";
 
 export const QuestionsContainer = React.memo(
-  ({ questions, isFreestyle = false }) => {
+  ({ getTeacherNames, isFreestyle = false, questions }) => {
     const dispatch = useDispatch();
 
     // timeout modal
@@ -359,8 +359,19 @@ export const QuestionsContainer = React.memo(
           {/* bottom container */}
           <Container className="d-flex mt-3">
             <div className="ml-auto">
-              <HelpModalSM question={question} />
-              <ExitButton url={"/course/#" + exam.topicName} />
+              {!isFreestyle && getTeacherNames && (
+                <HelpModal
+                  {...{
+                    className: "mr-2",
+                    courseName: course.name,
+                    getTeacherNames,
+                    question,
+                    topic: exam.topicName,
+                    topicId: exam.topicId,
+                  }}
+                />
+              )}
+              <ExitButton url={`/course/#${exam.topicName}`} />
             </div>
           </Container>
           {/* modals for regular exams */}

@@ -18,7 +18,7 @@ export const DashboardCourseCard = React.memo(({ course }) => {
     <Card className={cn("shadow-sm", styles.card)}>
       <Card.Body>
         <Card.Title className="d-flex flex-row">
-          <h2 className="mb-0">{course.name}</h2>
+          <h4 className="mb-0">{course.name}</h4>
         </Card.Title>
         <Card.Text>
           {course.description &&

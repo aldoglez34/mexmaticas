@@ -41,21 +41,21 @@ export const AdminClassroomDetailPage = memo((props) => {
 
   const optionsDropdown = [
     {
-      text: "Agregar cursos",
+      text: "Actualizar cursos",
       modal: {
         Content: AddCoursesModal,
         props: { classroomId },
         size: "lg",
-        title: "Agregar cursos",
+        title: "Actualizar cursos",
       },
     },
     {
-      text: "Agregar alumnos",
+      text: "Actualizar alumnos",
       modal: {
         Content: AddStudentsModal,
         props: { classroomId },
         size: "lg",
-        title: "Agregar estudiantes",
+        title: "Actualizar estudiantes",
       },
     },
     {

@@ -5,6 +5,7 @@ import { Container, Spinner } from "react-bootstrap";
 import { fetchExamInfo } from "../../services";
 import * as zenModeActions from "../../redux/actions/zenMode";
 import { QuestionsContainer } from "../../components";
+import { useClassroom } from "../hooks/useClassroom";
 import "./exampage.scss";
 
 export const ExamPage = () => {
@@ -13,6 +14,9 @@ export const ExamPage = () => {
   const [exam, setExam] = useState();
 
   const reduxexam = useSelector((state) => state.exam);
+  const course = useSelector((state) => state.course);
+
+  const { getTeacherNames } = useClassroom(course?._id);
 
   useEffect(() => {
     try {
@@ -45,7 +49,10 @@ export const ExamPage = () => {
           <Container>
             <h1 className="examNameStyle mt-4">{exam.name}</h1>
           </Container>
-          <QuestionsContainer questions={exam.questions} />
+          <QuestionsContainer
+            questions={exam.questions}
+            getTeacherNames={getTeacherNames}
+          />
           <br />
           <br />
         </>

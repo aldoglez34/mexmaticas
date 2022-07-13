@@ -27,6 +27,16 @@ const schema = new Schema({
     type: String,
     trim: true,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  classrooms: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Classroom",
+    },
+  ],
   courses: [
     {
       type: Schema.Types.ObjectId,

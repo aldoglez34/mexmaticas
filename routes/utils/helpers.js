@@ -88,6 +88,38 @@ const utils = {
       });
     });
   },
+  pushClassroomIntoStudents: (studentIds, classroomId) => {
+    return new Promise((resolve, reject) => {
+      studentIds.forEach((studentId, index, array) => {
+        Student.findOneAndUpdate(
+          { _id: studentId },
+          {
+            $addToSet: {
+              classrooms: classroomId,
+            },
+          }
+        ).then(() => {
+          if (index === array.length - 1) resolve();
+        });
+      });
+    });
+  },
+  removeClassroomsFromStudents: (studentsIds, classroomId) => {
+    return new Promise((resolve, reject) => {
+      studentsIds.forEach((studentId, index, array) => {
+        Student.findOneAndUpdate(
+          { _id: studentId },
+          {
+            $pull: {
+              classrooms: classroomId,
+            },
+          }
+        ).then(() => {
+          if (index === array.length - 1) resolve();
+        });
+      });
+    });
+  },
   removeInstitutionFromClassrooms: (institutionId, classrooms) => {
     const classroomsArr = Array.isArray(classrooms) ? classrooms : [classrooms];
     return new Promise((resolve, reject) => {
@@ -133,6 +165,16 @@ const utils = {
       .sort((a, b) => a.orderNumber - b.orderNumber);
     return sortedCourses;
   },
+  isIdIncluded: (arr, id) => {
+    let response = false;
+    for (let item of arr) {
+      if (String(item) === String(id)) response = true;
+      break;
+    }
+    return response;
+  },
+  getFullName: (name, firstSurname, secondSurname) =>
+    `${name ?? ""} ${firstSurname ?? ""} ${secondSurname ?? ""}`.trim(),
 };
 
 module.exports = utils;

@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import {
-  AdminAddStudentToClassroom,
   AdminClassroomDetailPage,
   AdminClassroomsPage,
   AdminCourseDetailPage,
@@ -88,11 +87,6 @@ export const AdminNavigation = () => (
         exact
         path="/admin/classrooms/new"
         component={AdminNewClassroomPage}
-      />
-      <Route
-        exact
-        path="/admin/classrooms/edit/:classroomId/student/add"
-        render={(props) => <AdminAddStudentToClassroom routeProps={props} />}
       />
       {/* ================= topics ================= */}
       <Route

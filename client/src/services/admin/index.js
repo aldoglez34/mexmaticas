@@ -63,6 +63,7 @@ import {
   fetchStudentHistory,
   fetchStudents,
   fetchStudentUnpurchased,
+  updateActivityStatus,
 } from "./students";
 
 import {
@@ -126,6 +127,7 @@ export {
   newTopic,
   registerNewTeacher,
   respondMsg,
+  updateActivityStatus,
   updateClassroomCourses,
   updateClassroomDescription,
   updateClassroomInstitution,

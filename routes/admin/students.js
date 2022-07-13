@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const errorLogger = require("../utils/errors");
 const model = require("../../models");
 
 // fetchStudents()
@@ -139,7 +140,7 @@ router.get("/:studentId", function (req, res) {
 
   model.Student.findById(studentId)
     .select(
-      "email name firstSurname secondSurname registeredAt courses attempts rewards"
+      "email name firstSurname secondSurname registeredAt courses attempts rewards isDeleted"
     )
     .lean() // necessary
     .populate("courses", "name")
@@ -148,6 +149,16 @@ router.get("/:studentId", function (req, res) {
       console.log("@error", err);
       res.status(422).send("Ocurrió un error.");
     });
+});
+
+// updateActivityStatus()
+// matches with /adminapi/students/update
+router.put("/:studentId", function (req, res) {
+  const { studentId, isDeleted } = req.body;
+
+  model.Student.findOneAndUpdate({ _id: studentId }, { isDeleted: isDeleted })
+    .then((data) => res.json(data))
+    .catch((err) => errorLogger(err, res, 422));
 });
 
 module.exports = router;

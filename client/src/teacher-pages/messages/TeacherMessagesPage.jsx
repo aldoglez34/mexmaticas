@@ -3,17 +3,20 @@ import {
   AdminDataTemplate,
   AdminModal,
   Button,
+  ImageFromFirebase,
   ListGroupItem,
   SearchForm,
   TeacherLayout,
 } from "../../components";
-import { deleteMessage, fetchMessages } from "../../services";
+import { fetchTeacherMessages, markTeacherMsgSeen } from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
-import { ADMIN_PAGES } from "../../utils/constants";
 import { formatDate } from "../../utils/helpers";
-import { markSeen } from "../../services";
-import { isEmpty, isEqual } from "lodash";
-import { Badge } from "react-bootstrap";
+import { isEmpty } from "lodash";
+import { Badge, Form } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { errorLogger } from "../../errors/errorLogger";
+
+const PAGE_SIZE = 25;
 
 export const TeacherMessagesPage = () => {
   const [messages, setMessages] = useState();
@@ -21,18 +24,13 @@ export const TeacherMessagesPage = () => {
   // this state forces the effect to trigger and refetch the messages again
   const [readCount, setReadCount] = useState(0);
 
-  const {
-    MESSAGES: { PAGE_SIZE },
-  } = ADMIN_PAGES;
+  const teacher = useSelector((state) => state.teacher);
 
   useEffect(() => {
-    fetchMessages()
+    fetchTeacherMessages(teacher?._id)
       .then((res) => setMessages(res.data))
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
-  }, [readCount]);
+      .catch((err) => errorLogger(err));
+  }, [readCount, teacher]);
 
   const {
     data: { activePage, filtered, limit, offset, pages, searchRef },
@@ -40,7 +38,7 @@ export const TeacherMessagesPage = () => {
   } = useDataUtils({
     data: messages,
     pageSize: PAGE_SIZE,
-    searchBarAccessor: "email",
+    searchBarAccessor: "studentName",
   });
 
   const handleClose = () => {
@@ -50,12 +48,11 @@ export const TeacherMessagesPage = () => {
   };
 
   const handleShow = (message) => {
-    markSeen(message._id).catch((err) => {
-      console.log(err.response);
-      err.response.data.msg
-        ? alert(err.response.data.msg)
-        : alert("Ocurrió un error al marcar mensaje como leído.");
-    });
+    if (!message.isSeen)
+      markTeacherMsgSeen({
+        messageId: message._id,
+        teacherId: teacher._id,
+      }).catch((err) => errorLogger(err));
     setActiveMessage(message);
   };
 
@@ -63,37 +60,29 @@ export const TeacherMessagesPage = () => {
     <ListGroupItem
       key={item._id}
       handleOnClick={() => handleShow(item)}
-      title={`${item.email} - ${formatDate(item.sentAt, "L")}`}
+      title={`[${item.studentEmail}] ${item.studentName}`}
       content={
         <>
           <div className="d-flex flex-column">
-            <strong>
+            <span>
               Mensaje
-              {!item.seen && (
+              {!item.isSeen && (
                 <Badge className="ml-1" variant="danger">
                   Nuevo
                 </Badge>
               )}
-            </strong>
+              {item.isResponded && (
+                <Badge className="ml-1" variant="primary">
+                  Respondido
+                </Badge>
+              )}
+            </span>
             {item.body}
           </div>
         </>
       }
     />
   );
-
-  const handleDeleteMessage = async (messageId) => {
-    try {
-      await deleteMessage(messageId);
-
-      setActiveMessage(null);
-      // this state change will trigger the effect
-      setReadCount((prevState) => prevState + 1);
-    } catch (err) {
-      console.log(err);
-      alert("Ocurrió un error, vuelve a intentarlo.");
-    }
-  };
 
   const ModalRow = ({ title, text }) => (
     <div className="mb-2">
@@ -102,6 +91,19 @@ export const TeacherMessagesPage = () => {
     </div>
   );
 
+  const AnswerBox = () => {
+    return (
+      <>
+        <Form.Control
+          as="textarea"
+          disabled={activeMessage?.isResponded}
+          style={{ height: "100px" }}
+        />
+        <Button className="mt-2">Contestar</Button>
+      </>
+    );
+  };
+
   return (
     <TeacherLayout expanded leftBarActive="Mensajes" topNavTitle="Mensajes">
       <SearchForm
@@ -109,7 +111,7 @@ export const TeacherMessagesPage = () => {
         handleFilter={handleFilterData}
         isDataEmpty={isEmpty(messages)}
         ref={searchRef}
-        searchBarPlaceholder="Buscar por remitente..."
+        searchBarPlaceholder="Buscar por nombre de alumno..."
       />
       <AdminDataTemplate
         {...{
@@ -135,8 +137,8 @@ export const TeacherMessagesPage = () => {
           title="Remitente"
           text={
             <div className="d-flex flex-column">
-              <span>{`Nombre: ${activeMessage?.name ?? ""}`}</span>
-              <span>{`Correo: ${activeMessage?.email ?? ""}`}</span>
+              <span>{activeMessage?.studentName ?? ""}</span>
+              <small>{activeMessage?.studentEmail ?? ""}</small>
             </div>
           }
         />
@@ -145,34 +147,31 @@ export const TeacherMessagesPage = () => {
           text={formatDate(activeMessage?.sentAt, "LLLL")}
         />
         <ModalRow
-          title="Mensaje"
+          title="Origen"
           text={
             <div className="d-flex flex-column">
-              <span>{`Tema: ${activeMessage?.subject ?? ""}`}</span>
+              <span>{activeMessage?.origin ?? ""}</span>
             </div>
           }
         />
+        {activeMessage?.image && (
+          <ImageFromFirebase
+            className="mt-2"
+            height="250"
+            path={activeMessage.image}
+            rounded
+            width="250"
+          />
+        )}
         <ModalRow
+          title="Pregunta"
           text={
-            <div className="d-flex flex-column py-4">
-              <span>{activeMessage?.body ?? ""}</span>
+            <div className="d-flex flex-column">
+              <span>{activeMessage?.text ?? ""}</span>
             </div>
           }
         />
-        <Button
-          className="mt-2"
-          onClick={() =>
-            isEqual(
-              window.confirm(
-                "¿Estás seguro que quieres eliminar este mensaje?"
-              ),
-              true
-            ) && handleDeleteMessage(activeMessage._id)
-          }
-          variant="danger"
-        >
-          Eliminar
-        </Button>
+        <ModalRow title="Respuesta" text={<AnswerBox />} />
       </AdminModal>
     </TeacherLayout>
   );

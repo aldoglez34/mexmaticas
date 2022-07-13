@@ -26,12 +26,15 @@ const App = () => {
     setNavigation(USERS.GUEST);
   }, [dispatch, reduxStudent]);
 
+  const logoutUser = useCallback(() => {
+    if (reduxStudent) dispatch(logoutStudent());
+    setNavigation(USERS.GUEST);
+  }, [dispatch, reduxStudent]);
+
   const handleIsStudent = useCallback(
     (emailVerified, uid) => {
       if (!emailVerified) {
-        // logout user from redux if needed
-        if (reduxStudent) dispatch(logoutStudent());
-        setNavigation(USERS.GUEST);
+        logoutUser();
         return;
       }
 
@@ -43,6 +46,7 @@ const App = () => {
                 _id: data._id,
                 email: data.email,
                 firstSurname: data.firstSurname,
+                isDeleted: data.isDeleted,
                 name: data.name,
                 secondSurname: data.secondSurname,
               })
@@ -51,7 +55,7 @@ const App = () => {
         setNavigation(USERS.STUDENT);
       }
     },
-    [dispatch, reduxStudent]
+    [dispatch, logoutUser, reduxStudent]
   );
 
   const handleIsTeacher = useCallback(() => setNavigation(USERS.TEACHER), []);
@@ -60,6 +64,13 @@ const App = () => {
 
   useEffect(() => {
     firebaseAuth.onAuthStateChanged(async (user) => {
+      if (reduxStudent?.isDeleted) {
+        alert("Ocurrió un error.");
+        firebaseAuth.signOut();
+        logoutUser();
+        return;
+      }
+
       const { displayName, uid, emailVerified } = user || {};
 
       // guest would be true if no displayName returned in the user, which means no active session
@@ -90,7 +101,14 @@ const App = () => {
           break;
       }
     });
-  }, [handleIsAdmin, handleIsGuest, handleIsStudent, handleIsTeacher]);
+  }, [
+    handleIsAdmin,
+    handleIsGuest,
+    handleIsStudent,
+    handleIsTeacher,
+    logoutUser,
+    reduxStudent,
+  ]);
 
   const getNavigation = () => {
     if (isEqual(navigation, USERS.GUEST)) return <GuestNavigation />;

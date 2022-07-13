@@ -1,7 +1,7 @@
 export const errorLogger = (error, alertMessage) => {
   if (error.code) console.log("ERROR CODE", error.code);
   if (error.message) console.log("ERROR MESSAGE", error.MESSAGE);
-  console.log(error);
+  console.error(error);
 
   switch (alertMessage) {
     case 1:

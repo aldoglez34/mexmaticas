@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { fetchOneStudent } from "../../../services";
+import { fetchOneStudent, updateActivityStatus } from "../../../services";
 import { AdminLayout, AdminRow } from "../../../components";
-import { formatDate, getFullName } from "../../../utils/helpers";
+import {
+  askUserToConfirm,
+  formatDate,
+  getFullName,
+} from "../../../utils/helpers";
+import { Badge } from "react-bootstrap";
 
 export const AdminStudentDetailPage = (props) => {
-  const url = new URL(window.location.href);
-  const comesFrom =
-    url.href.split("comesFrom=").length === 2
-      ? url.href.split("comesFrom=").pop()
-      : undefined;
-
   const [student, setStudent] = useState();
 
   const studentId = props.routeProps.match.params.studentId;
@@ -36,11 +35,22 @@ export const AdminStudentDetailPage = (props) => {
       text: "Ver historial",
       href: `/admin/students/history/${studentId}`,
     },
+    "divider",
+    {
+      text: student?.isDeleted ? "Activar" : "Desactivar",
+      fn: () =>
+        askUserToConfirm("¿Estás seguro?", () =>
+          updateActivityStatus({
+            studentId,
+            isDeleted: !student?.isDeleted,
+          }).then(() => window.location.reload())
+        ),
+    },
   ];
 
   return (
     <AdminLayout
-      backBttn={comesFrom || "/admin/students"}
+      backBttn="/admin/students"
       expanded
       leftBarActive="Alumnos"
       optionsDropdown={optionsDropdown}
@@ -55,6 +65,14 @@ export const AdminStudentDetailPage = (props) => {
           student?.firstSurname,
           student?.secondSurname
         )}
+      />
+      <AdminRow
+        rowTitle="Estatus"
+        value={
+          <Badge variant={student?.isDeleted ? "danger" : "success"}>
+            {student?.isDeleted ? "No activo" : "Activo"}
+          </Badge>
+        }
       />
       <AdminRow
         rowTitle="Fecha de registro"

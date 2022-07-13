@@ -9,9 +9,11 @@ export const TopicBadge = ({ topicName }) => {
     <div className="mb-1">
       <Link
         className={styles.topic}
-        smooth
         title={`Ir a ${topicName}`}
         to={`/course/#${topicName}`}
+        scroll={(el) =>
+          el.scrollIntoView({ behavior: "smooth", block: "center" })
+        }
       >
         <strong style={{ fontSize: "17px" }}>
           <i

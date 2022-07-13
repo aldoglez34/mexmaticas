@@ -3,6 +3,9 @@ const model = require("../../models");
 const {
   getBasicExamsOfAnArrayOfCourses,
   pushExamsIntoStudentsAccountsIfTheyDontExist,
+  removeClassroomsFromStudents,
+  pushClassroomIntoStudents,
+  isIdIncluded,
 } = require("../utils/helpers");
 
 // fetchClassrooms()
@@ -191,26 +194,59 @@ router.put("/update/institution", async (req, res) => {
 // updateClassroomMembers()
 // matches with /adminapi/classrooms/update/members
 router.put("/update/members", async (req, res) => {
-  const { classroomId, members } = req.body;
+  const { classroomId, members: updatedMembers } = req.body;
 
   try {
-    // get the courses ids of this classroom
-    const coursesIds = await model.Classroom.findById(classroomId)
-      .select("courses")
-      .then((res) => res.courses);
-
-    // get the basic exams of these courses
-    const onlyBasicExamsIds = await getBasicExamsOfAnArrayOfCourses(coursesIds);
-
-    await pushExamsIntoStudentsAccountsIfTheyDontExist(
-      members,
-      coursesIds,
-      onlyBasicExamsIds
+    // get members of this classroom
+    const originalMembers = await model.Classroom.findById(classroomId).then(
+      (classroom) => (classroom.members || []).map((member) => member._id)
     );
+
+    // get members from orignal members list that doesn't appear on the updated list
+    const membersToRemove = originalMembers
+      .map((memberId) => {
+        if (memberId && !isIdIncluded(updatedMembers, memberId))
+          return memberId;
+      })
+      .filter((x) => x && x);
+
+    // get students that need to be added
+    const membersToAdd = updatedMembers
+      .map((memberId) => {
+        if (memberId && !isIdIncluded(originalMembers, memberId))
+          return memberId;
+      })
+      .filter((x) => x && x);
+
+    // add new members if there are any
+    if (membersToAdd.length) {
+      // get the courses ids of this classroom
+      const coursesIds = await model.Classroom.findById(classroomId)
+        .select("courses")
+        .then((res) => res.courses);
+
+      // get the basic exams of these courses
+      const onlyBasicExamsIds = await getBasicExamsOfAnArrayOfCourses(
+        coursesIds
+      );
+
+      await pushClassroomIntoStudents(membersToAdd, classroomId);
+
+      await pushExamsIntoStudentsAccountsIfTheyDontExist(
+        membersToAdd,
+        coursesIds,
+        onlyBasicExamsIds
+      );
+    }
+
+    // delete classroom from members
+    if (membersToRemove.length) {
+      removeClassroomsFromStudents(membersToRemove, classroomId);
+    }
 
     // update members with new members list
     await model.Classroom.findByIdAndUpdate(classroomId, {
-      members,
+      members: updatedMembers,
     });
 
     res.status(200).send("Los alumnos del salón fueron actualizados.");

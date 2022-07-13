@@ -6,6 +6,9 @@ export const buyCourse = (data) =>
 export const fetchStudentByUID = (uid) =>
   axios.get(`/studentapi/student/fetchByUID/${uid}`);
 
+export const fetchStudentClassrooms = (id) =>
+  axios.get(`/studentapi/student/fetchClassrooms/${id}`);
+
 export const registerNewStudent = (data) =>
   axios.post("/studentapi/student/new", data);
 
@@ -38,3 +41,6 @@ export const fetchFreestyle = (courseId, topicId) =>
 
 export const registerFreestyleAttempt = (data) =>
   axios.put("/studentapi/freestyle/registerAttempt", data);
+
+export const messageTeacher = (data) =>
+  axios.put("/studentapi/messageTeacher", data);

@@ -1,0 +1,19 @@
+.topicName {
+  font-size: 56px !important;
+  color: #0f5257 !important;
+  font-weight: bolder;
+  margin-bottom: 0px;
+}
+
+.topicSubject {
+  color: #48bf84 !important;
+  font-size: 20px !important;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 991px) {
+  .topicName {
+    font-size: 35px !important;
+  }
+}

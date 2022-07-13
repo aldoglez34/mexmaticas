@@ -13,3 +13,6 @@ export const assignCourse = (data) =>
 
 export const fetchOneStudent = (studentId) =>
   axios.get(`/adminapi/students/${studentId}`);
+
+export const updateActivityStatus = (data) =>
+  axios.put("/adminapi/students/update", data);

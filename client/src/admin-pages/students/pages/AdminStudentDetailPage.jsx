@@ -22,8 +22,6 @@ export const AdminStudentDetailPage = (props) => {
       });
   }, [studentId]);
 
-  console.log({ student });
-
   const studentFullName = `${student?.name ?? ""} ${
     student?.firstSurname ?? ""
   } ${student?.secondSurname ?? ""}`.trim();

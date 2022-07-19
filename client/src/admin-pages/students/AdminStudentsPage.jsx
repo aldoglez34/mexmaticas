@@ -10,12 +10,13 @@ import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
 import { isEmpty } from "lodash";
 import { getFullName } from "../../utils/helpers";
+import { errorLogger } from "../../errors/errorLogger";
 
 export const AdminStudentsPage = () => {
   const [students, setStudents] = useState();
 
   const {
-    CLASSROOMS: { PAGE_SIZE, SORT_OPTIONS },
+    STUDENTS: { PAGE_SIZE, SORT_OPTIONS },
   } = ADMIN_PAGES;
 
   useEffect(() => {
@@ -27,10 +28,7 @@ export const AdminStudentsPage = () => {
           )
         )
       )
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
+      .catch((err) => errorLogger(err));
   }, []);
 
   const {

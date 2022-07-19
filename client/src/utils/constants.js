@@ -19,7 +19,7 @@ export const USERS = {
 
 export const ADMIN_PAGES = {
   COURSES: {
-    PAGE_SIZE: 15,
+    PAGE_SIZE: 25,
     SORT_OPTIONS: [
       "Más Recientes",
       "Más Antiguos",
@@ -29,7 +29,7 @@ export const ADMIN_PAGES = {
     FILTER_BUTTONS: ["Primaria", "Secundaria", "Preparatoria", "Universidad"],
   },
   CLASSROOMS: {
-    PAGE_SIZE: 15,
+    PAGE_SIZE: 25,
     SORT_OPTIONS: [
       "Más Recientes",
       "Más Antiguos",
@@ -39,7 +39,7 @@ export const ADMIN_PAGES = {
     FILTER_BUTTONS: ["Primaria", "Secundaria", "Preparatoria", "Universidad"],
   },
   INSTITUTIONS: {
-    PAGE_SIZE: 15,
+    PAGE_SIZE: 25,
     SORT_OPTIONS: [
       "Más Recientes",
       "Más Antiguos",
@@ -48,10 +48,10 @@ export const ADMIN_PAGES = {
     ],
   },
   MESSAGES: {
-    PAGE_SIZE: 15,
+    PAGE_SIZE: 25,
   },
   STUDENTS: {
-    PAGE_SIZE: 15,
+    PAGE_SIZE: 25,
     SORT_OPTIONS: [
       "Más Recientes",
       "Más Antiguos",
@@ -60,9 +60,13 @@ export const ADMIN_PAGES = {
       "Por Email Asc",
       "Por Email Desc",
     ],
+    HISTORY: {
+      PAGE_SIZE: 40,
+      SORT_OPTIONS: ["Más Recientes", "Más Antiguos"],
+    },
   },
   TEACHERS: {
-    PAGE_SIZE: 15,
+    PAGE_SIZE: 25,
     SORT_OPTIONS: [
       "Más Recientes",
       "Más Antiguos",

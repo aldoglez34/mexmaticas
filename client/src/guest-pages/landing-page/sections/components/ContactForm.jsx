@@ -2,7 +2,8 @@ import React from "react";
 import { Form, Col, Button } from "react-bootstrap";
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { postMessage } from "../../../../services";
+import { newConversation } from "../../../../services";
+import { errorLogger } from "../../../../errors/errorLogger";
 
 export const ContactForm = () => {
   const yupschema = yup.object({
@@ -21,17 +22,22 @@ export const ContactForm = () => {
         body: "",
       }}
       validationSchema={yupschema}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
-        values.source = "Inicio";
-        postMessage(values)
-          .then((res) => {
-            // console.log(res);
-            alert(res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        newConversation({
+          text: values.body,
+          origin: values.subject,
+          sender: {
+            name: values.name,
+            email: values.email,
+          },
+        })
+          .then(() =>
+            alert(
+              "Mensaje enviado, el administrador se pondrá en contacto contigo al correo proporcionado."
+            )
+          )
+          .catch((err) => errorLogger(err));
       }}
     >
       {({

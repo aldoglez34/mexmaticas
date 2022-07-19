@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Image } from "react-bootstrap";
 import { bool, func, object, string } from "prop-types";
 import { ExamsAccordion, HelpModal, PDFLInk, Leaderboards } from ".";
 
@@ -59,7 +59,15 @@ export const Topic = React.memo(
           </div>
         </Col>
         <Col lg={6} className="mt-2 mt-lg-0">
-          <h4 className="mb-3">Exámenes</h4>
+          <div className="d-flex align-items-center mb-3">
+            <h4 className="mb-0">Exámenes</h4>
+            <Image
+              className="ml-2"
+              height="35"
+              src="/images/exams.png"
+              width="35"
+            />
+          </div>
           <ExamsAccordion
             exams={topic.exams}
             reward={topic.reward}

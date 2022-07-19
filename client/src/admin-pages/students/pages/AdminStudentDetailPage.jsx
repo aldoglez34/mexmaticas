@@ -22,6 +22,8 @@ export const AdminStudentDetailPage = (props) => {
       });
   }, [studentId]);
 
+  console.log({ student });
+
   const studentFullName = `${student?.name ?? ""} ${
     student?.firstSurname ?? ""
   } ${student?.secondSurname ?? ""}`.trim();
@@ -95,6 +97,18 @@ export const AdminStudentDetailPage = (props) => {
         value={`${student?.attempts?.length} / ${
           (student?.attempts || []).filter((a) => a.grade === 10).length
         }`}
+      />
+      <AdminRow
+        rowTitle="Salones"
+        list={{
+          accessor: "name",
+          data: student?.classrooms,
+          icon: {
+            getLink: (item) => `/admin/classrooms/edit/${item._id}`,
+            hoverText: "Ir a salón",
+            svg: "anchor",
+          },
+        }}
       />
       <AdminRow
         rowTitle="Medallas"

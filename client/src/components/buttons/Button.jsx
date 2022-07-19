@@ -44,7 +44,7 @@ export const Button = memo(
       >
         {children}
         {isSubmit && !children && "Guardar"}
-        {isSubmit && isLoading && (
+        {isLoading && (
           <Spinner
             animation="border"
             className="ml-2"

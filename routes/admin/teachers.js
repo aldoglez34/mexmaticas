@@ -22,6 +22,7 @@ router.post("/new", async (req, res) => {
     firstSurname: req.body.firstSurname,
     secondSurname: req.body.secondSurname,
     email: req.body.email,
+    gender: req.body.gender,
   })
     .then((data) => res.json(data))
     .catch((err) => {

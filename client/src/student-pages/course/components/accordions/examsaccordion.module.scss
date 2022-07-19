@@ -1,6 +1,24 @@
-.underConstruction {
-  background-color: #f4fbf8;
+.cardHeader {
+  background-color: #e7edee !important;
+}
+
+.arrowIcon {
+  color: #48bf84;
+  margin-right: 0.4rem;
+}
+
+.accordionToggle {
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.underConstructionDiv {
+  background-color: white;
   background-blend-mode: multiply;
 
   padding: 55px 0px !important;
+}
+
+.underConstruction {
+  font-size: 80px !important;
 }

@@ -41,6 +41,7 @@ export const useAddTeacher = () => {
         firstSurname: values.firstSurname,
         secondSurname: values.secondSurname,
         email: values.email,
+        gender: values.gender,
       });
 
       // delete and signout temporary firebase auth

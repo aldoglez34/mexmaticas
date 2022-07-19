@@ -1,10 +1,10 @@
 import React from "react";
 import { ListGroup, Form } from "react-bootstrap";
 import { array } from "prop-types";
-import "./mymessages.scss";
+import "./studentconversations.scss";
 import { formatDate } from "../../../utils/helpers";
 
-export const MyMessages = React.memo(({ messages }) => {
+export const StudentConversations = React.memo(({ messages }) => {
   return (
     <ListGroup className="mt-2">
       {messages.map((m) => (
@@ -75,8 +75,8 @@ export const MyMessages = React.memo(({ messages }) => {
   );
 });
 
-MyMessages.propTypes = {
+StudentConversations.propTypes = {
   messages: array.isRequired,
 };
 
-MyMessages.displayName = "MyMessages";
+StudentConversations.displayName = "StudentConversations";

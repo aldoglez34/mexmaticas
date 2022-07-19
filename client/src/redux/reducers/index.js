@@ -5,7 +5,6 @@ import exam from "./exam";
 import purchase from "./purchase";
 import student from "./student";
 import teacher from "./teacher";
-import zenMode from "./zen";
 
 const rootReducer = combineReducers({
   admin,
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
   purchase,
   student,
   teacher,
-  zenMode,
 });
 
 export default rootReducer;

@@ -1,77 +1,73 @@
-import React, { useState, useEffect } from "react";
-import { NavDropdown, Badge } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import React, { memo } from "react";
+import { NavDropdown } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import * as studentActions from "../../../../../redux/actions/student";
 import { firebaseAuth } from "../../../../../firebase/firebase";
-import { fetchUnseeenMessages } from "../../../../../services";
-import "./navbardropdowns.scss";
+import { errorLogger } from "../../../../../errors/errorLogger";
+import { bool, object } from "prop-types";
 
-export const StudentDropdown = () => {
-  const [unseen, setUnseen] = useState();
+import styles from "./navbar.module.scss";
 
-  const student = useSelector((state) => state.student);
-  const zenMode = useSelector((state) => state.zenMode);
-  const dispatch = useDispatch();
+export const StudentDropdown = memo(
+  ({ hasPendingMessages, isZen, student }) => {
+    const dispatch = useDispatch();
 
-  const logout = () => {
-    firebaseAuth
-      .signOut()
-      .then(() => {
-        dispatch(studentActions.logoutStudent());
-        alert("¡Adiós, vuelve pronto!");
-      })
-      .catch((error) => console.log(error));
-  };
+    const logout = () => {
+      firebaseAuth
+        .signOut()
+        .then(() => dispatch(studentActions.logoutStudent()))
+        .catch((err) => errorLogger(err));
+    };
 
-  useEffect(() => {
-    fetchUnseeenMessages(student._id)
-      .then((res) => setUnseen(res.data))
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [student._id]);
+    const getStudentEmail = () => {
+      if (!student) return null;
+      if (isZen) return <s>{student.email}</s>;
+      return <span>{student.email}</span>;
+    };
 
-  return (
-    <NavDropdown
-      id="navDropdownToggle"
-      alignRight
-      title={
-        <span id="navDropdownText">
-          {unseen > 0 ? (
-            <Badge variant="danger" className="mr-1" title="Nuevos mensajes">
-              {unseen}
-            </Badge>
-          ) : null}
-          {student ? (
-            zenMode ? (
-              <s>{student.email}</s>
-            ) : (
-              <span>{student.email}</span>
-            )
-          ) : null}
-          <i
-            className="fas fa-chevron-down ml-1"
-            style={{ fontSize: "13px" }}
-          />
-        </span>
-      }
-      disabled={zenMode}
-    >
-      <NavDropdown.Item href="/dashboard" className="dropdownItem">
-        Mis cursos
-      </NavDropdown.Item>
-      <NavDropdown.Item href="/messages" className="dropdownItem">
-        {unseen > 0 ? (
-          <Badge variant="danger" className="mr-1" title="Nuevos mensajes">
-            {unseen}
-          </Badge>
-        ) : null}
-        Mis mensajes
-      </NavDropdown.Item>
-      <NavDropdown.Divider />
-      <NavDropdown.Item onClick={logout} className="dropdownItem">
-        Cerrar sesión
-      </NavDropdown.Item>
-    </NavDropdown>
-  );
+    const RedDot = () => (
+      <small>
+        <i
+          className="fas fa-circle ml-1"
+          style={{ color: "#dc3545", textAlign: "center" }}
+        />
+      </small>
+    );
+
+    return (
+      <NavDropdown
+        alignRight
+        className={styles.navDropdownToggle}
+        disabled={isZen}
+        title={
+          <span className={styles.navDropdownText}>
+            {getStudentEmail()}
+            <i
+              className="fas fa-chevron-down ml-1"
+              style={{ fontSize: "13px" }}
+            />
+          </span>
+        }
+      >
+        <NavDropdown.Item href="/dashboard" className="dropdownItem">
+          Mis cursos
+        </NavDropdown.Item>
+        <NavDropdown.Item href="/messages" className="dropdownItem">
+          Mis mensajes{hasPendingMessages && <RedDot />}
+        </NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item onClick={logout} className="dropdownItem">
+          Cerrar sesión
+        </NavDropdown.Item>
+      </NavDropdown>
+    );
+  }
+);
+
+StudentDropdown.propTypes = {
+  hasPendingMessages: bool,
+  isZen: bool,
+  student: object,
 };
+
+StudentDropdown.displayName = "StudentDropdown";

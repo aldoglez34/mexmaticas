@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { StudentLayout } from "../../components";
-import { useSelector, useDispatch } from "react-redux";
-import * as zenModeActions from "../../redux/actions/zenMode";
+import { useSelector } from "react-redux";
 import { fetchFreestyle } from "../../services";
 import { QuestionsContainer } from "../../components";
 
 export const FreestylePage = () => {
-  const dispatch = useDispatch();
-
   const course = useSelector((state) => state.course);
   const exam = useSelector((state) => state.exam);
 
@@ -23,7 +20,6 @@ export const FreestylePage = () => {
           );
           window.location.href = "/course";
         } else {
-          dispatch(zenModeActions.zenModeOn());
           setFreestyle(res.data);
         }
       });
@@ -38,7 +34,7 @@ export const FreestylePage = () => {
   }, []);
 
   return (
-    <StudentLayout>
+    <StudentLayout isZen={true}>
       {freestyle ? (
         <>
           <Container>

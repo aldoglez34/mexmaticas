@@ -21,6 +21,10 @@ const schema = new Schema({
     type: String,
     trim: true,
   },
+  gender: {
+    type: String,
+    enum: ["man", "woman"],
+  },
   email: {
     type: String,
     trim: true,
@@ -33,20 +37,13 @@ const schema = new Schema({
       ref: "Classroom",
     },
   ],
-  messages: [
+  conversations: [
     {
-      sentAt: { type: Date, default: Date.now },
-      isResponded: { type: Boolean, default: false },
-      isSeen: { type: Boolean, default: false },
-      text: { type: String, required: true },
-      origin: { type: String, required: true },
-      image: { type: String },
-      student: {
-        type: Schema.Types.ObjectId,
-        ref: "Student",
-      },
+      type: Schema.Types.ObjectId,
+      ref: "Conversation",
     },
   ],
+  pendingMessages: [{ type: Schema.Types.ObjectId }],
   createdAt: {
     type: Date,
     default: Date.now,

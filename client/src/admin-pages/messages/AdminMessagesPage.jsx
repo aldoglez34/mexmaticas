@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AdminDataTemplate,
   AdminLayout,
@@ -7,84 +7,79 @@ import {
   ListGroupItem,
   SearchForm,
 } from "../../components";
-import { deleteMessage, fetchMessages } from "../../services";
+import {
+  deleteConversation,
+  fetchConversations,
+  setConversationSeen,
+} from "../../services";
 import { useDataUtils } from "../../hooks/useDataUtils";
 import { ADMIN_PAGES } from "../../utils/constants";
 import { formatDate } from "../../utils/helpers";
-import { markSeen } from "../../services";
 import { isEmpty, isEqual } from "lodash";
-import { Badge } from "react-bootstrap";
 import { errorLogger } from "../../errors/errorLogger";
 
 export const AdminMessagesPage = () => {
-  const [messages, setMessages] = useState();
-  const [activeMessage, setActiveMessage] = useState(null);
-  // this state forces the effect to trigger and refetch the messages again
-  const [readCount, setReadCount] = useState(0);
+  const [conversations, setConversations] = useState();
+  const [activeConversation, setActiveConversation] = useState(null);
 
   const {
     MESSAGES: { PAGE_SIZE },
   } = ADMIN_PAGES;
 
   useEffect(() => {
-    fetchMessages()
-      .then((res) => setMessages(res.data))
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
-  }, [readCount]);
+    fetchConversations("admin", "admin")
+      .then((res) => setConversations(res.data))
+      .catch((err) => errorLogger(err));
+  }, []);
 
   const {
     data: { activePage, filtered, limit, offset, pages, searchRef },
     functions: { clearFilters, handleChangePage, handleFilterData },
   } = useDataUtils({
-    data: messages,
+    data: conversations,
     pageSize: PAGE_SIZE,
     searchBarAccessor: "email",
   });
 
   const handleClose = () => {
-    setActiveMessage(null);
-    // this state change will trigger the effect
-    setReadCount((prevState) => prevState + 1);
+    if (!activeConversation.isSeenByAdmin) {
+      window.location.reload();
+      return;
+    }
+    setActiveConversation(null);
   };
 
-  const handleShow = (message) => {
-    if (!message.seen) markSeen(message._id).catch((err) => errorLogger(err));
-    setActiveMessage(message);
+  const handleShow = async (conversation) => {
+    try {
+      await setConversationSeen("admin", "admin", conversation._id);
+      setActiveConversation(conversation);
+    } catch (err) {
+      errorLogger(err);
+    }
   };
 
   const mapItemFunc = (item) => (
     <ListGroupItem
-      key={item._id}
       handleOnClick={() => handleShow(item)}
-      title={`[${item.email}] ${item.name}`}
+      hasRedDot={!item.isSeenByAdmin}
+      key={item._id}
+      title={`[${item.sender?.email}] ${item.sender?.name}`}
       content={
         <>
           <div className="d-flex flex-column">
-            <strong>
-              Mensaje
-              {!item.seen && (
-                <Badge className="ml-1" variant="danger">
-                  Nuevo
-                </Badge>
-              )}
-            </strong>
-            {item.body}
+            <strong>Mensaje</strong>
+            {item.messages[0]?.text}
           </div>
         </>
       }
     />
   );
 
-  const handleDeleteMessage = async (messageId) => {
+  const handleDeleteConversation = async (conversationId) => {
     try {
-      await deleteMessage(messageId);
-
-      setActiveMessage(null);
-      // this state change will trigger the effect
-      setReadCount((prevState) => prevState + 1);
+      await deleteConversation(conversationId);
+      setActiveConversation(null);
+      window.location.reload();
     } catch (err) {
       console.log(err);
       alert("Ocurrió un error, vuelve a intentarlo.");
@@ -103,7 +98,7 @@ export const AdminMessagesPage = () => {
       <SearchForm
         clearFilters={clearFilters}
         handleFilter={handleFilterData}
-        isDataEmpty={isEmpty(messages)}
+        isDataEmpty={isEmpty(conversations)}
         ref={searchRef}
         searchBarPlaceholder="Buscar por remitente..."
       />
@@ -123,7 +118,7 @@ export const AdminMessagesPage = () => {
       {/* show modal if there's an active message */}
       <AdminModal
         handleClose={handleClose}
-        show={!!activeMessage}
+        show={!!activeConversation}
         size="lg"
         title="Mensaje"
       >
@@ -131,20 +126,20 @@ export const AdminMessagesPage = () => {
           title="Remitente"
           text={
             <div className="d-flex flex-column">
-              <span>{activeMessage?.name ?? ""}</span>
-              <small>{activeMessage?.email ?? ""}</small>
+              <span>{activeConversation?.sender?.name ?? ""}</span>
+              <small>{activeConversation?.sender?.email ?? ""}</small>
             </div>
           }
         />
         <ModalRow
           title="Fecha"
-          text={formatDate(activeMessage?.sentAt, "LLLL")}
+          text={formatDate(activeConversation?.createdAt, "LLLL")}
         />
         <ModalRow
           title="Tema"
           text={
             <div className="d-flex flex-column">
-              <span>{activeMessage?.subject ?? ""}</span>
+              <span>{activeConversation?.origin ?? ""}</span>
             </div>
           }
         />
@@ -152,7 +147,7 @@ export const AdminMessagesPage = () => {
           title="Mensaje"
           text={
             <div className="d-flex flex-column">
-              <span>{activeMessage?.body ?? ""}</span>
+              <span>{activeConversation?.messages[0]?.text ?? ""}</span>
             </div>
           }
         />
@@ -164,7 +159,7 @@ export const AdminMessagesPage = () => {
                 "¿Estás seguro que quieres eliminar este mensaje?"
               ),
               true
-            ) && handleDeleteMessage(activeMessage._id)
+            ) && handleDeleteConversation(activeConversation._id)
           }
           variant="danger"
         >

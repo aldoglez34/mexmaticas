@@ -13,7 +13,7 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
             <i className="far fa-star ml-1" />
             <i className="far fa-star ml-1" />
             <br />
-            <span className="text-danger">
+            <span className="text-info">
               <strong>Básico</strong>
             </span>
           </>
@@ -27,7 +27,7 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
             <i className="far fa-star ml-1" />
             <i className="far fa-star ml-1" />
             <br />
-            <span className="text-danger">
+            <span className="text-info">
               <strong>Básico-Intermedio</strong>
             </span>
           </>
@@ -41,7 +41,7 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
             <i className="far fa-star ml-1" />
             <i className="far fa-star ml-1" />
             <br />
-            <span className="text-danger">
+            <span className="text-info">
               <strong>Intermedio</strong>
             </span>
           </>
@@ -55,7 +55,7 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
             <i className="fas fa-star ml-1" />
             <i className="far fa-star ml-1" />
             <br />
-            <span className="text-danger">
+            <span className="text-info">
               <strong>Intermedio-Avanzado</strong>
             </span>
           </>
@@ -69,7 +69,7 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
             <i className="fas fa-star ml-1" />
             <i className="fas fa-star ml-1" />
             <br />
-            <span className="text-danger">
+            <span className="text-info">
               <strong>Avanzado</strong>
             </span>
           </>
@@ -80,7 +80,7 @@ export const DifficultyStars = React.memo(({ difficulty }) => {
   };
 
   return (
-    <span className="text-danger" title="Dificultad">
+    <span className="text-info" title="Dificultad">
       {calculateDifficulty()}
     </span>
   );

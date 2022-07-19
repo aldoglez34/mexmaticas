@@ -140,10 +140,9 @@ router.get("/:studentId", function (req, res) {
 
   model.Student.findById(studentId)
     .select(
-      "email name firstSurname secondSurname registeredAt courses attempts rewards isDeleted"
+      "email name firstSurname secondSurname registeredAt courses attempts rewards isDeleted classrooms"
     )
-    .lean() // necessary
-    .populate("courses", "name")
+    .populate("courses classrooms", "name")
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("@error", err);

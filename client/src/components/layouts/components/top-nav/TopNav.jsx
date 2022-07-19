@@ -37,8 +37,7 @@ export const TopNav = memo(
                   href={backBttn}
                   style={{ boxShadow: "none" }}
                 >
-                  <i className="fas fa-chevron-left mr-1" />
-                  Atrás
+                  <i className="fas fa-level-up-alt" />
                 </Button>
               ) : null}
               {/* options dropdown */}

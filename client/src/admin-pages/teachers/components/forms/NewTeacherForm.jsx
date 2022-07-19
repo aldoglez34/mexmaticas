@@ -42,6 +42,7 @@ export const NewTeacherForm = () => {
         "Sólo letras"
       )
       .required("Requerido"),
+    gender: yup.string().required("Requerido"),
     password: yup.string().min(6, "Mínimo 6 caracteres").required("Requerido"),
   });
 
@@ -144,7 +145,7 @@ export const NewTeacherForm = () => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group as={Col}>
+            <Form.Group as={Col} md={8}>
               <Form.Label>
                 <strong>Correo</strong>
                 <strong className="ml-1 text-danger" title="Requerido">
@@ -164,6 +165,31 @@ export const NewTeacherForm = () => {
               <ErrorMessage
                 className="text-danger"
                 name="email"
+                component="div"
+              />
+            </Form.Group>
+            <Form.Group as={Col} md={4}>
+              <Form.Label>
+                <strong>Género</strong>
+                <strong className="ml-1 text-danger" title="Requerido">
+                  *
+                </strong>
+              </Form.Label>
+              <Form.Control
+                isValid={touched.gender && !errors.gender}
+                as="select"
+                name="gender"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.gender}
+              >
+                <option value=""></option>
+                <option value="man">Hombre</option>
+                <option value="woman">Mujer</option>
+              </Form.Control>
+              <ErrorMessage
+                className="text-danger"
+                name="gender"
                 component="div"
               />
             </Form.Group>

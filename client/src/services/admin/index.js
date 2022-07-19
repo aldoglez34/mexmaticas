@@ -43,8 +43,6 @@ import {
 
 import { addMaterial, deleteMaterial, updateMaterialOrder } from "./material";
 
-import { deleteMessage, fetchMessages, markSeen, respondMsg } from "./messages";
-
 import {
   deleteQuestion,
   newDichotomousQuestion,
@@ -92,7 +90,6 @@ export {
   deleteClassroom,
   deleteInstitution,
   deleteMaterial,
-  deleteMessage,
   deleteQuestion,
   deleteTopic,
   fetchAvailableDifficulties,
@@ -101,7 +98,6 @@ export {
   fetchCourses,
   fetchExam,
   fetchInstitutions,
-  fetchMessages,
   fetchOneClassroom,
   fetchOneCourse,
   fetchOneInstitution,
@@ -112,7 +108,6 @@ export {
   fetchStudentUnpurchased,
   fetchTeachers,
   fetchTopic,
-  markSeen,
   newClassroom,
   newCourse,
   newDichotomousQuestion,
@@ -126,7 +121,6 @@ export {
   newSimpleWithTwoAnswersQuestion,
   newTopic,
   registerNewTeacher,
-  respondMsg,
   updateActivityStatus,
   updateClassroomCourses,
   updateClassroomDescription,

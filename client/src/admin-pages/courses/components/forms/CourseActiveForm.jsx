@@ -59,6 +59,7 @@ export const CourseActiveForm = memo(({ formLabel, formInitialText }) => {
                 isValid={touched.newStatus && !errors.newStatus}
                 isInvalid={touched.newStatus && !!errors.newStatus}
               >
+                <option value=""></option>
                 <option value={true}>Activo</option>
                 <option value={false}>No activo</option>
               </Form.Control>

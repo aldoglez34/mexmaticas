@@ -113,32 +113,4 @@ router.get("/fetchLandingPageCourses", function (req, res) {
     });
 });
 
-// postMessage()
-// matches with /guestapi/postMessage
-router.post("/postMessage", function (req, res) {
-  const { body, email, subject, source, name, username } = req.body;
-
-  model.Message.create({
-    source,
-    name,
-    username,
-    email,
-    subject,
-    body,
-  })
-    .then(() =>
-      res.json(
-        "El mensaje se ha enviado con éxito, nosotros nos pondremos en contacto contigo al correo proporcionado"
-      )
-    )
-    .catch((err) => {
-      console.log("@error", err);
-      res
-        .status(422)
-        .send(
-          "Ocurrió un error al enviar el mensaje, inténtalo de nuevo más tarde"
-        );
-    });
-});
-
 module.exports = router;

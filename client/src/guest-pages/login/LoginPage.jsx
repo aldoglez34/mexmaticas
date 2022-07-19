@@ -1,5 +1,5 @@
 import React from "react";
-import { GuestLayout } from "../../components";
+import { StudentLayout } from "../../components";
 import { Col, Container, Row } from "react-bootstrap";
 import { LoginForm } from "./components";
 import cn from "classnames";
@@ -7,7 +7,7 @@ import cn from "classnames";
 import styles from "./loginpage.module.scss";
 
 export const LoginPage = () => (
-  <GuestLayout>
+  <StudentLayout isContainer={false}>
     <Container className={styles.log_container}>
       <Row className="px-0 px-lg-3">
         <Col lg={6} className={cn("d-flex flex-column", styles.log_leftCol)}>
@@ -27,5 +27,5 @@ export const LoginPage = () => (
         </Col>
       </Row>
     </Container>
-  </GuestLayout>
+  </StudentLayout>
 );

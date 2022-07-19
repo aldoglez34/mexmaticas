@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { StudentLayout } from "../../components";
 import { Container, Spinner } from "react-bootstrap";
 import { fetchExamInfo } from "../../services";
-import * as zenModeActions from "../../redux/actions/zenMode";
 import { QuestionsContainer } from "../../components";
 import { useClassroom } from "../hooks/useClassroom";
 import "./exampage.scss";
 
 export const ExamPage = () => {
-  const dispatch = useDispatch();
-
   const [exam, setExam] = useState();
 
   const reduxexam = useSelector((state) => state.exam);
@@ -28,7 +25,6 @@ export const ExamPage = () => {
           );
           window.location.href = "/course";
         } else {
-          dispatch(zenModeActions.zenModeOn());
           setExam(res.data);
         }
       });
@@ -43,7 +39,7 @@ export const ExamPage = () => {
   }, []);
 
   return (
-    <StudentLayout>
+    <StudentLayout isZen={true}>
       {exam ? (
         <>
           <Container>

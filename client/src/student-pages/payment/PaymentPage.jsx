@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { GuestLayout } from "../../components";
-import {
-  Button,
-  Col,
-  Container,
-  Image,
-  Modal,
-  Row,
-  Spinner,
-} from "react-bootstrap";
+import { StudentLayout } from "../../components";
+import { Col, Container, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { AdminSpinner } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { clearPurchase } from "../../redux/actions/purchase";
 import { fetchOneCourse } from "../../services";
 import { buyCourse } from "../../services";
 import { PayPalButtonComponent } from "./components/PayPalButtonComponent";
-import { useHistory } from "react-router-dom";
-
-import styles from "./paymentpage.module.scss";
 
 export const PaymentPage = React.memo((props) => {
   const [course, setCourse] = useState();
@@ -28,8 +17,6 @@ export const PaymentPage = React.memo((props) => {
 
   const strPaypalError =
     "Ocurrió un error con tu cuenta de PayPal, no se pudo efectuar el pago. Por favor revisa tus datos.";
-
-  const { goBack } = useHistory();
 
   const dispatch = useDispatch();
 
@@ -43,14 +30,6 @@ export const PaymentPage = React.memo((props) => {
 
     fetchOneCourse(courseId).then((res) => setCourse(res.data));
   }, [courseId, dispatch, purchase]);
-
-  // take the user back if there's no course
-  useEffect(() => {
-    if (!course) {
-      alert(strDBError);
-      return goBack();
-    }
-  }, [course, goBack]);
 
   const catchError = (error) => {
     console.log("@catchError", error);
@@ -66,7 +45,6 @@ export const PaymentPage = React.memo((props) => {
 
   const onSuccess = async (details, data) => {
     setShowPaymentModal(true);
-    console.log("@onSuccess, payment approved", { details, data });
 
     // adding course to user if everything went well
     try {
@@ -82,18 +60,9 @@ export const PaymentPage = React.memo((props) => {
   };
 
   return (
-    <GuestLayout backgroundColor="white">
+    <StudentLayout isContainer={false}>
       {course ? (
-        <Container
-          style={{
-            paddingTop: "40px",
-            marginBottom: "80px",
-          }}
-        >
-          <Button className={styles.backButton} href={`/courses/${school}`}>
-            <i className="fas fa-long-arrow-alt-left mr-2" />
-            <span>Regresar</span>
-          </Button>
+        <Container style={{ marginBottom: "80px" }}>
           <Container>
             <Row>
               <Col md={{ span: 5, offset: 4 }} className="p-0">
@@ -103,11 +72,11 @@ export const PaymentPage = React.memo((props) => {
                 <p>{`Al comprar este curso, recibirás acceso a todo el material que contienen sus temas. Se hará un cargo a tu cuenta de PayPal por $${course.price} MXN.`}</p>
                 <div className="mb-3">
                   <strong>Nombre:</strong>
-                  <h2>{course.name}</h2>
+                  <p className="lead">{course.name}</p>
                 </div>
                 <div className="mb-4">
                   <strong>Precio:</strong>
-                  <h2>{`$${course.price} MXN`}</h2>
+                  <p className="lead">{`$${course.price} MXN`}</p>
                 </div>
                 <PayPalButtonComponent
                   {...{
@@ -140,7 +109,7 @@ export const PaymentPage = React.memo((props) => {
           <Spinner animation="border" role="status" />
         </div>
       )}
-    </GuestLayout>
+    </StudentLayout>
   );
 });
 

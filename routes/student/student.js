@@ -161,47 +161,6 @@ router.get("/student/fetchDashboard/:studentId", function (req, res) {
     });
 });
 
-// fetchMessages()
-// matches with /studentapi/student/messages/:username
-router.get("/messages/:username", function (req, res) {
-  const username = req.params.username;
-
-  model.Message.find({ username })
-    .sort({ sentAt: -1 })
-    .then((data) => res.json(data))
-    .catch((err) => {
-      console.log("@error", err);
-      res.status(422).send("Ocurrió un error");
-    });
-});
-
-// fetchUnseeenMessages()
-// matches with /studentapi/student/messages/unseen/:studentId
-router.get("/messages/unseen/:studentId", function (req, res) {
-  const studentId = req.params.studentId;
-
-  model.Student.findById(studentId)
-    .select("unseenMessages")
-    .then((data) => res.json(data.unseenMessages))
-    .catch((err) => {
-      console.log("@error", err);
-      res.status(422).send({ msg: "Ocurrió un error" });
-    });
-});
-
-// markAllMessagesSeen()
-// matches with /studentapi/student/messages/markAllSeen/:studentId
-router.put("/messages/markAllSeen/:studentId", function (req, res) {
-  const studentId = req.params.studentId;
-
-  model.Student.findByIdAndUpdate(studentId, { unseenMessages: 0 })
-    .then((data) => res.json(data))
-    .catch((err) => {
-      console.log("@error", err);
-      res.status(422).send({ msg: "Ocurrió un error" });
-    });
-});
-
 // fetchCourseInfo()
 // matches with /studentapi/course/info/:courseId/:studentId
 router.get("/course/info/:courseId/:studentId", function (req, res) {

@@ -15,15 +15,6 @@ export const registerNewStudent = (data) =>
 export const fetchDashboard = (studentId) =>
   axios.get(`/studentapi/student/fetchDashboard/${studentId}`);
 
-export const fetchMessages = (username) =>
-  axios.get(`/studentapi/messages/${username}`);
-
-export const fetchUnseeenMessages = (studentId) =>
-  axios.get(`/studentapi/messages/unseen/${studentId}`);
-
-export const markAllMessagesSeen = (studentId) =>
-  axios.put(`/studentapi/messages/markAllSeen/${studentId}`);
-
 export const fetchCourseInfo = (courseId, studentId) =>
   axios.get(`/studentapi/course/info/${courseId}/${studentId}`);
 

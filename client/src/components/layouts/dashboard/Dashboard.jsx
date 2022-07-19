@@ -31,7 +31,13 @@ export const Dashboard = memo(
   }) => (
     <div className="d-flex h-100">
       <LeftNav
-        {...{ leftBarActive, navItems, onLogoutCallback, type, userName }}
+        {...{
+          leftBarActive,
+          navItems,
+          onLogoutCallback,
+          type,
+          userName,
+        }}
       />
       <div style={{ marginLeft: "15rem" }} className="h-100 w-100">
         <TopNav
@@ -82,6 +88,7 @@ export const DashboardType = {
   leftBarActive: string.isRequired,
   navItems: arrayOf(
     shape({
+      hasPendingMessages: bool,
       icon: string,
       label: string,
       link: string,

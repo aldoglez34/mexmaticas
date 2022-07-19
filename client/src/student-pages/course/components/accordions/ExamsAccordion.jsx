@@ -1,27 +1,128 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { array, object } from "prop-types";
-import {
-  DifficultyStars,
-  FreestyleCard,
-  LastVisited,
-  NotAvailableBttn,
-} from "..";
+import { DifficultyStars, FreestyleCard, NotAvailableBttn } from "..";
 import { useDispatch, useSelector } from "react-redux";
 import * as examActions from "../../../../redux/actions/exam";
+import { isEqual } from "lodash";
 import cn from "classnames";
 
 import styles from "./examsaccordion.module.scss";
 
-export const ExamsAccordion = React.memo(
+export const ExamsAccordion = memo(
   ({ exams, freestyle, reward, topicId, topicName }) => {
-    const dispatch = useDispatch();
-
     const [selected, setSelected] = useState();
 
+    const dispatch = useDispatch();
     const exam = useSelector((state) => state.exam);
 
-    const handleBeginExam = (_id, name, difficulty, duration, qCounter) => {
+    useEffect(() => {
+      if (!exam) return;
+      if (exam.name !== "Modo Rápido") window.location.href = "/course/exam";
+    }, [exam]);
+
+    const ArrowIcon = ({ isOpen }) => {
+      if (isOpen)
+        return <i className={cn("fas fa-chevron-up", styles.arrowIcon)} />;
+      if (!isOpen)
+        return <i className={cn("fas fa-chevron-down", styles.arrowIcon)} />;
+    };
+
+    const Toggle = ({ exam, index }) => {
+      const { hasPerfectGrade, highestGrade, isAvailable, name } = exam;
+      return (
+        <>
+          <ArrowIcon isOpen={isEqual(selected, index)} />
+          <strong style={{ color: "#0f5257" }}>{name}</strong>
+          {highestGrade >= 8 && (
+            <i
+              className="fas fa-check-circle text-warning ml-2"
+              title="Aprobado"
+            />
+          )}
+          {hasPerfectGrade && (
+            <i
+              className="fas fa-crown text-warning ml-2"
+              title="Calificación perfecta"
+            />
+          )}{" "}
+          {!isAvailable && (
+            <i className="fas fa-lock ml-2 text-danger" title="Bloqueado" />
+          )}
+        </>
+      );
+    };
+
+    const UnderConstruction = () => (
+      <div className={cn("text-center", styles.underConstructionDiv)}>
+        <h4 className="mb-3">En construcción...</h4>
+        <i
+          className={cn(
+            "fas fa-exclamation-triangle text-warning",
+            styles.underConstruction
+          )}
+        />
+      </div>
+    );
+
+    const CardContent = ({ exam }) => {
+      const { qCounter, questions } = exam;
+      const isUnderConstruction = qCounter > questions;
+      if (isUnderConstruction) return <UnderConstruction />;
+      return (
+        <div className="p-4">
+          <h2 className="mb-2">{exam.name}</h2>
+          <DifficultyStars difficulty={exam.difficulty} />
+          <p className="mb-2">
+            <strong>{exam.description}</strong>
+          </p>
+          {/* <LastVisited date={exam.latestAttempt} /> */}
+          {/* <br />
+          <span style={{ fontSize: "14px" }} title="Duración">
+            <i className="fas fa-stopwatch mr-2" />
+            {exam.duration + " minutos"}
+          </span>
+          <br />
+          <span style={{ fontSize: "14px" }} title="Número de preguntas">
+            <i className="fas fa-flag-checkered mr-2" />
+            {exam.qCounter + " preguntas"}
+          </span> */}
+          <Row className="mb-2">
+            <Col className="text-center">
+              <strong
+                className="mb-0 rounded text-light px-3 bg-info"
+                style={{ fontSize: 45 }}
+              >
+                <span title="Calificación más alta">{exam.highestGrade}</span>
+              </strong>
+              <span className="d-block">Calificación</span>
+            </Col>
+            <Col className="text-center">
+              <strong
+                className="mb-0 rounded text-light px-3 bg-info"
+                style={{ fontSize: 45 }}
+              >
+                <span title="Número de intentos">{exam.attemptsCounter}</span>
+              </strong>
+              <span className="d-block">Intentos</span>
+            </Col>
+          </Row>
+          {exam.isAvailable ? (
+            <Button
+              className="shadow genericButton"
+              onClick={() => handleBeginExam(exam)}
+            >
+              Iniciar
+            </Button>
+          ) : (
+            <NotAvailableBttn />
+          )}
+        </div>
+      );
+    };
+
+    const handleBeginExam = (exam) => {
+      const { _id, name, difficulty, duration, qCounter } = exam;
       dispatch(
         examActions.setExam({
           _id,
@@ -36,159 +137,48 @@ export const ExamsAccordion = React.memo(
       );
     };
 
-    useEffect(() => {
-      if (exam && exam.name !== "Modo Rápido")
-        window.location.href = "/course/exam";
-    }, [exam]);
-
     return (
       <Accordion className="shadow-sm">
         {exams
           .sort((a, b) => a.examOrderNumber - b.examOrderNumber)
-          .map((ex, idx) => {
-            const icon =
-              selected === idx
-                ? "fas fa-chevron-up mr-2"
-                : "fas fa-chevron-down mr-2";
-            return (
-              <React.Fragment key={idx}>
-                <Card>
-                  <Card.Header style={{ backgroundColor: "#e7edee" }}>
-                    <Accordion.Toggle
-                      as={Button}
-                      className="p-0 text-left"
-                      eventKey={idx}
-                      style={{ boxShadow: "none", textDecoration: "none" }}
-                      variant="link"
-                      onClick={() => {
-                        if (selected !== idx) {
-                          setSelected(idx);
-                        } else {
-                          setSelected();
-                        }
+          .map((exam, idx) => (
+            <React.Fragment key={idx}>
+              <Card>
+                <Card.Header className={styles.cardHeader}>
+                  <Accordion.Toggle
+                    as={Button}
+                    className={cn("p-0 text-left", styles.accordionToggle)}
+                    eventKey={idx}
+                    variant="link"
+                    onClick={() =>
+                      setSelected(!isEqual(selected, idx) ? idx : null)
+                    }
+                  >
+                    <Toggle
+                      {...{
+                        exam,
+                        index: idx,
+                        key: idx,
                       }}
-                    >
-                      <i className={icon} style={{ color: "#48bf84" }} />
-                      <strong style={{ color: "#0f5257" }}>{ex.name}</strong>
-                      {/* exam cheked (passed) */}
-                      {ex.highestGrade >= 8 ? (
-                        <i
-                          className="fas fa-check-circle text-warning ml-2"
-                          title="Aprobado"
-                        />
-                      ) : null}
-                      {/* crown for perfect grade */}
-                      {ex.hasPerfectGrade ? (
-                        <i
-                          className="fas fa-crown text-warning ml-2"
-                          title="Calificación perfecta"
-                        />
-                      ) : null}
-                      {/* locked exam */}
-                      {ex.isAvailable ? null : (
-                        <i
-                          className="fas fa-lock ml-2 text-danger"
-                          title="Bloqueado"
-                        />
-                      )}
-                    </Accordion.Toggle>
-                  </Card.Header>
-                  <Accordion.Collapse eventKey={idx}>
-                    <Card.Body className="p-0">
-                      {Number(ex.qCounter) <= Number(ex.questions) ? (
-                        <div className="p-4">
-                          <h2 className="mb-2">{ex.name}</h2>
-                          <DifficultyStars difficulty={ex.difficulty} />
-                          <p className="mb-2 mt-2">
-                            <strong style={{ fontSize: "14px" }}>
-                              {ex.description}
-                            </strong>
-                          </p>
-                          <LastVisited date={ex.latestAttempt} />
-                          <br />
-                          <span style={{ fontSize: "14px" }} title="Duración">
-                            <i className="fas fa-stopwatch mr-2" />
-                            {ex.duration + " minutos"}
-                          </span>
-                          <br />
-                          <span
-                            style={{ fontSize: "14px" }}
-                            title="Número de preguntas"
-                          >
-                            <i className="fas fa-flag-checkered mr-2" />
-                            {ex.qCounter + " preguntas"}
-                          </span>
-                          <Row className="my-3">
-                            <Col className="text-center">
-                              <h1 className="mb-0" style={{ color: "#48bf84" }}>
-                                <span title="Calificación más alta">
-                                  {ex.highestGrade}
-                                </span>
-                              </h1>
-                              <h4>
-                                <small className="text-muted">
-                                  Calificación
-                                </small>
-                              </h4>
-                            </Col>
-                            <Col className="text-center">
-                              <h1 className="mb-0" style={{ color: "#48bf84" }}>
-                                <span title="Número de intentos">
-                                  {ex.attemptsCounter}
-                                </span>
-                              </h1>
-                              <h4>
-                                <small className="text-muted">Intentos</small>
-                              </h4>
-                            </Col>
-                          </Row>
-                          {ex.isAvailable ? (
-                            <Button
-                              onClick={() =>
-                                handleBeginExam(
-                                  ex._id,
-                                  ex.name,
-                                  ex.difficulty,
-                                  ex.duration,
-                                  ex.qCounter
-                                )
-                              }
-                              className="shadow-sm genericButton"
-                            >
-                              Iniciar
-                            </Button>
-                          ) : (
-                            <NotAvailableBttn />
-                          )}
-                        </div>
-                      ) : (
-                        <div
-                          className={cn(
-                            "text-center",
-                            styles.underConstruction
-                          )}
-                        >
-                          <h4 className="mb-3">En construcción...</h4>
-                          <i
-                            className="fas fa-exclamation-triangle text-warning"
-                            style={{ fontSize: "80px" }}
-                          />
-                        </div>
-                      )}
-                    </Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-                {/* only show freestyle if student has the reward AND it has to be the last card */}
-                {exams.length === idx + 1 && freestyle.isAvailable ? (
-                  <FreestyleCard
-                    topicName={topicName}
-                    topicId={topicId}
-                    freestyle={freestyle}
-                  />
-                ) : null}
-              </React.Fragment>
-            );
-          })}
+                    />
+                  </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey={idx}>
+                  <Card.Body className="p-0">
+                    <CardContent {...{ exam }} />
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              {/* only show freestyle if student has the reward AND it has to be the last card */}
+              {isEqual(exams.length, idx + 1) && freestyle.isAvailable && (
+                <FreestyleCard
+                  topicName={topicName}
+                  topicId={topicId}
+                  freestyle={freestyle}
+                />
+              )}
+            </React.Fragment>
+          ))}
       </Accordion>
     );
   }

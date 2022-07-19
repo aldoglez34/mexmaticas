@@ -1,18 +1,18 @@
-#navDropdownToggle {
+.navDropdownToggle {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
 
-#navDropdownToggle::after {
+.navDropdownToggle::after {
   display: none !important;
 }
 
-#navDropdownText {
-  font-weight: bold !important;
+.navDropdownText {
   background-color: transparent;
   border-color: transparent;
   color: #7b8887 !important;
   font-size: 16px !important;
+  font-weight: bold !important;
 
   &:hover {
     color: gainsboro !important;

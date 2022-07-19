@@ -16,6 +16,15 @@ export const LeftNav = React.memo(
         .then(() => onLogoutCallback && onLogoutCallback())
         .catch((error) => errorLogger(error));
 
+    const RedDot = () => (
+      <small>
+        <i
+          className="fas fa-circle ml-1"
+          style={{ color: "#dc3545", textAlign: "center" }}
+        />
+      </small>
+    );
+
     return (
       <Nav className={cn("d-flex flex-column h-100", styles.leftnavstyle)}>
         <div
@@ -27,7 +36,7 @@ export const LeftNav = React.memo(
           <span className={styles.adminlogo}>MeXmáticas</span>
           <span className={styles.adminlogo2}>{type}</span>
         </div>
-        {navItems.map(({ label, link, icon }) => {
+        {navItems.map(({ hasPendingMessages, icon, label, link }) => {
           const navLinkStyle = cn(
             isEqual(leftBarActive, label)
               ? styles.navLinkStyleActive
@@ -39,7 +48,10 @@ export const LeftNav = React.memo(
                 className={icon}
                 style={{ width: "26px", textAlign: "center" }}
               />
-              <span className="ml-1">{label}</span>
+              <span className="ml-1">
+                {label}
+                {hasPendingMessages && <RedDot />}
+              </span>
             </Nav.Link>
           );
         })}

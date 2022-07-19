@@ -11,7 +11,7 @@ import {
 import { Formik, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
-import { messageTeacher } from "../../../../services";
+import { newConversation } from "../../../../services";
 import { AlertModal } from "../../../../components";
 import { errorLogger } from "../../../../errors/errorLogger";
 import cn from "classnames";
@@ -97,18 +97,18 @@ export const HelpModal = memo(
               })}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);
-                const messageData = {
+                const data = {
                   text: values.body,
                   origin: question
                     ? getOriginFromQuestion()
                     : `${courseName} | ${topic}`,
-                  student: student?._id,
-                  teacherId: selectedTeacher?.id,
+                  sender: { student: student?._id },
+                  receiver: { teacher: selectedTeacher?.id },
                   ...(question?.qTechnicalInstruction?.imageLink && {
                     image: question.qTechnicalInstruction.imageLink,
                   }),
                 };
-                messageTeacher(messageData)
+                newConversation(data)
                   .then(() => {
                     alert("Mensaje enviado.");
                     handleClose();

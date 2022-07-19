@@ -80,22 +80,16 @@ const schema = new Schema({
       ref: "Exam",
     },
   ],
-  messages: [
+  conversations: [
     {
-      body: { type: String, required: true },
-      answered: { type: Boolean, required: true, default: false },
-      response: { type: String, required: true },
-      date: { type: Date, default: Date.now },
+      type: Schema.Types.ObjectId,
+      ref: "Conversation",
     },
   ],
+  pendingMessages: [{ type: Schema.Types.ObjectId }],
   registeredAt: {
     type: Date,
     default: Date.now,
-  },
-  unseenMessages: {
-    type: Number,
-    required: true,
-    default: 0,
   },
 });
 

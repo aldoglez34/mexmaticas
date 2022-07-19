@@ -1,67 +1,110 @@
 import React, { useState, useEffect } from "react";
-import { Container, Spinner, Image } from "react-bootstrap";
-import { StudentLayout } from "../../components";
-import { fetchMessages, markAllMessagesSeen } from "../../services";
-import { useSelector, useDispatch } from "react-redux";
-import { MyMessages } from "./components";
-import * as zenModeActions from "../../redux/actions/zenMode";
+import { Image, ListGroup, Spinner } from "react-bootstrap";
+import {
+  ConversationModal,
+  ListGroupItem,
+  StudentLayout,
+  StudentTitle,
+} from "../../components";
+import { fetchConversations, setConversationSeen } from "../../services";
+import { useSelector } from "react-redux";
+import { errorLogger } from "../../errors/errorLogger";
+import { isEmpty } from "lodash";
+import { useConversations } from "../../hooks/useConversations";
 
 export const MessagesPage = () => {
-  const dispatch = useDispatch();
-
-  const [messages, setMessages] = useState();
+  const [conversations, setConversations] = useState();
+  const [activeConversation, setActiveConversation] = useState(null);
+  const [messagesWereRemoved, setMessagesWereRemoved] = useState(false);
 
   const student = useSelector((state) => state.student);
-  const zenMode = useSelector((state) => state.zenMode);
+
+  const { formattedConversations } = useConversations(
+    conversations,
+    student?._id
+  );
 
   useEffect(() => {
-    if (zenMode) dispatch(zenModeActions.zenModeOff());
+    if (!student?._id) return;
+    fetchConversations("student", student?._id)
+      .then((res) => setConversations(res.data))
+      .catch((err) => errorLogger(err));
+  }, [student]);
 
-    fetchMessages(student?.username)
-      .then((res) => {
-        setMessages(res.data);
-        // console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
+  const handleClose = () => {
+    if (messagesWereRemoved) {
+      window.location.reload();
+      return;
+    }
+    setActiveConversation(null);
+  };
 
-    markAllMessagesSeen(student?._id)
-      .then(() => {
-        // console.log(res.data);
-        console.log("Todos los mensajes han sido marcados como vistos");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Ocurrió un error, vuelve a intentarlo.");
-      });
+  const handleShow = async (conversation) => {
+    try {
+      const _messagesWereRemoved = await setConversationSeen(
+        "student",
+        student?._id,
+        conversation._id
+      ).then((res) => res.data);
+      setMessagesWereRemoved(_messagesWereRemoved);
+      setActiveConversation(conversation);
+    } catch (err) {
+      errorLogger(err);
+    }
+  };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [student?._id]);
+  const StudentConversation = ({ item }) => (
+    <ListGroupItem
+      content={<div className="d-flex flex-column">{item.body}</div>}
+      handleOnClick={() => handleShow(item)}
+      hasRedDot={item.hasPendingMessages}
+      title={item.title}
+    />
+  );
+
+  const EmptyMessages = () => (
+    <div className="text-center mt-5">
+      <Image
+        className="mb-3"
+        height="135"
+        src="/images/emptybox.png"
+        width="135"
+      />
+      <em className="d-block" style={{ color: "#b3b3b3" }}>
+        Tu bandeja de mensajes está vacía.
+      </em>
+    </div>
+  );
 
   return (
     <StudentLayout>
-      <Container className="pb-4">
-        {/* title */}
-        <h2 className="studentTitle">Mis mensajes</h2>
-        {messages ? (
-          messages.length ? (
-            <MyMessages messages={messages} />
-          ) : (
-            <div className="text-center" style={{ marginTop: "110px" }}>
-              <Image src="/images/emptymsgs.png" className="emptyBox" />
-              <em className="d-block lead" style={{ color: "#b3b3b3" }}>
-                Tu bandeja de mensajes está vacía
-              </em>
-            </div>
-          )
-        ) : (
+      <div className="pb-4">
+        <StudentTitle text="Mensajes" imageName="messages.png" />
+        {!conversations && (
           <div className="text-center mt-4 pt-4">
             <Spinner animation="border" variant="success" />
           </div>
         )}
-      </Container>
+        {!(conversations || []).length && <EmptyMessages />}
+        {!isEmpty(formattedConversations) && (
+          <ListGroup>
+            {formattedConversations.map((conv) => (
+              <StudentConversation item={conv} key={conv._id} />
+            ))}
+          </ListGroup>
+        )}
+        {/* show conversation modal if there's an active message */}
+        <ConversationModal
+          {...{
+            activeConversation,
+            handleClose,
+            myId: student?._id,
+            receiver: activeConversation?.receiver,
+            sender: activeConversation?.sender,
+            show: !!activeConversation,
+          }}
+        />
+      </div>
     </StudentLayout>
   );
 };

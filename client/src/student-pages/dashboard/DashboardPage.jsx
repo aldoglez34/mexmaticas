@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button, CardColumns, Image, Spinner } from "react-bootstrap";
-import { StudentLayout } from "../../components";
+import { StudentLayout, StudentTitle } from "../../components";
 import { useSelector } from "react-redux";
 import { fetchDashboard, fetchSchoolDropdownItems } from "../../services";
 import { useDispatch } from "react-redux";
 import * as courseActions from "../../redux/actions/course";
 import * as examActions from "../../redux/actions/exam";
-import * as zenModeActions from "../../redux/actions/zenMode";
 import { errorLogger } from "../../errors/errorLogger";
-import { isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { DashboardCourseCard } from "./components/DashboardCourseCard";
 import { useClassroom } from "../hooks/useClassroom";
 
@@ -22,9 +21,8 @@ export const DashboardPage = () => {
   const student = useSelector((state) => state.student);
   const course = useSelector((state) => state.course);
   const exam = useSelector((state) => state.exam);
-  const zenMode = useSelector((state) => state.zenMode);
 
-  const { hasClassrooms, myClassrooms } = useClassroom();
+  const { myClassrooms } = useClassroom();
 
   const isLoading = !courses;
   const areCoursesEmpty = Boolean(!courses?.length);
@@ -34,7 +32,6 @@ export const DashboardPage = () => {
     // clear redux stuff
     if (course) dispatch(courseActions.clearCourse());
     if (exam) dispatch(examActions.clearExam());
-    if (zenMode) dispatch(zenModeActions.zenModeOff());
     // eslint-disable-next-line
   }, []);
 
@@ -86,9 +83,9 @@ export const DashboardPage = () => {
 
   return (
     <StudentLayout hasScrollButton>
-      {hasClassrooms && (
+      {!isEmpty(myClassrooms) && (
         <section>
-          <h3>Mis salones</h3>
+          <StudentTitle text="Salones" imageName="classrooms.png" />
           <ul>
             {myClassrooms.map((classroom, idx) => (
               <li key={idx}>
@@ -96,14 +93,18 @@ export const DashboardPage = () => {
                   <strong>{`${classroom.institution} / `}</strong>
                 )}
                 {classroom.name && <strong>{`${classroom.name} / `}</strong>}
-                {classroom.teacher && <strong>{classroom.teacher}</strong>}
+                {classroom.teacher && (
+                  <strong>{`${
+                    isEqual(classroom.gender, "man") ? "Mtro." : "Mtra."
+                  } ${classroom.teacher}`}</strong>
+                )}
               </li>
             ))}
           </ul>
         </section>
       )}
       <section>
-        <h3>Mis cursos</h3>
+        <StudentTitle text="Cursos" imageName="courses.png" />
         {isLoading && (
           <div className="text-center mt-4 pt-4">
             <Spinner animation="border" variant="success" />
